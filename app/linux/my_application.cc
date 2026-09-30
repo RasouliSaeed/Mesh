@@ -41,11 +41,11 @@ static void my_application_activate(GApplication* application) {
   if (GTK_CSD && strcmp(GTK_CSD, "1") == 0) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "HamResan");
+    gtk_header_bar_set_title(header_bar, "Locara");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "HamResan");
+    gtk_window_set_title(window, "Locara");
   }
 
   gtk_window_set_default_size(window, 400, 500);
