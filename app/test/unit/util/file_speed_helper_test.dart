@@ -1,5 +1,5 @@
 import 'package:locara_app/util/notification_strings.dart';
-import 'package:localsend_isolates/util/file_speed_helper.dart';
+import 'package:locara_isolates/util/file_speed_helper.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -51,4 +51,5 @@ void main() {
     });
   });
 }
+
 

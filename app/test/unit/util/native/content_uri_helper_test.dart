@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/util/content_uri_helper.dart';
+import 'package:locara_isolates/util/content_uri_helper.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -134,3 +134,4 @@ void main() {
     });
   });
 }
+

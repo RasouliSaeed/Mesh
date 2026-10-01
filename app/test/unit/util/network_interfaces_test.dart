@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/util/network_interfaces.dart';
+import 'package:locara_isolates/util/network_interfaces.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -47,3 +47,4 @@ void main() {
     expect(ignored('4.3.3.3'), false);
   });
 }
+

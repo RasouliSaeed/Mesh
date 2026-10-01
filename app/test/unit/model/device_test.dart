@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -43,3 +43,4 @@ void main() {
     expect(set, contains(SignalingChannel(signalingServer: 'sb')));
   });
 }
+

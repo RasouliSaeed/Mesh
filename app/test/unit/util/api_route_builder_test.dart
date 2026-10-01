@@ -1,5 +1,5 @@
-import 'package:localsend_isolates/api_route_builder.dart';
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/api_route_builder.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -59,3 +59,4 @@ Device _target({
     channels: [],
   );
 }
+
