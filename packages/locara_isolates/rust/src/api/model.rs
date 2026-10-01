@@ -72,4 +72,3 @@ pub struct _PrepareUploadResponseDto {
     pub session_id: String,
     pub files: HashMap<String, String>,
 }
-

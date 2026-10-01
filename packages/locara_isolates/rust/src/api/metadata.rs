@@ -6,4 +6,3 @@ use locara::model::transfer::FileMetadata;
 pub async fn read_file_metadata(path: String) -> Option<FileMetadata> {
     FileMetadata::from_path(std::path::Path::new(&path))
 }
-

@@ -631,9 +631,7 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
         (&Method::POST, "/api/locara/v2/prepare-download") => {
             web::prepare_download(req, state, client_info).await
         }
-        (&Method::GET, "/api/locara/v2/download") => {
-            web::download(req, state, client_info).await
-        }
+        (&Method::GET, "/api/locara/v2/download") => web::download(req, state, client_info).await,
         (&Method::POST, "/api/locara/v2/register") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
@@ -691,4 +689,3 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
         }
     }
 }
-

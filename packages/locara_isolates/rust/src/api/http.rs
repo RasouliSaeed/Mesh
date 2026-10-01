@@ -4,8 +4,8 @@ use crate::frb_generated::StreamSink;
 use flutter_rust_bridge::frb;
 pub use locara::http::client::{ClientError, LsHttpClientVersion};
 pub use locara::http::dto::{
-    PrepareUploadRequestDto, PrepareUploadResponseDto, PrepareUploadResult,
-    RegisterDto, RegisterResponseDto,
+    PrepareUploadRequestDto, PrepareUploadResponseDto, PrepareUploadResult, RegisterDto,
+    RegisterResponseDto,
 };
 use locara::model::discovery::ProtocolType;
 use locara::util::error::ErrorChain;
@@ -256,4 +256,3 @@ pub struct ResultWithPublicKeyRegisterResponseDto {
     pub public_key: Option<String>,
     pub body: RegisterResponseDto,
 }
-

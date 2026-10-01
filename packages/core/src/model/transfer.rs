@@ -264,8 +264,7 @@ mod tests {
 
     #[test]
     fn reads_file_timestamps() {
-        let path =
-            std::env::temp_dir().join(format!("locara-metadata-{}", uuid::Uuid::new_v4()));
+        let path = std::env::temp_dir().join(format!("locara-metadata-{}", uuid::Uuid::new_v4()));
         std::fs::write(&path, b"hello").unwrap();
         // 100 ns aligned, so the values are exactly representable on NTFS.
         let modified = SystemTime::UNIX_EPOCH + Duration::new(1_600_000_000, 123_456_700);
@@ -307,8 +306,7 @@ mod tests {
     /// a 0-byte file while this side reports a successful transfer.
     #[tokio::test]
     async fn unopenable_path_fails_the_stream() {
-        let missing =
-            std::env::temp_dir().join(format!("locara-missing-{}", uuid::Uuid::new_v4()));
+        let missing = std::env::temp_dir().join(format!("locara-missing-{}", uuid::Uuid::new_v4()));
         let chunks: Vec<_> = FileContent::Path(missing).into_stream().collect().await;
 
         assert_eq!(chunks.len(), 1);
@@ -334,4 +332,3 @@ mod tests {
         assert_eq!(content.as_slice(), b"hello");
     }
 }
-

@@ -94,4 +94,3 @@ mod tests {
         assert_eq!(decode("s3.scoped.locara.internal"), None); // no address
     }
 }
-

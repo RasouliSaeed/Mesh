@@ -510,4 +510,3 @@ pub struct _RTCSendFileResponse {
     pub success: bool,
     pub error: Option<String>,
 }
-

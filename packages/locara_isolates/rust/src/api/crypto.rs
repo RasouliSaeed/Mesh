@@ -125,4 +125,3 @@ pub async fn hash_file(
         let _ = sink.add_error(err);
     }
 }
-

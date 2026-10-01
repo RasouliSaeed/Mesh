@@ -72,4 +72,3 @@ fn dir() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("."))
         .join("locara-cli")
 }
-

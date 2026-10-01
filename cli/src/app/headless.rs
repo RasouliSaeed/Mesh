@@ -235,4 +235,3 @@ fn render_progress(ui: &mut Ui, send: &mut Option<SendState>) {
         width,
     )));
 }
-

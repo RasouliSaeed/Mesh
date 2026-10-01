@@ -1462,4 +1462,3 @@ async fn test_pin_too_many_attempts() {
         .await;
     assert_status(result, 429);
 }
-

@@ -90,4 +90,3 @@ fn expand_tilde(path: PathBuf) -> PathBuf {
         _ => path,
     }
 }
-

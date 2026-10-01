@@ -482,4 +482,3 @@ impl LsHttpClientV2 {
         Ok(total_bytes)
     }
 }
-

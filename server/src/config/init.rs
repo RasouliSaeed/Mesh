@@ -18,4 +18,3 @@ pub async fn init() -> AppState {
 
     app_state
 }
-

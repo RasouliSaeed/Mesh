@@ -142,4 +142,3 @@ async fn server_survives_descriptor_exhaustion() {
         "the server stopped accepting after running out of descriptors: {status:?}"
     );
 }
-

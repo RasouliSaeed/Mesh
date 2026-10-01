@@ -154,4 +154,3 @@ async fn subnet_scan_finishes_when_events_are_not_consumed() {
         found.len()
     );
 }
-

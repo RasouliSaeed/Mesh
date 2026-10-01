@@ -132,4 +132,3 @@ mod tests {
         assert_eq!(lines, [" - https://[2a02::1]:53317"]);
     }
 }
-

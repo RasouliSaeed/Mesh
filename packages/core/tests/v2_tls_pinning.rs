@@ -430,4 +430,3 @@ async fn test_register_without_pin_returns_public_key() {
     assert!(response.public_key.is_some());
     assert_eq!(response.body.fingerprint, server_identity.fingerprint);
 }
-

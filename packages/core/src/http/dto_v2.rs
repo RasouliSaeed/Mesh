@@ -256,4 +256,3 @@ mod tests {
         assert!(json.contains("\"fingerprint\":\"sender-fingerprint\""));
     }
 }
-

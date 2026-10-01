@@ -495,4 +495,3 @@ impl App {
         self.ui.resume();
     }
 }
-

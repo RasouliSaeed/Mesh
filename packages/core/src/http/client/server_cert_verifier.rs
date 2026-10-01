@@ -208,4 +208,3 @@ VRus1zGVD8IVpIdPMyz01WJyS7M0fWaHXKWo+Bo=
         assert!(verify(None).is_ok());
     }
 }
-

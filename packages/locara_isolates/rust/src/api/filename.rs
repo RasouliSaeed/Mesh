@@ -14,4 +14,3 @@ pub fn sanitize_file_name(name: String) -> String {
 pub fn is_valid_file_name(name: String) -> bool {
     filename::is_valid(&name, filename::Rules::current())
 }
-

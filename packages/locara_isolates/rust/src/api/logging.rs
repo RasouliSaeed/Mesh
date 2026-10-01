@@ -22,4 +22,3 @@ pub fn enable_debug_logging() -> Result<()> {
 
     Ok(())
 }
-

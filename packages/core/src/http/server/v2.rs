@@ -690,4 +690,3 @@ async fn finalize_file(v2: &V2State, session_id: &str, file_id: &str, result: Sa
             .await;
     }
 }
-

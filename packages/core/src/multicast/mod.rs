@@ -423,4 +423,3 @@ mod tests {
         assert!(!json.contains("deviceModel"));
     }
 }
-

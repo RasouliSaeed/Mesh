@@ -116,4 +116,3 @@ mod tests {
         assert_eq!(url, "http://192.168.1.1:53317/api/locara/v2/info");
     }
 }
-

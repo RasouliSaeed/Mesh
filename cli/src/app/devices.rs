@@ -171,4 +171,3 @@ fn channel_hosts(stored: &StatefulDevice) -> Vec<String> {
         .map(|http| http.host.clone())
         .collect()
 }
-

@@ -125,4 +125,3 @@ pub(super) fn device_confirmed(
         discovery.add_device(device).await;
     });
 }
-

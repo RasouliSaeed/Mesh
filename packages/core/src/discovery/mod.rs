@@ -587,4 +587,3 @@ fn confirmed_device(
         download: response.download,
     }
 }
-

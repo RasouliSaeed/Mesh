@@ -107,4 +107,3 @@ async fn hash_stream() {
 
     assert_eq!(hash, HELLO_WORLD_HASH);
 }
-

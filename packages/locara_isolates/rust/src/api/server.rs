@@ -8,7 +8,7 @@ use locara::http::server::internal::{InternalConfig, InternalEvent};
 pub use locara::http::server::v2::SessionEndReasonV2;
 use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
 use locara::http::server::web::{
-    WebConfig, WebMode as CoreWebMode, WebDownloadConfig, WebDownloadEvent,
+    WebConfig, WebDownloadConfig, WebDownloadEvent, WebMode as CoreWebMode,
 };
 pub use locara::http::server::web::{WebI18n, WebPages};
 use locara::http::state::ClientInfo;
@@ -805,4 +805,3 @@ pub enum _SessionEndReasonV2 {
     Finished,
     Cancelled,
 }
-

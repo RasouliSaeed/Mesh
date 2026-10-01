@@ -367,4 +367,3 @@ async fn protect_ddos_request_count(
     *count += 1;
     Ok(())
 }
-

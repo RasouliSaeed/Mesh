@@ -112,4 +112,3 @@ async fn connections_beyond_the_limit_are_closed() {
         "no connection was served after one was closed"
     );
 }
-

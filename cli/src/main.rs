@@ -73,8 +73,8 @@ mod tests {
 
     #[test]
     fn accepts_mixed_send_paths() {
-        let args = Args::try_parse_from(["locara-cli", "send", "one.txt", "two.txt", "backup"])
-            .unwrap();
+        let args =
+            Args::try_parse_from(["locara-cli", "send", "one.txt", "two.txt", "backup"]).unwrap();
 
         let Some(Command::Send { to, paths }) = args.command else {
             panic!("expected the send command");
@@ -93,8 +93,7 @@ mod tests {
     #[test]
     fn accepts_a_destination_alias() {
         let args =
-            Args::try_parse_from(["locara-cli", "send", "--to", "Cute Tomato", "one.txt"])
-                .unwrap();
+            Args::try_parse_from(["locara-cli", "send", "--to", "Cute Tomato", "one.txt"]).unwrap();
 
         let Some(Command::Send { to, paths }) = args.command else {
             panic!("expected the send command");
@@ -105,9 +104,8 @@ mod tests {
 
     #[test]
     fn accepts_a_destination_ip() {
-        let args =
-            Args::try_parse_from(["locara-cli", "send", "--to", "192.168.27.26", "one.txt"])
-                .unwrap();
+        let args = Args::try_parse_from(["locara-cli", "send", "--to", "192.168.27.26", "one.txt"])
+            .unwrap();
 
         let Some(Command::Send { to, paths }) = args.command else {
             panic!("expected the send command");
@@ -128,4 +126,3 @@ mod tests {
         assert!(args.command.is_none());
     }
 }
-

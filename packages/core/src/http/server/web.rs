@@ -585,4 +585,3 @@ async fn clear_pending_session(web: &WebDownloadState, session_id: &str) {
         sessions.remove(session_id);
     }
 }
-

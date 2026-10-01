@@ -132,4 +132,3 @@ async fn test_show_disabled() {
 
     assert_eq!(response.status().as_u16(), 404);
 }
-

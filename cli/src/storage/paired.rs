@@ -194,10 +194,8 @@ mod tests {
     /// A fresh directory per test (`name` disambiguates tests, the process
     /// id parallel `cargo test` processes).
     fn temp_dir(name: &str) -> PathBuf {
-        let dir = std::env::temp_dir().join(format!(
-            "locara-cli-paired-{name}-{}",
-            std::process::id()
-        ));
+        let dir =
+            std::env::temp_dir().join(format!("locara-cli-paired-{name}-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         dir
@@ -233,4 +231,3 @@ mod tests {
         assert_eq!(hosts, ["fe80::1%3", "192.168.0.10"]);
     }
 }
-

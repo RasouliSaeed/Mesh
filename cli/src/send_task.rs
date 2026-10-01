@@ -274,4 +274,3 @@ fn upload_body(content: FileContent, progress: impl Fn(u64) + Send + 'static) ->
     });
     reqwest::Body::wrap_stream(stream)
 }
-

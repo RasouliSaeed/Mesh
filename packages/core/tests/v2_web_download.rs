@@ -603,4 +603,3 @@ async fn test_pin_too_many_attempts() {
 
     let _ = std::fs::remove_file(disk_path);
 }
-

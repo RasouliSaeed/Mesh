@@ -7,9 +7,7 @@
 //! instead of failing when the environment does not carry the traffic.
 
 use locara::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
-use locara::multicast::{
-    self, MulticastConfig, MulticastDevice, MulticastEvent, MulticastHandle,
-};
+use locara::multicast::{self, MulticastConfig, MulticastDevice, MulticastEvent, MulticastHandle};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use std::sync::atomic::{AtomicU16, Ordering};
 use std::time::Duration;
@@ -242,4 +240,3 @@ async fn test_port_is_released_after_stop() {
         "the port must be bindable again after the discovery stopped"
     );
 }
-
