@@ -1,4 +1,4 @@
-﻿///
+///
 /// Generated file. Do not edit.
 ///
 // coverage:ignore-file
@@ -1656,4 +1656,3 @@ class _Translations$whatsNewPage$changes$v1_18_0$fa extends Translations$whatsNe
     'در اندروید، انتقال فایل‌ها زمانی که برنامه در پس‌زمینه است یا صفحه نمایش خاموش است ادامه می‌یابد. در iOS، برنامه همچنان باید در پیش‌زمینه باقی بماند.',
   ];
 }
-
