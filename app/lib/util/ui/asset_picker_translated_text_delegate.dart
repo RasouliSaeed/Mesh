@@ -1,4 +1,4 @@
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class TranslatedAssetPickerTextDelegate extends AssetPickerTextDelegate {
@@ -91,3 +91,4 @@ class TranslatedAssetPickerTextDelegate extends AssetPickerTextDelegate {
   @override
   String get sUnitAssetCountLabel => t.assetPicker.sUnitAssetCountLabel;
 }
+

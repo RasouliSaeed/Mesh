@@ -1,4 +1,4 @@
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_isolates/util/notification_strings.dart';
 
 /// The translations that `localsend_isolates` needs, taken from the current locale.
@@ -19,4 +19,5 @@ String _remainingTimeLong({required num h, required num m}) {
   }
   return remainingTime.hours(h: h, m: m);
 }
+
 

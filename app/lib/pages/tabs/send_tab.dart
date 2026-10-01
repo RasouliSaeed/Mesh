@@ -1,34 +1,34 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/send_mode.dart';
-import 'package:localsend_app/pages/device_details_page.dart';
-import 'package:localsend_app/pages/selected_files_page.dart';
-import 'package:localsend_app/pages/tabs/send_tab_vm.dart';
-import 'package:localsend_app/pages/troubleshoot_page.dart';
-import 'package:localsend_app/provider/animation_provider.dart';
-import 'package:localsend_app/provider/file_transfer_provider.dart';
-import 'package:localsend_app/provider/network/nearby_devices_provider.dart';
-import 'package:localsend_app/provider/network/scan_facade.dart';
-import 'package:localsend_app/provider/network/send_provider.dart';
-import 'package:localsend_app/provider/selection/selected_sending_files_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/util/favorites.dart';
-import 'package:localsend_app/util/native/file_picker.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/widget/big_button.dart';
-import 'package:localsend_app/widget/custom_icon_button.dart';
-import 'package:localsend_app/widget/dialogs/add_file_dialog.dart';
-import 'package:localsend_app/widget/dialogs/send_mode_help_dialog.dart';
-import 'package:localsend_app/widget/file_thumbnail.dart';
-import 'package:localsend_app/widget/list_tile/device_list_tile.dart';
-import 'package:localsend_app/widget/list_tile/device_placeholder_list_tile.dart';
-import 'package:localsend_app/widget/opacity_slideshow.dart';
-import 'package:localsend_app/widget/responsive_builder.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_app/widget/responsive_wrap_view.dart';
-import 'package:localsend_app/widget/rotating_widget.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/send_mode.dart';
+import 'package:locara_app/pages/device_details_page.dart';
+import 'package:locara_app/pages/selected_files_page.dart';
+import 'package:locara_app/pages/tabs/send_tab_vm.dart';
+import 'package:locara_app/pages/troubleshoot_page.dart';
+import 'package:locara_app/provider/animation_provider.dart';
+import 'package:locara_app/provider/file_transfer_provider.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/network/scan_facade.dart';
+import 'package:locara_app/provider/network/send_provider.dart';
+import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/util/favorites.dart';
+import 'package:locara_app/util/native/file_picker.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/widget/big_button.dart';
+import 'package:locara_app/widget/custom_icon_button.dart';
+import 'package:locara_app/widget/dialogs/add_file_dialog.dart';
+import 'package:locara_app/widget/dialogs/send_mode_help_dialog.dart';
+import 'package:locara_app/widget/file_thumbnail.dart';
+import 'package:locara_app/widget/list_tile/device_list_tile.dart';
+import 'package:locara_app/widget/list_tile/device_placeholder_list_tile.dart';
+import 'package:locara_app/widget/opacity_slideshow.dart';
+import 'package:locara_app/widget/responsive_builder.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
+import 'package:locara_app/widget/responsive_wrap_view.dart';
+import 'package:locara_app/widget/rotating_widget.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/session_status.dart';
 import 'package:locara_isolates/util/file_size_helper.dart';
@@ -584,4 +584,5 @@ extension on SessionStatus {
     }
   }
 }
+
 

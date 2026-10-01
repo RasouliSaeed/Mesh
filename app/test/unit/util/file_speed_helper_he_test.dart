@@ -1,6 +1,6 @@
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/util/i18n.dart';
-import 'package:localsend_app/util/notification_strings.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/util/i18n.dart';
+import 'package:locara_app/util/notification_strings.dart';
 import 'package:localsend_isolates/util/file_speed_helper.dart';
 import 'package:test/test.dart';
 
@@ -34,3 +34,4 @@ void main() {
     });
   }
 }
+

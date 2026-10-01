@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/cross_file.dart';
-import 'package:localsend_app/model/state/server/web_share_state.dart';
-import 'package:localsend_app/provider/local_ip_provider.dart';
-import 'package:localsend_app/provider/network/server/server_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/util/ui/snackbar.dart';
-import 'package:localsend_app/widget/dialogs/pin_dialog.dart';
-import 'package:localsend_app/widget/dialogs/qr_dialog.dart';
-import 'package:localsend_app/widget/dialogs/zoom_dialog.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/cross_file.dart';
+import 'package:locara_app/model/state/server/web_share_state.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/util/ui/snackbar.dart';
+import 'package:locara_app/widget/dialogs/pin_dialog.dart';
+import 'package:locara_app/widget/dialogs/qr_dialog.dart';
+import 'package:locara_app/widget/dialogs/zoom_dialog.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/util/sleep.dart';
 import 'package:logging/logging.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -405,4 +405,5 @@ class _WebSharePageState extends State<WebSharePage> with Refena {
     );
   }
 }
+
 

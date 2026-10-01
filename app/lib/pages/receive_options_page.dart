@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/pages/receive_page.dart';
-import 'package:localsend_app/provider/network/server/server_provider.dart';
-import 'package:localsend_app/provider/selection/selected_receiving_files_provider.dart';
-import 'package:localsend_app/util/file_type_ext.dart';
-import 'package:localsend_app/util/native/pick_directory_path.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/widget/custom_dropdown_button.dart';
-import 'package:localsend_app/widget/custom_icon_button.dart';
-import 'package:localsend_app/widget/dialogs/file_name_input_dialog.dart';
-import 'package:localsend_app/widget/dialogs/quick_actions_dialog.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/pages/receive_page.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/selection/selected_receiving_files_provider.dart';
+import 'package:locara_app/util/file_type_ext.dart';
+import 'package:locara_app/util/native/pick_directory_path.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/widget/custom_dropdown_button.dart';
+import 'package:locara_app/widget/custom_icon_button.dart';
+import 'package:locara_app/widget/dialogs/file_name_input_dialog.dart';
+import 'package:locara_app/widget/dialogs/quick_actions_dialog.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/util/file_size_helper.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -201,4 +201,5 @@ class ReceiveOptionsPage extends StatelessWidget {
     );
   }
 }
+
 

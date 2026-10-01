@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_app/model/state/send/web/web_download_state.dart';
+import 'package:locara_app/model/state/send/web/web_download_state.dart';
 
 part 'web_share_state.mapper.dart';
 
@@ -30,3 +30,4 @@ class WebShareDownload extends WebShareState with WebShareDownloadMappable {
 class WebShareUpload extends WebShareState with WebShareUploadMappable {
   const WebShareUpload({required super.pin});
 }
+

@@ -1,4 +1,4 @@
-name: localsend_app
+name: locara_app
 description: An open source cross-platform alternative to AirDrop
 homepage: https://localsend.org/
 publish_to: "none"
@@ -83,7 +83,7 @@ dev_dependencies:
   slang_build_runner: 4.19.0
   test: ^1.30.0
 
-  localsend_isolates: any
+  locara_isolates: any
 dependency_overrides:
   device_apps:
     # Migrate to another maintained package to fetch installed apps on Android
@@ -112,3 +112,5 @@ flutter:
 
 flutter_gen:
   line_length: 150
+
+

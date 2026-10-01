@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_app/model/state/send/web/web_download_state.dart';
-import 'package:localsend_app/model/state/server/receive_session_state.dart';
-import 'package:localsend_app/model/state/server/web_share_state.dart';
+import 'package:locara_app/model/state/send/web/web_download_state.dart';
+import 'package:locara_app/model/state/server/receive_session_state.dart';
+import 'package:locara_app/model/state/server/web_share_state.dart';
 
 part 'server_state.mapper.dart';
 
@@ -48,3 +48,4 @@ class ServerState with ServerStateMappable {
     return 'ServerState(alias: $alias, port: $port, https: $https, session: $session, web: $web)';
   }
 }
+

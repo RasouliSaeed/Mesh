@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/model/cross_file.dart';
-import 'package:localsend_app/provider/chat_provider.dart';
-import 'package:localsend_app/provider/network/send_provider.dart';
+import 'package:locara_app/model/cross_file.dart';
+import 'package:locara_app/provider/chat_provider.dart';
+import 'package:locara_app/provider/network/send_provider.dart';
 import 'package:locara_isolates/model/file_type.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -153,4 +153,5 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
 

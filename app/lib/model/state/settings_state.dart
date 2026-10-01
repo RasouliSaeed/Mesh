@@ -1,8 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/model/send_mode.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/model/send_mode.dart';
 import 'package:locara_isolates/model/device.dart';
 
 part 'settings_state.mapper.dart';
@@ -73,4 +73,5 @@ class SettingsState with SettingsStateMappable {
     required this.advancedSettings,
   });
 }
+
 

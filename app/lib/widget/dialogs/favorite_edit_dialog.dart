@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/favorite_device.dart';
-import 'package:localsend_app/provider/device_info_provider.dart';
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/provider/http_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/widget/dialogs/error_dialog.dart';
-import 'package:localsend_app/widget/dialogs/favorite_delete_dialog.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/provider/http_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/widget/dialogs/error_dialog.dart';
+import 'package:locara_app/widget/dialogs/favorite_delete_dialog.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/rust/api/model.dart';
 import 'package:locara_isolates/util/rust.dart';
@@ -231,4 +231,5 @@ class _FavoriteEditDialogState extends State<FavoriteEditDialog> with Refena {
     );
   }
 }
+
 

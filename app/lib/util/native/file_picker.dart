@@ -4,22 +4,22 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/cross_file.dart';
-import 'package:localsend_app/pages/apk_picker_page.dart';
-import 'package:localsend_app/provider/device_info_provider.dart';
-import 'package:localsend_app/provider/selection/selected_sending_files_provider.dart';
-import 'package:localsend_app/util/determine_image_type.dart';
-import 'package:localsend_app/util/image_converter.dart';
-import 'package:localsend_app/util/native/channel/android_channel.dart' as android_channel;
-import 'package:localsend_app/util/native/cross_file_converters.dart';
-import 'package:localsend_app/util/native/pick_directory_path.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/util/ui/asset_picker_translated_text_delegate.dart';
-import 'package:localsend_app/widget/dialogs/loading_dialog.dart';
-import 'package:localsend_app/widget/dialogs/message_input_dialog.dart';
-import 'package:localsend_app/widget/dialogs/no_permission_dialog.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/cross_file.dart';
+import 'package:locara_app/pages/apk_picker_page.dart';
+import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
+import 'package:locara_app/util/determine_image_type.dart';
+import 'package:locara_app/util/image_converter.dart';
+import 'package:locara_app/util/native/channel/android_channel.dart' as android_channel;
+import 'package:locara_app/util/native/cross_file_converters.dart';
+import 'package:locara_app/util/native/pick_directory_path.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/util/ui/asset_picker_translated_text_delegate.dart';
+import 'package:locara_app/widget/dialogs/loading_dialog.dart';
+import 'package:locara_app/widget/dialogs/message_input_dialog.dart';
+import 'package:locara_app/widget/dialogs/no_permission_dialog.dart';
 import 'package:locara_isolates/model/file_type.dart';
 import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:locara_isolates/util/sleep.dart';
@@ -376,4 +376,5 @@ Future<void> _pickApp(BuildContext context) async {
 extension on int {
   String get twoDigitString => toString().padLeft(2, '0');
 }
+
 

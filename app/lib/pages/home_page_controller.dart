@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/pages/home_page.dart';
+import 'package:locara_app/pages/home_page.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 class HomePageVm {
@@ -44,3 +44,4 @@ class ChangeTabAction extends ReduxAction<HomePageController, HomePageVm> {
     );
   }
 }
+

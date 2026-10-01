@@ -1,4 +1,4 @@
-import 'package:localsend_app/provider/security_provider.dart';
+import 'package:locara_app/provider/security_provider.dart';
 import 'package:locara_isolates/rust/api/http.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -51,4 +51,5 @@ final httpProvider = ViewProvider((ref) {
     ),
   );
 });
+
 

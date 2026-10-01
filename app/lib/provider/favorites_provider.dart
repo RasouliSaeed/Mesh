@@ -1,5 +1,5 @@
-import 'package:localsend_app/model/persistence/favorite_device.dart';
-import 'package:localsend_app/provider/persistence_provider.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/provider/persistence_provider.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 /// This provider stores the list of favorite devices.
@@ -82,3 +82,4 @@ class RemoveFavoriteAction extends AsyncReduxAction<FavoritesService, List<Favor
     return updated;
   }
 }
+

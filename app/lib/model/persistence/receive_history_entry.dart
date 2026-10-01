@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:intl/intl.dart';
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_isolates/model/file_type.dart';
 
 part 'receive_history_entry.mapper.dart';
@@ -55,4 +55,5 @@ class IsMessageHook extends MappingHook {
     return value == true;
   }
 }
+
 

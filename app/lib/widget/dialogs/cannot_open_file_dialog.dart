@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/widget/dialogs/custom_bottom_sheet.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/widget/dialogs/custom_bottom_sheet.dart';
 import 'package:routerino/routerino.dart';
 
 class CannotOpenFileDialog extends StatelessWidget {
@@ -51,3 +51,4 @@ class CannotOpenFileDialog extends StatelessWidget {
     );
   }
 }
+

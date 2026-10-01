@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:localsend_app/model/state/purchase_state.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
+import 'package:locara_app/model/state/purchase_state.dart';
+import 'package:locara_app/util/native/platform_check.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 final purchaseProvider = ReduxProvider<PurchaseService, PurchaseState>((ref) {
@@ -191,3 +191,4 @@ class PurchaseAction extends AsyncReduxAction<PurchaseService, PurchaseState> {
   @override
   String get debugLabel => 'BuyAction(${item.name})';
 }
+

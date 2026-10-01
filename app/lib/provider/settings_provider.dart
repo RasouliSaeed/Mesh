@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/model/persistence/quick_save_mode.dart';
-import 'package:localsend_app/model/send_mode.dart';
-import 'package:localsend_app/model/state/settings_state.dart';
-import 'package:localsend_app/provider/persistence_provider.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/model/persistence/quick_save_mode.dart';
+import 'package:locara_app/model/send_mode.dart';
+import 'package:locara_app/model/state/settings_state.dart';
+import 'package:locara_app/provider/persistence_provider.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -298,4 +298,5 @@ class SettingsService extends PureNotifier<SettingsState> {
     );
   }
 }
+
 

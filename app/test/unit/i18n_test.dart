@@ -1,5 +1,5 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -17,3 +17,4 @@ void main() {
     });
   });
 }
+

@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:localsend_app/provider/local_ip_provider.dart';
-import 'package:localsend_app/provider/network/server/server_provider.dart';
-import 'package:localsend_app/provider/security_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/security_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device.dart';
@@ -48,4 +48,5 @@ final deviceFullInfoProvider = ViewProvider((ref) {
     channels: const [],
   );
 });
+
 

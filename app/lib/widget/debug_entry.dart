@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/widget/copyable_text.dart';
+import 'package:locara_app/widget/copyable_text.dart';
 
 class DebugEntry extends StatelessWidget {
   static const headerStyle = TextStyle(fontWeight: FontWeight.bold);
@@ -27,3 +27,4 @@ class DebugEntry extends StatelessWidget {
     );
   }
 }
+

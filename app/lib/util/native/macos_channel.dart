@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/util/native/taskbar_helper.dart';
-import 'package:localsend_app/util/native/tray_helper.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/util/native/taskbar_helper.dart';
+import 'package:locara_app/util/native/tray_helper.dart';
 
 const _methodChannel = MethodChannel('main-delegate-channel');
 
@@ -91,3 +91,4 @@ Future<void> setupMethodCallHandler() async {
 
   await _methodChannel.invokeMethod('methodChannelInitialized');
 }
+

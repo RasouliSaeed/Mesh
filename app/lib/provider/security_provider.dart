@@ -1,5 +1,5 @@
-import 'package:localsend_app/provider/persistence_provider.dart';
-import 'package:localsend_app/util/security_helper.dart';
+import 'package:locara_app/provider/persistence_provider.dart';
+import 'package:locara_app/util/security_helper.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/stored_security_context.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -35,4 +35,5 @@ class ResetSecurityContextAction extends AsyncReduxAction<SecurityService, Store
     return securityContext;
   }
 }
+
 

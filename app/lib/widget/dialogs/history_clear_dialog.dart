@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:routerino/routerino.dart';
 
 class HistoryClearDialog extends StatelessWidget {
@@ -23,3 +23,4 @@ class HistoryClearDialog extends StatelessWidget {
     );
   }
 }
+

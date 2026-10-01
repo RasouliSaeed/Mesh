@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_app/model/state/server/receiving_file.dart';
+import 'package:locara_app/model/state/server/receiving_file.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/file_type.dart';
 import 'package:locara_isolates/model/session_status.dart';
@@ -68,4 +68,5 @@ class ReceiveSessionState with ReceiveSessionStateMappable implements SessionSta
     return files.values.any((f) => f.file.fileName.contains('/'));
   }
 }
+
 

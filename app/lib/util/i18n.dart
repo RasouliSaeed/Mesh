@@ -1,4 +1,4 @@
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 
 Future<void> initI18n() async {
   // Register default plural resolver
@@ -94,3 +94,4 @@ extension AppLocaleExt on AppLocale {
     };
   }
 }
+

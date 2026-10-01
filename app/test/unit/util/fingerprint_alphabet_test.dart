@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:localsend_app/util/fingerprint_alphabet.dart';
+import 'package:locara_app/util/fingerprint_alphabet.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -76,3 +76,4 @@ void main() {
     });
   });
 }
+

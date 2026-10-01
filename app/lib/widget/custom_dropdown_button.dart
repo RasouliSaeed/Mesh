@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
+import 'package:locara_app/config/theme.dart';
 
 /// A [DropdownButton] with a custom theme.
 /// Currently, there is no easy way to apply color and border radius to all [DropdownButton].
@@ -39,3 +39,4 @@ class CustomDropdownButton<T> extends StatelessWidget {
     );
   }
 }
+

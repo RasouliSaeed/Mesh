@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/pages/debug/debug_page.dart';
-import 'package:localsend_app/util/i18n.dart';
-import 'package:localsend_app/widget/local_send_logo.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/pages/debug/debug_page.dart';
+import 'package:locara_app/util/i18n.dart';
+import 'package:locara_app/widget/local_send_logo.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:routerino/routerino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -220,3 +220,4 @@ InlineSpan _buildContributor({required String label, required Color primaryColor
   // Only full name
   return TextSpan(text: '$newLineStr$label');
 }
+

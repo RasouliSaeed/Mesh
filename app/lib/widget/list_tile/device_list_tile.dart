@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/util/device_type_ext.dart';
-import 'package:localsend_app/widget/custom_progress_bar.dart';
-import 'package:localsend_app/widget/device_bage.dart';
-import 'package:localsend_app/widget/list_tile/custom_list_tile.dart';
+import 'package:locara_app/util/device_type_ext.dart';
+import 'package:locara_app/widget/custom_progress_bar.dart';
+import 'package:locara_app/widget/device_bage.dart';
+import 'package:locara_app/widget/list_tile/custom_list_tile.dart';
 import 'package:locara_isolates/model/device.dart';
 
 class DeviceListTile extends StatelessWidget {
@@ -86,4 +86,5 @@ class DeviceListTile extends StatelessWidget {
     );
   }
 }
+
 

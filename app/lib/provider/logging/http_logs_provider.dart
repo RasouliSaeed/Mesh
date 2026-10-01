@@ -1,4 +1,4 @@
-import 'package:localsend_app/model/log_entry.dart';
+import 'package:locara_app/model/log_entry.dart';
 import 'package:logging/logging.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -30,3 +30,4 @@ class HttpLogsService extends Notifier<List<LogEntry>> {
   @override
   String describeState(List<LogEntry> state) => '${state.length} logs';
 }
+

@@ -4,21 +4,21 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/model/persistence/favorite_device.dart';
-import 'package:localsend_app/model/persistence/quick_save_mode.dart';
-import 'package:localsend_app/model/persistence/receive_history_entry.dart';
-import 'package:localsend_app/model/send_mode.dart';
-import 'package:localsend_app/provider/window_dimensions_provider.dart';
-import 'package:localsend_app/util/alias_generator.dart';
-import 'package:localsend_app/util/native/autostart_helper.dart';
-import 'package:localsend_app/util/native/context_menu_helper.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/util/security_helper.dart';
-import 'package:localsend_app/util/shared_preferences/shared_preferences_file.dart';
-import 'package:localsend_app/util/shared_preferences/shared_preferences_portable.dart';
-import 'package:localsend_app/util/ui/animations_status.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/model/persistence/quick_save_mode.dart';
+import 'package:locara_app/model/persistence/receive_history_entry.dart';
+import 'package:locara_app/model/send_mode.dart';
+import 'package:locara_app/provider/window_dimensions_provider.dart';
+import 'package:locara_app/util/alias_generator.dart';
+import 'package:locara_app/util/native/autostart_helper.dart';
+import 'package:locara_app/util/native/context_menu_helper.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/util/security_helper.dart';
+import 'package:locara_app/util/shared_preferences/shared_preferences_file.dart';
+import 'package:locara_app/util/shared_preferences/shared_preferences_portable.dart';
+import 'package:locara_app/util/ui/animations_status.dart';
 import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/stored_security_context.dart';
@@ -593,4 +593,5 @@ class PersistenceService {
     await _prefs.clear();
   }
 }
+
 

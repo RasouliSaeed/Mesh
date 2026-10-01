@@ -1,4 +1,4 @@
-import 'package:localsend_app/provider/selection/selected_receiving_files_provider.dart';
+import 'package:locara_app/provider/selection/selected_receiving_files_provider.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:test/test.dart';
 
@@ -27,3 +27,4 @@ void main() {
     ]);
   });
 }
+

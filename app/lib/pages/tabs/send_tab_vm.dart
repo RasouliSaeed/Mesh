@@ -1,22 +1,22 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/model/cross_file.dart';
-import 'package:localsend_app/model/persistence/favorite_device.dart';
-import 'package:localsend_app/model/send_mode.dart';
-import 'package:localsend_app/pages/progress_page.dart';
-import 'package:localsend_app/pages/send_page.dart';
-import 'package:localsend_app/pages/tabs/send_tab.dart';
-import 'package:localsend_app/pages/web_share_page.dart';
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/provider/local_ip_provider.dart';
-import 'package:localsend_app/provider/network/nearby_devices_provider.dart';
-import 'package:localsend_app/provider/network/scan_facade.dart';
-import 'package:localsend_app/provider/network/send_provider.dart';
-import 'package:localsend_app/provider/selection/selected_sending_files_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/widget/dialogs/add_file_dialog.dart';
-import 'package:localsend_app/widget/dialogs/address_input_dialog.dart';
-import 'package:localsend_app/widget/dialogs/favorite_dialog.dart';
+import 'package:locara_app/model/cross_file.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/model/send_mode.dart';
+import 'package:locara_app/pages/progress_page.dart';
+import 'package:locara_app/pages/send_page.dart';
+import 'package:locara_app/pages/tabs/send_tab.dart';
+import 'package:locara_app/pages/web_share_page.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/network/scan_facade.dart';
+import 'package:locara_app/provider/network/send_provider.dart';
+import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/widget/dialogs/add_file_dialog.dart';
+import 'package:locara_app/widget/dialogs/address_input_dialog.dart';
+import 'package:locara_app/widget/dialogs/favorite_dialog.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/session_status.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -233,4 +233,5 @@ class SendTabInitAction extends AsyncGlobalAction {
     }
   }
 }
+
 

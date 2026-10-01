@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/widget/dialogs/custom_bottom_sheet.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/widget/dialogs/custom_bottom_sheet.dart';
 import 'package:routerino/routerino.dart';
 
 class CancelSessionDialog extends StatelessWidget {
@@ -28,3 +28,4 @@ class CancelSessionDialog extends StatelessWidget {
     );
   }
 }
+

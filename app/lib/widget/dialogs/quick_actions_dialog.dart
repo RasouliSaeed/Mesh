@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/provider/selection/selected_receiving_files_provider.dart';
-import 'package:localsend_app/widget/labeled_checkbox.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/provider/selection/selected_receiving_files_provider.dart';
+import 'package:locara_app/widget/labeled_checkbox.dart';
 import 'package:locara_isolates/rust/api/filename.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -173,4 +173,5 @@ class _QuickActionsDialogState extends State<QuickActionsDialog> with Refena {
     );
   }
 }
+
 

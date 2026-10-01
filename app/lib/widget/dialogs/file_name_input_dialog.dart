@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_isolates/rust/api/filename.dart';
 import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:routerino/routerino.dart';
@@ -113,4 +113,5 @@ class _FileNameInputDialogState extends State<FileNameInputDialog> {
     );
   }
 }
+
 

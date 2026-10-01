@@ -1,8 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/model/state/server/server_state.dart';
-import 'package:localsend_app/model/state/settings_state.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/model/state/server/server_state.dart';
+import 'package:locara_app/model/state/settings_state.dart';
 import 'package:locara_isolates/model/device_info_result.dart';
 
 part 'settings_tab_vm.mapper.dart';
@@ -61,4 +61,5 @@ class SettingsTabVm with SettingsTabVmMappable {
     required this.onTapAdvanced,
   });
 }
+
 

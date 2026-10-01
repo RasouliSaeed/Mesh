@@ -1,13 +1,13 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/provider/apk_provider.dart';
-import 'package:localsend_app/provider/selection/selected_sending_files_provider.dart';
-import 'package:localsend_app/util/native/cross_file_converters.dart';
-import 'package:localsend_app/util/ui/nav_bar_padding.dart';
-import 'package:localsend_app/widget/file_thumbnail.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_app/widget/sliver/sliver_pinned_header.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/provider/apk_provider.dart';
+import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
+import 'package:locara_app/util/native/cross_file_converters.dart';
+import 'package:locara_app/util/ui/nav_bar_padding.dart';
+import 'package:locara_app/widget/file_thumbnail.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
+import 'package:locara_app/widget/sliver/sliver_pinned_header.dart';
 import 'package:locara_isolates/model/file_type.dart';
 import 'package:locara_isolates/util/file_size_helper.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -284,4 +284,5 @@ class _ApkPickerPageState extends State<ApkPickerPage> with Refena {
     );
   }
 }
+
 

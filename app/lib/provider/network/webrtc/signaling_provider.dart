@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:localsend_app/provider/device_info_provider.dart';
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/provider/network/nearby_devices_provider.dart';
-import 'package:localsend_app/provider/network/webrtc/webrtc_receiver.dart';
-import 'package:localsend_app/provider/persistence_provider.dart';
-import 'package:localsend_app/provider/security_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
+import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/network/webrtc/webrtc_receiver.dart';
+import 'package:locara_app/provider/persistence_provider.dart';
+import 'package:locara_app/provider/security_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/rust/api/crypto.dart' as crypto;
@@ -250,4 +250,5 @@ extension on DeviceType {
     };
   }
 }
+
 

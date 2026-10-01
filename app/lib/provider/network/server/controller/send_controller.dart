@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:localsend_app/model/cross_file.dart';
-import 'package:localsend_app/model/state/send/web/web_download_file.dart';
-import 'package:localsend_app/model/state/send/web/web_download_session.dart';
-import 'package:localsend_app/model/state/send/web/web_download_state.dart';
-import 'package:localsend_app/provider/network/server/server_utils.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/util/native/directories.dart';
-import 'package:localsend_app/util/user_agent_analyzer.dart';
+import 'package:locara_app/model/cross_file.dart';
+import 'package:locara_app/model/state/send/web/web_download_file.dart';
+import 'package:locara_app/model/state/send/web/web_download_session.dart';
+import 'package:locara_app/model/state/send/web/web_download_state.dart';
+import 'package:locara_app/provider/network/server/server_utils.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/util/native/directories.dart';
+import 'package:locara_app/util/user_agent_analyzer.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/dto/file_dto.dart';
 import 'package:locara_isolates/model/file_type.dart';
@@ -226,4 +226,5 @@ extension on WebDownloadState {
     );
   }
 }
+
 

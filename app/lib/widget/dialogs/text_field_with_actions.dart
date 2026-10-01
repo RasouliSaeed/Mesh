@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
 import 'package:routerino/routerino.dart';
 
 /// A [AlertDialog] on all devices.
@@ -80,3 +80,4 @@ class _TextFieldWithActionsState extends State<TextFieldWithActions> {
     );
   }
 }
+

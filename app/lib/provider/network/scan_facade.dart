@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/provider/local_ip_provider.dart';
-import 'package:localsend_app/provider/network/nearby_devices_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 /// Discovers devices in stages, cheapest first: multicast announcement and
@@ -56,3 +56,4 @@ class StartLegacySubnetScan extends AsyncGlobalAction {
     ]);
   }
 }
+

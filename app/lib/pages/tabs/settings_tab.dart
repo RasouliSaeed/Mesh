@@ -2,33 +2,33 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/pages/about/about_page.dart';
-import 'package:localsend_app/pages/changelog_page.dart';
-import 'package:localsend_app/pages/donation/donation_page.dart';
-import 'package:localsend_app/pages/settings/network_interfaces_page.dart';
-import 'package:localsend_app/pages/tabs/settings_tab_controller.dart';
-import 'package:localsend_app/provider/network/server/server_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/provider/version_provider.dart';
-import 'package:localsend_app/util/alias_generator.dart';
-import 'package:localsend_app/util/device_type_ext.dart';
-import 'package:localsend_app/util/i18n.dart';
-import 'package:localsend_app/util/native/macos_channel.dart';
-import 'package:localsend_app/util/native/pick_directory_path.dart';
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/widget/custom_dropdown_button.dart';
-import 'package:localsend_app/widget/dialogs/encryption_disabled_notice.dart';
-import 'package:localsend_app/widget/dialogs/pin_dialog.dart';
-import 'package:localsend_app/widget/dialogs/quick_save_from_favorites_notice.dart';
-import 'package:localsend_app/widget/dialogs/quick_save_notice.dart';
-import 'package:localsend_app/widget/dialogs/text_field_tv.dart';
-import 'package:localsend_app/widget/dialogs/text_field_with_actions.dart';
-import 'package:localsend_app/widget/labeled_checkbox.dart';
-import 'package:localsend_app/widget/local_send_logo.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/pages/about/about_page.dart';
+import 'package:locara_app/pages/changelog_page.dart';
+import 'package:locara_app/pages/donation/donation_page.dart';
+import 'package:locara_app/pages/settings/network_interfaces_page.dart';
+import 'package:locara_app/pages/tabs/settings_tab_controller.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/provider/version_provider.dart';
+import 'package:locara_app/util/alias_generator.dart';
+import 'package:locara_app/util/device_type_ext.dart';
+import 'package:locara_app/util/i18n.dart';
+import 'package:locara_app/util/native/macos_channel.dart';
+import 'package:locara_app/util/native/pick_directory_path.dart';
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/widget/custom_dropdown_button.dart';
+import 'package:locara_app/widget/dialogs/encryption_disabled_notice.dart';
+import 'package:locara_app/widget/dialogs/pin_dialog.dart';
+import 'package:locara_app/widget/dialogs/quick_save_from_favorites_notice.dart';
+import 'package:locara_app/widget/dialogs/quick_save_notice.dart';
+import 'package:locara_app/widget/dialogs/text_field_tv.dart';
+import 'package:locara_app/widget/dialogs/text_field_with_actions.dart';
+import 'package:locara_app/widget/labeled_checkbox.dart';
+import 'package:locara_app/widget/local_send_logo.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -772,4 +772,5 @@ extension on ColorMode {
     };
   }
 }
+
 

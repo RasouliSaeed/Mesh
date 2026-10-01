@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:localsend_app/util/native/channel/android_channel.dart';
-import 'package:localsend_app/util/native/ios_channel.dart';
-import 'package:localsend_app/util/native/macos_channel.dart';
+import 'package:locara_app/util/native/channel/android_channel.dart';
+import 'package:locara_app/util/native/ios_channel.dart';
+import 'package:locara_app/util/native/macos_channel.dart';
 
 Future<bool> getSystemAnimationsStatus() async {
   if (Platform.isAndroid) {
@@ -16,3 +16,4 @@ Future<bool> getSystemAnimationsStatus() async {
 
   return true; // Default to true for other platforms.
 }
+

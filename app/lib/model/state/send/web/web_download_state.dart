@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_app/model/state/send/web/web_download_file.dart';
-import 'package:localsend_app/model/state/send/web/web_download_session.dart';
+import 'package:locara_app/model/state/send/web/web_download_file.dart';
+import 'package:locara_app/model/state/send/web/web_download_session.dart';
 
 part 'web_download_state.mapper.dart';
 
@@ -21,3 +21,4 @@ class WebDownloadState with WebDownloadStateMappable {
     return 'WebDownloadState(sessions: $sessions, files: <${files.keys}>, autoAccept: $autoAccept)';
   }
 }
+

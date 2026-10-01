@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/persistence/favorite_device.dart';
-import 'package:localsend_app/pages/verify_page.dart';
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/util/favorites.dart';
-import 'package:localsend_app/widget/big_button.dart';
-import 'package:localsend_app/widget/dialogs/favorite_delete_dialog.dart';
-import 'package:localsend_app/widget/dialogs/favorite_edit_dialog.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/pages/verify_page.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/util/favorites.dart';
+import 'package:locara_app/widget/big_button.dart';
+import 'package:locara_app/widget/dialogs/favorite_delete_dialog.dart';
+import 'package:locara_app/widget/dialogs/favorite_edit_dialog.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -158,4 +158,5 @@ extension on DeviceLog {
     };
   }
 }
+
 

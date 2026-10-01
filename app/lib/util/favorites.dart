@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:localsend_app/model/persistence/favorite_device.dart';
+import 'package:locara_app/model/persistence/favorite_device.dart';
 import 'package:locara_isolates/model/device.dart';
 
 extension FavoriteDevicesExt on Iterable<FavoriteDevice> {
@@ -13,4 +13,5 @@ extension FavoriteDevicesExt on Iterable<FavoriteDevice> {
     return any((e) => e.fingerprint == device.fingerprint);
   }
 }
+
 

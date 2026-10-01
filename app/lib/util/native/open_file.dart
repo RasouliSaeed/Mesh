@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/util/native/channel/android_channel.dart' as android_channel;
-import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_app/widget/dialogs/cannot_open_file_dialog.dart';
+import 'package:locara_app/util/native/channel/android_channel.dart' as android_channel;
+import 'package:locara_app/util/native/platform_check.dart';
+import 'package:locara_app/widget/dialogs/cannot_open_file_dialog.dart';
 import 'package:locara_isolates/model/file_type.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,4 +27,5 @@ Future<void> openFile(
     await CannotOpenFileDialog.open(context, filePath, onDeleteTap);
   }
 }
+
 

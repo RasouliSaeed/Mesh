@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/model/persistence/color_mode.dart';
-import 'package:localsend_app/pages/language_page.dart';
-import 'package:localsend_app/pages/tabs/settings_tab_vm.dart';
-import 'package:localsend_app/provider/device_info_provider.dart';
-import 'package:localsend_app/provider/local_ip_provider.dart';
-import 'package:localsend_app/provider/network/server/server_provider.dart';
-import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_app/util/native/autostart_helper.dart';
-import 'package:localsend_app/util/native/context_menu_helper.dart';
-import 'package:localsend_app/util/ui/dynamic_colors.dart';
-import 'package:localsend_app/util/ui/snackbar.dart';
-import 'package:localsend_app/widget/dialogs/custom_color_dialog.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/pages/language_page.dart';
+import 'package:locara_app/pages/tabs/settings_tab_vm.dart';
+import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/settings_provider.dart';
+import 'package:locara_app/util/native/autostart_helper.dart';
+import 'package:locara_app/util/native/context_menu_helper.dart';
+import 'package:locara_app/util/ui/dynamic_colors.dart';
+import 'package:locara_app/util/ui/snackbar.dart';
+import 'package:locara_app/widget/dialogs/custom_color_dialog.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device_info_result.dart';
 import 'package:locara_isolates/util/sleep.dart';
@@ -250,4 +250,5 @@ class _SetShowInContextMenuAction extends ReduxAction<SettingsTabController, Set
     return state.copyWith(showInContextMenu: enabled);
   }
 }
+
 

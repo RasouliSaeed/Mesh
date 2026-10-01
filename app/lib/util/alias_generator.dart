@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:localsend_app/gen/strings.g.dart';
+import 'package:locara_app/gen/strings.g.dart';
 
 String generateRandomAlias() {
   final random = Random();
@@ -13,3 +13,4 @@ String generateRandomAlias() {
     fruit: fruits[random.nextInt(fruits.length)],
   );
 }
+

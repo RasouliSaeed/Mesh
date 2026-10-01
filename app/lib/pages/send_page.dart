@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:localsend_app/config/theme.dart';
-import 'package:localsend_app/gen/strings.g.dart';
-import 'package:localsend_app/model/state/send/send_session_state.dart';
-import 'package:localsend_app/pages/verify_page.dart';
-import 'package:localsend_app/provider/device_info_provider.dart';
-import 'package:localsend_app/provider/favorites_provider.dart';
-import 'package:localsend_app/provider/file_transfer_provider.dart';
-import 'package:localsend_app/provider/network/send_provider.dart';
-import 'package:localsend_app/util/favorites.dart';
-import 'package:localsend_app/util/native/taskbar_helper.dart';
-import 'package:localsend_app/widget/animations/initial_fade_transition.dart';
-import 'package:localsend_app/widget/animations/initial_slide_transition.dart';
-import 'package:localsend_app/widget/dialogs/error_dialog.dart';
-import 'package:localsend_app/widget/list_tile/device_list_tile.dart';
-import 'package:localsend_app/widget/responsive_list_view.dart';
+import 'package:locara_app/config/theme.dart';
+import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/state/send/send_session_state.dart';
+import 'package:locara_app/pages/verify_page.dart';
+import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/favorites_provider.dart';
+import 'package:locara_app/provider/file_transfer_provider.dart';
+import 'package:locara_app/provider/network/send_provider.dart';
+import 'package:locara_app/util/favorites.dart';
+import 'package:locara_app/util/native/taskbar_helper.dart';
+import 'package:locara_app/widget/animations/initial_fade_transition.dart';
+import 'package:locara_app/widget/animations/initial_slide_transition.dart';
+import 'package:locara_app/widget/dialogs/error_dialog.dart';
+import 'package:locara_app/widget/list_tile/device_list_tile.dart';
+import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/session_status.dart';
 import 'package:refena_flutter/addons.dart';
@@ -260,4 +260,5 @@ class _SendPageState extends State<SendPage> with Refena {
     );
   }
 }
+
 
