@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: "3.41.9"
+  FLUTTER_VERSION: "3.47.5"
 
 jobs:
   build:
@@ -84,6 +84,7 @@ jobs:
         with:
           name: appimage-arm-64-result
           path: ./*.AppImage
+
 
 
 

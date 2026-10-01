@@ -9,7 +9,7 @@ import connectivity_plus
 import desktop_drop
 import device_info_plus
 import dynamic_color
-import file_picker_darwin
+import file_picker
 import file_selector_macos
 import gal
 import in_app_purchase_storekit
@@ -20,6 +20,7 @@ import pasteboard
 import photo_manager
 import screen_retriever_macos
 import shared_preferences_foundation
+import tray_manager
 import uri_content
 import url_launcher_macos
 import video_player_avfoundation
@@ -42,6 +43,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   PhotoManagerPlugin.register(with: registry.registrar(forPlugin: "PhotoManagerPlugin"))
   ScreenRetrieverMacosPlugin.register(with: registry.registrar(forPlugin: "ScreenRetrieverMacosPlugin"))
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
+  TrayManagerPlugin.register(with: registry.registrar(forPlugin: "TrayManagerPlugin"))
   UriContentPlugin.register(with: registry.registrar(forPlugin: "UriContentPlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
   VideoPlayerPlugin.register(with: registry.registrar(forPlugin: "VideoPlayerPlugin"))
