@@ -765,7 +765,7 @@ extension on ColorMode {
   String get humanName {
     return switch (this) {
       ColorMode.system => t.settingsTab.general.colorOptions.system,
-      ColorMode.Locara => t.appName,
+      ColorMode.locara => t.appName,
       ColorMode.oled => t.settingsTab.general.colorOptions.oled,
       ColorMode.yaru => 'Yaru',
       ColorMode.custom => t.settingsTab.general.colorOptions.custom,

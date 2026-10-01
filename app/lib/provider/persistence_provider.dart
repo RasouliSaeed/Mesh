@@ -209,7 +209,7 @@ class PersistenceService {
   static Future<void> _initColorSetting(SharedPreferences prefs, bool supportsDynamicColors) async {
     await prefs.setString(
       _colorKey,
-      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.Locara.name,
+      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.locara.name,
     );
   }
 

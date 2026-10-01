@@ -59,7 +59,7 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
             iconTheme: WidgetStateProperty.all(const IconThemeData(color: Colors.white)),
           )
         : null,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: colorScheme.surface.withValues(alpha: 0.5),
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -161,7 +161,7 @@ ColorScheme _determineColorScheme(ColorMode mode, Color customColor, Brightness 
 
   final colorScheme = switch (mode) {
     ColorMode.system => brightness == Brightness.light ? dynamicColors?.light : dynamicColors?.dark,
-    ColorMode.Locara => null,
+    ColorMode.locara => null,
     ColorMode.oled => (dynamicColors?.dark ?? defaultColorScheme).copyWith(
       surface: Colors.black,
     ),
@@ -199,7 +199,7 @@ ThemeData _getYaruTheme(Brightness brightness) {
             iconTheme: WidgetStateProperty.all(const IconThemeData(color: Colors.white)),
           )
         : null,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: colorScheme.surface.withValues(alpha: 0.5),
       elevation: 0,
       shape: RoundedRectangleBorder(

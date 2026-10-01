@@ -10,8 +10,6 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  plugins:
-    - custom_lint
   exclude:
     - build/**
     - lib/**.g.dart
@@ -38,3 +36,4 @@ linter:
     directives_ordering: true
     unawaited_futures: true
     discarded_futures: true
+
