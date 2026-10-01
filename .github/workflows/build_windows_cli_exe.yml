@@ -11,7 +11,7 @@ jobs:
       version: ${{ steps.get_version.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Get version from pubspec.yaml
         id: get_version
@@ -39,16 +39,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Install Rust
         run: rustup toolchain install # version from rust-toolchain.toml
 
       - name: Compile CLI
-        run: cargo build --release --package localsend-cli
+        run: cargo build --release --package Locara-cli
 
       - name: Rename CLI executable
-        run: Rename-Item -Path "target\release\localsend-cli.exe" -NewName "LocalSend-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
+        run: Rename-Item -Path "target\release\Locara-cli.exe" -NewName "Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
 
       - name: Azure login
         uses: azure/login@v3
@@ -62,7 +62,7 @@ jobs:
         with:
           endpoint: https://neu.codesigning.azure.net/
           trusted-signing-account-name: tienisto
-          certificate-profile-name: localsend
+          certificate-profile-name: Locara
           files-folder: ${{ github.workspace }}\target\release
           files-folder-filter: exe
           file-digest: SHA256
@@ -73,11 +73,14 @@ jobs:
         continue-on-error: true
         run: |
           $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\10.*\${{ matrix.signtool_arch }}\signtool.exe' | Select-Object -Last 1
-          & $signtool.FullName verify /pa /v "target\release\LocalSend-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
+          & $signtool.FullName verify /pa /v "target\release\Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
 
       - name: Upload signed CLI
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: windows-cli-exe-${{ matrix.suffix }}-result
-          path: target\release\LocalSend-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe
+          path: target\release\Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe
           if-no-files-found: error
+
+
+

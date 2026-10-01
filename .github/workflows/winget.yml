@@ -7,15 +7,16 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish LocalSend
+      - name: Publish Locara
         uses: vedantmgoyal9/winget-releaser@main
         with:
-          identifier: LocalSend.LocalSend
-          installers-regex: 'LocalSend-(?!CLI-).*\.exe$'
+          identifier: Locara.Locara
+          installers-regex: 'Locara-(?!CLI-).*\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
-      - name: Publish LocalSend CLI
+      - name: Publish Locara CLI
         uses: vedantmgoyal9/winget-releaser@main
         with:
-          identifier: LocalSend.LocalSend.CLI
-          installers-regex: 'LocalSend-CLI-.*\.exe$'
+          identifier: Locara.Locara.CLI
+          installers-regex: 'Locara-CLI-.*\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
+

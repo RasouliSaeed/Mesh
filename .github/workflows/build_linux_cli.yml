@@ -11,7 +11,7 @@ jobs:
       version: ${{ steps.get_version.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Get version from pubspec.yaml
         id: get_version
@@ -32,21 +32,24 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install Rust
         run: rustup toolchain install # version from rust-toolchain.toml
 
       - name: Compile CLI
-        run: cargo build --release --package localsend-cli
+        run: cargo build --release --package Locara-cli
 
       # tar preserves the executable bit, which a bare artifact upload would lose
       - name: Create tar.gz archive
-        run: tar -czvf LocalSend-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz -C target/release localsend-cli
+        run: tar -czvf Locara-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz -C target/release Locara-cli
 
       - name: Upload CLI
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: cli-${{ matrix.suffix }}-result
-          path: LocalSend-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz
+          path: Locara-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz
           if-no-files-found: error
+
+
+

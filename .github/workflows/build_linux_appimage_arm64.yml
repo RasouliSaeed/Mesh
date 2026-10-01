@@ -13,7 +13,7 @@ jobs:
       version: ${{ steps.get_version.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Get version from pubspec.yaml
         id: get_version
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-22.04-arm
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -46,7 +46,7 @@ jobs:
           toolchain: stable
 
       - name: Check rust-toolchain.toml
-        working-directory: packages/localsend_isolates
+        working-directory: packages/Locara_isolates
         run: rustup show
 
       - name: Dependencies
@@ -65,11 +65,11 @@ jobs:
       - name: Copy logo to AppDir
         run: |
           mkdir -p AppDir/usr/share/icons/hicolor/32x32/apps
-          cp app/assets/img/logo-32.png AppDir/usr/share/icons/hicolor/32x32/apps/localsend.png
+          cp app/assets/img/logo-32.png AppDir/usr/share/icons/hicolor/32x32/apps/Locara.png
           mkdir -p AppDir/usr/share/icons/hicolor/128x128/apps
-          cp app/assets/img/logo-128.png AppDir/usr/share/icons/hicolor/128x128/apps/localsend.png
+          cp app/assets/img/logo-128.png AppDir/usr/share/icons/hicolor/128x128/apps/Locara.png
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          cp app/assets/img/logo-256.png AppDir/usr/share/icons/hicolor/256x256/apps/localsend.png
+          cp app/assets/img/logo-256.png AppDir/usr/share/icons/hicolor/256x256/apps/Locara.png
 
       - name: Copy Recipe to correct location
         run: cp support/build/appimage/AppImageBuilder_arm_64.yml AppImageBuilder.yml
@@ -80,7 +80,10 @@ jobs:
           recipe: ./AppImageBuilder.yml
 
       - name: Upload AppImage file
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: appimage-arm-64-result
           path: ./*.AppImage
+
+
+
