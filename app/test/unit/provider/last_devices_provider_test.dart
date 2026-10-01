@@ -65,5 +65,3 @@ Device _createDevice(String ip) {
     channels: [],
   );
 }
-
-

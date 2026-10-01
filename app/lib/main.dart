@@ -102,6 +102,3 @@ class LocaraApp extends StatelessWidget {
     );
   }
 }
-
-
-

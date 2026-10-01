@@ -158,5 +158,3 @@ extension on DeviceLog {
     };
   }
 }
-
-

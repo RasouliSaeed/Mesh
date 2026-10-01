@@ -44,4 +44,3 @@ class ChangeTabAction extends ReduxAction<HomePageController, HomePageVm> {
     );
   }
 }
-

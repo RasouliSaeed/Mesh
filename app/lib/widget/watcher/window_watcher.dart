@@ -125,4 +125,3 @@ class _WindowWatcherState extends State<WindowWatcher> with WindowListener, Refe
     ref.notifier(sleepProvider).setState((_) => false);
   }
 }
-

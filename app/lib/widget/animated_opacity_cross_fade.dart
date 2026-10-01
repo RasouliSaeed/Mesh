@@ -57,4 +57,3 @@ class _AnimatedOpacityCrossFadeState extends State<AnimatedOpacityCrossFade> {
     );
   }
 }
-

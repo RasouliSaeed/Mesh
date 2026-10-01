@@ -118,4 +118,3 @@ class VerifyWidget extends StatelessWidget {
     );
   }
 }
-

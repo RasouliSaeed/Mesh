@@ -366,5 +366,3 @@ class ClearSelectionAction extends ReduxAction<SelectedSendingFilesNotifier, Lis
     global.dispatchAsync(ClearCacheAction()); // ignore: discarded_futures
   }
 }
-
-

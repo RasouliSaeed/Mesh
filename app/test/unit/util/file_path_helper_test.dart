@@ -7,4 +7,3 @@ void main() {
     expect('myFile (1)'.withCount(2), 'myFile (2)');
   });
 }
-

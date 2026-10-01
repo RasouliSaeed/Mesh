@@ -41,4 +41,3 @@ class EncryptionDisabledNotice extends StatelessWidget {
     );
   }
 }
-

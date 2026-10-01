@@ -613,5 +613,3 @@ extension on SessionStatus {
     }
   }
 }
-
-

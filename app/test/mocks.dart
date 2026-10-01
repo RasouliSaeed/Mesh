@@ -7,4 +7,3 @@ import 'package:shared_preferences/shared_preferences.dart';
   MockSpec<SharedPreferences>(),
 ])
 void main() {}
-

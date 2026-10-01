@@ -139,5 +139,3 @@ class _FavoritesDialogState extends State<FavoritesDialog> with Refena {
     );
   }
 }
-
-

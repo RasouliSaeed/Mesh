@@ -65,4 +65,3 @@ class FileTransferNotifier extends ChangeNotifier {
     return _sessionMap;
   }
 }
-

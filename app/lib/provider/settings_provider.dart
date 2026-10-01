@@ -298,5 +298,3 @@ class SettingsService extends PureNotifier<SettingsState> {
     );
   }
 }
-
-

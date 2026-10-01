@@ -75,6 +75,3 @@ Future<void> _clear(RootIsolateToken token) async {
     _logger.warning('Failed to clear cache: $e');
   }
 }
-
-
-

@@ -115,4 +115,3 @@ class FileInfo with FileInfoMappable {
     required this.lastModified,
   });
 }
-

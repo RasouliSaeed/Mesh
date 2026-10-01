@@ -28,4 +28,3 @@ class CancelSessionDialog extends StatelessWidget {
     );
   }
 }
-

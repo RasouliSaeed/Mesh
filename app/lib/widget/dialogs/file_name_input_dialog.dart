@@ -113,5 +113,3 @@ class _FileNameInputDialogState extends State<FileNameInputDialog> {
     );
   }
 }
-
-

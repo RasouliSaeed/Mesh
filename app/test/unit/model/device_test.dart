@@ -43,4 +43,3 @@ void main() {
     expect(set, contains(SignalingChannel(signalingServer: 'sb')));
   });
 }
-

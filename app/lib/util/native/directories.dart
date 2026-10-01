@@ -43,4 +43,3 @@ Future<String> getCacheDirectory() async {
   await dir.create(recursive: true);
   return dir.path;
 }
-

@@ -100,5 +100,3 @@ Future<void> destroyTray() async {
     await tm.trayManager.destroy();
   }
 }
-
-

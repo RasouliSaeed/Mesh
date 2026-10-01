@@ -80,4 +80,3 @@ class _TextFieldWithActionsState extends State<TextFieldWithActions> {
     );
   }
 }
-

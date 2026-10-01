@@ -48,5 +48,3 @@ final deviceFullInfoProvider = ViewProvider((ref) {
     channels: const [],
   );
 });
-
-

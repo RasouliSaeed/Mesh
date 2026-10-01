@@ -29,4 +29,3 @@ class DiscoveryLogger extends Notifier<List<LogEntry>> {
     state = [];
   }
 }
-

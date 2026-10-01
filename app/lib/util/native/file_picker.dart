@@ -40,8 +40,7 @@ enum FilePickerOption {
   media(Icons.image),
   text(Icons.subject),
   app(Icons.apps),
-  clipboard(Icons.paste)
-  ;
+  clipboard(Icons.paste);
 
   const FilePickerOption(this.icon);
 
@@ -376,5 +375,3 @@ Future<void> _pickApp(BuildContext context) async {
 extension on int {
   String get twoDigitString => toString().padLeft(2, '0');
 }
-
-

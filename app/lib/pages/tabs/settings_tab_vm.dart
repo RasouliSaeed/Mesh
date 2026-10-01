@@ -61,5 +61,3 @@ class SettingsTabVm with SettingsTabVmMappable {
     required this.onTapAdvanced,
   });
 }
-
-

@@ -48,4 +48,3 @@ class ServerState with ServerStateMappable {
     return 'ServerState(alias: $alias, port: $port, https: $https, session: $session, web: $web)';
   }
 }
-

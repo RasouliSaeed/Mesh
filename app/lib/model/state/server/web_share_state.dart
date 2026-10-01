@@ -30,4 +30,3 @@ class WebShareDownload extends WebShareState with WebShareDownloadMappable {
 class WebShareUpload extends WebShareState with WebShareUploadMappable {
   const WebShareUpload({required super.pin});
 }
-

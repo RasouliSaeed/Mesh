@@ -248,6 +248,3 @@ class _InfoBox extends StatelessWidget {
     );
   }
 }
-
-
-

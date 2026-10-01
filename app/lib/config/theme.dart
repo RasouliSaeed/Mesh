@@ -233,6 +233,3 @@ ThemeData _getYaruTheme(Brightness brightness) {
     ),
   );
 }
-
-
-

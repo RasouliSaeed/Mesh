@@ -49,4 +49,3 @@ final donationPageNoopVmProvider = ViewProvider<DonationPageVm>((ref) {
     restore: () {},
   );
 });
-

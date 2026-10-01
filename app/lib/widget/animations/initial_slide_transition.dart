@@ -51,4 +51,3 @@ class _InitialSlideTransitionState extends State<InitialSlideTransition> {
     );
   }
 }
-

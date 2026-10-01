@@ -106,5 +106,3 @@ class _OpenFileDialogState extends State<OpenFileDialog> {
     );
   }
 }
-
-

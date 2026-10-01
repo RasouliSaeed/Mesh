@@ -27,5 +27,3 @@ Future<void> openFile(
     await CannotOpenFileDialog.open(context, filePath, onDeleteTap);
   }
 }
-
-

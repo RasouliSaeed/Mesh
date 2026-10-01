@@ -27,4 +27,3 @@ class AddLastDeviceAction extends ReduxAction<LastDevicesService, List<Device>> 
     }.take(5).toList();
   }
 }
-

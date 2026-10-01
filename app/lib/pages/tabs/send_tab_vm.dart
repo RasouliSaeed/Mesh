@@ -233,5 +233,3 @@ class SendTabInitAction extends AsyncGlobalAction {
     }
   }
 }
-
-

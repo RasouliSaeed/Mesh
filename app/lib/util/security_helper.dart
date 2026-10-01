@@ -20,4 +20,3 @@ Future<void> verifyCertificate({
 }) async {
   await rust.verifyCert(cert: cert, publicKey: publicKey);
 }
-

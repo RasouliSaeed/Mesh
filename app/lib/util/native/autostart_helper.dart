@@ -120,5 +120,3 @@ RegistryKey _getWindowsRegistryKey() {
 String _getLinuxFilePath(String appName) {
   return '${Platform.environment['HOME']}/.config/autostart/$appName.desktop';
 }
-
-

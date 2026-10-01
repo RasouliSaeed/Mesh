@@ -55,5 +55,3 @@ class IsMessageHook extends MappingHook {
     return value == true;
   }
 }
-
-

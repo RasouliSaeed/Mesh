@@ -54,4 +54,3 @@ class DiscoveryDebugPage extends StatelessWidget {
     );
   }
 }
-

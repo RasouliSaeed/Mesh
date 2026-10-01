@@ -85,4 +85,3 @@ class ZoomDialog extends StatelessWidget {
     );
   }
 }
-

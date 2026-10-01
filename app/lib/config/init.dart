@@ -354,5 +354,3 @@ class _HandleAppStartArgumentsAction extends AsyncGlobalAction {
     }
   }
 }
-
-

@@ -25,4 +25,3 @@ class ServerUtils {
     required this.setState,
   });
 }
-

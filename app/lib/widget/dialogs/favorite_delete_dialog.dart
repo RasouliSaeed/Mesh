@@ -26,4 +26,3 @@ class FavoriteDeleteDialog extends StatelessWidget {
     );
   }
 }
-

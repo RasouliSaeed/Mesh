@@ -257,6 +257,3 @@ class _SetRunningFavoriteScanAction extends ReduxAction<NearbyDevicesService, Ne
     );
   }
 }
-
-
-

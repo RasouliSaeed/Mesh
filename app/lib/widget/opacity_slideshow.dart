@@ -77,4 +77,3 @@ class _OpacitySlideshowState extends State<OpacitySlideshow> {
     );
   }
 }
-

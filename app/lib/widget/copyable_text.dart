@@ -35,4 +35,3 @@ class CopyableText extends StatelessWidget {
     );
   }
 }
-

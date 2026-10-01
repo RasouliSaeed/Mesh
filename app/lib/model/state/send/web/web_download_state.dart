@@ -21,4 +21,3 @@ class WebDownloadState with WebDownloadStateMappable {
     return 'WebDownloadState(sessions: $sessions, files: <${files.keys}>, autoAccept: $autoAccept)';
   }
 }
-

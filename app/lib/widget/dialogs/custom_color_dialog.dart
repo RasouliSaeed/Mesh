@@ -58,4 +58,3 @@ class _CustomColorDialogState extends State<CustomColorDialog> {
     );
   }
 }
-

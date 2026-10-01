@@ -829,6 +829,3 @@ class MockSharedPreferences extends _i1.Mock implements _i15.SharedPreferences {
           )
           as _i5.Future<void>);
 }
-
-
-

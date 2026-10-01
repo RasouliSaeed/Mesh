@@ -91,5 +91,3 @@ Future<void> setupMethodCallHandler() async {
 
   await _methodChannel.invokeMethod('methodChannelInitialized');
 }
-
-

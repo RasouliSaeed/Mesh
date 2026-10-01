@@ -60,4 +60,3 @@ class _TrayWatcherState extends State<TrayWatcher> with TrayListener {
     }
   }
 }
-

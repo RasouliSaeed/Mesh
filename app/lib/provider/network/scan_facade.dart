@@ -56,4 +56,3 @@ class StartLegacySubnetScan extends AsyncGlobalAction {
     ]);
   }
 }
-

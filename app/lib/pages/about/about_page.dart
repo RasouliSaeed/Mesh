@@ -220,5 +220,3 @@ InlineSpan _buildContributor({required String label, required Color primaryColor
   // Only full name
   return TextSpan(text: '$newLineStr$label');
 }
-
-

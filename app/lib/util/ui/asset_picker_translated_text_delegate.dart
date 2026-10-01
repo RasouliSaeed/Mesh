@@ -91,4 +91,3 @@ class TranslatedAssetPickerTextDelegate extends AssetPickerTextDelegate {
   @override
   String get sUnitAssetCountLabel => t.assetPicker.sUnitAssetCountLabel;
 }
-

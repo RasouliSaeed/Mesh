@@ -201,5 +201,3 @@ class ReceiveOptionsPage extends StatelessWidget {
     );
   }
 }
-
-

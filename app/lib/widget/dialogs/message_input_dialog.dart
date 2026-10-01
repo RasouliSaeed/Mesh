@@ -53,4 +53,3 @@ class _MessageInputDialogState extends State<MessageInputDialog> {
     );
   }
 }
-

@@ -211,5 +211,3 @@ extension on FileMetadata {
     );
   }
 }
-
-

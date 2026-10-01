@@ -16,4 +16,3 @@ Future<bool> getSystemAnimationsStatus() async {
 
   return true; // Default to true for other platforms.
 }
-

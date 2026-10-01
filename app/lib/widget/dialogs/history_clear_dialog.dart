@@ -23,4 +23,3 @@ class HistoryClearDialog extends StatelessWidget {
     );
   }
 }
-

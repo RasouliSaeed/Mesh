@@ -35,5 +35,3 @@ class ResetSecurityContextAction extends AsyncReduxAction<SecurityService, Store
     return securityContext;
   }
 }
-
-

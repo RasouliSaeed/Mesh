@@ -27,4 +27,3 @@ class DebugEntry extends StatelessWidget {
     );
   }
 }
-

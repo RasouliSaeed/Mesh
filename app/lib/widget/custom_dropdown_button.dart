@@ -39,4 +39,3 @@ class CustomDropdownButton<T> extends StatelessWidget {
     );
   }
 }
-

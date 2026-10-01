@@ -20,4 +20,3 @@ class NoFilesDialog extends StatelessWidget {
     );
   }
 }
-

@@ -86,5 +86,3 @@ class TaskbarHelper {
   final percentage = progress / total;
   return ((percentage * 100).toInt(), 100);
 }
-
-

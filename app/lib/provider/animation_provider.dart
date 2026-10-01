@@ -34,4 +34,3 @@ void setDefaultRouteTransition() {
     Routerino.transition = RouterinoTransition.material;
   }
 }
-

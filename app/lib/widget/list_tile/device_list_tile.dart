@@ -86,5 +86,3 @@ class DeviceListTile extends StatelessWidget {
     );
   }
 }
-
-

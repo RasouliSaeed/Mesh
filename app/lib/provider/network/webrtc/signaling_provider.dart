@@ -250,6 +250,3 @@ extension on DeviceType {
     };
   }
 }
-
-
-

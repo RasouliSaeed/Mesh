@@ -66,4 +66,3 @@ class RotatingWidgetState extends State<RotatingWidget> {
     );
   }
 }
-

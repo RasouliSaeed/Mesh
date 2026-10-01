@@ -220,5 +220,3 @@ class _ContentUriImage extends ImageProvider<Uri> {
     return decode(await ImmutableBuffer.fromUint8List(bytes));
   }
 }
-
-

@@ -19,4 +19,3 @@ class NoPermissionDialog extends StatelessWidget {
     );
   }
 }
-

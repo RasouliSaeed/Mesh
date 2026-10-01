@@ -85,5 +85,3 @@ class FileInfoDialog extends StatelessWidget {
     );
   }
 }
-
-

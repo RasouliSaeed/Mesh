@@ -62,5 +62,3 @@ class SendingTask {
     required this.taskId,
   });
 }
-
-

@@ -58,4 +58,3 @@ class _SendModeItem extends StatelessWidget {
     );
   }
 }
-

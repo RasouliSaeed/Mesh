@@ -112,4 +112,3 @@ FavoriteDevice _createDevice(
     alias: alias,
   );
 }
-

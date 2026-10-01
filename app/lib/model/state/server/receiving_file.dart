@@ -21,4 +21,3 @@ class ReceivingFile with ReceivingFileMappable {
     required this.errorMessage,
   });
 }
-

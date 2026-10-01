@@ -73,5 +73,3 @@ class SettingsState with SettingsStateMappable {
     required this.advancedSettings,
   });
 }
-
-

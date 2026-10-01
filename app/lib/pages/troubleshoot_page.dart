@@ -226,5 +226,3 @@ class _NativeFixAction extends _FixAction {
     await action();
   }
 }
-
-

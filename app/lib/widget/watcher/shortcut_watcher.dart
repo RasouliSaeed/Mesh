@@ -106,5 +106,3 @@ bool _isFakeMetaKey() {
 extension on LogicalKeyboardKey {
   bool get isMeta => this == LogicalKeyboardKey.meta || this == LogicalKeyboardKey.metaLeft || this == LogicalKeyboardKey.metaRight;
 }
-
-

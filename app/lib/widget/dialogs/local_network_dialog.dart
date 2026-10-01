@@ -29,4 +29,3 @@ class LocalNetworkDialog extends StatelessWidget {
     );
   }
 }
-

@@ -222,5 +222,3 @@ class _NetworkInterfacesPageState extends State<NetworkInterfacesPage> {
     );
   }
 }
-
-

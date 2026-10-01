@@ -284,5 +284,3 @@ class _ApkPickerPageState extends State<ApkPickerPage> with Refena {
     );
   }
 }
-
-

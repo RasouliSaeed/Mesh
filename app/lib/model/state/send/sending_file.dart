@@ -32,4 +32,3 @@ class SendingFile with SendingFileMappable {
     return 'SendingFile(file: $file, token: $token, thumbnail: ${thumbnail != null ? thumbnail!.length : 'null'}, asset: $asset, path: $path, bytes: ${bytes != null ? bytes!.length : 'null'}, errorMessage: $errorMessage)';
   }
 }
-

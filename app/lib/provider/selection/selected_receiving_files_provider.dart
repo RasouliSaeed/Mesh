@@ -69,4 +69,3 @@ class SelectedReceivingFilesNotifier extends Notifier<Map<String, String>> {
     );
   }
 }
-

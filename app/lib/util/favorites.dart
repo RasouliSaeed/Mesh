@@ -13,5 +13,3 @@ extension FavoriteDevicesExt on Iterable<FavoriteDevice> {
     return any((e) => e.fingerprint == device.fingerprint);
   }
 }
-
-

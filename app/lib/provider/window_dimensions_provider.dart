@@ -94,4 +94,3 @@ class WindowDimensionsController {
 extension on Display {
   Size get digestedSize => visibleSize ?? size;
 }
-

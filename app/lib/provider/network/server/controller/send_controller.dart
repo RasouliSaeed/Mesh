@@ -226,5 +226,3 @@ extension on WebDownloadState {
     );
   }
 }
-
-

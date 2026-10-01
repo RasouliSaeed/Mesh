@@ -19,6 +19,3 @@ String _remainingTimeLong({required num h, required num m}) {
   }
   return remainingTime.hours(h: h, m: m);
 }
-
-
-

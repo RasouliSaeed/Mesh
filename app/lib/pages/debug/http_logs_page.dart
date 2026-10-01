@@ -47,4 +47,3 @@ class HttpLogsPage extends StatelessWidget {
     );
   }
 }
-

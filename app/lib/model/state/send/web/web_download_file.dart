@@ -18,4 +18,3 @@ class WebDownloadFile with WebDownloadFileMappable {
     required this.bytes,
   });
 }
-

@@ -49,4 +49,3 @@ class WhatsNewPage extends StatelessWidget {
     );
   }
 }
-

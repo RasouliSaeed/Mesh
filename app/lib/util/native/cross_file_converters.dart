@@ -112,5 +112,3 @@ extension CompareFile on CrossFile {
     return (path ?? '') == (otherFile.path ?? '');
   }
 }
-
-

@@ -63,4 +63,3 @@ String _getWindowsFilePath(String appName) {
   final appData = Platform.environment['APPDATA'];
   return '$appData/Microsoft/Windows/SendTo/$appName.lnk';
 }
-

@@ -38,4 +38,3 @@ class CrossFile with CrossFileMappable {
     return 'CrossFile(name: $name, fileType: $fileType, size: $size, thumbnail: ${thumbnail != null ? thumbnail!.length : 'null'}, asset: $asset, path: $path, bytes: ${bytes != null ? bytes!.length : 'null'})';
   }
 }
-

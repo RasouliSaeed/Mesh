@@ -13,4 +13,3 @@ extension FileTypeExt on FileType {
     };
   }
 }
-

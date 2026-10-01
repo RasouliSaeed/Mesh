@@ -260,5 +260,3 @@ class _SendPageState extends State<SendPage> with Refena {
     );
   }
 }
-
-

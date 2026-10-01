@@ -42,7 +42,9 @@ class _ChatPageState extends State<ChatPage> {
       );
 
       context.ref.notifier(chatProvider).addMessage(text, isMine: true);
-      context.ref.notifier(sendProvider).startSession(
+      context.ref
+          .notifier(sendProvider)
+          .startSession(
             target: target,
             files: [file],
             background: true,
@@ -51,9 +53,7 @@ class _ChatPageState extends State<ChatPage> {
       _controller.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'مخاطبی برای ارسال پیام انتخاب نشده است. لطفا پیام دهید یا منتظر پیام باشید.')),
+        const SnackBar(content: Text('مخاطبی برای ارسال پیام انتخاب نشده است. لطفا پیام دهید یا منتظر پیام باشید.')),
       );
     }
   }
@@ -75,17 +75,12 @@ class _ChatPageState extends State<ChatPage> {
               itemBuilder: (context, index) {
                 final message = chatState.messages[index];
                 return Align(
-                  alignment: message.isMine
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
+                  alignment: message.isMine ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
-                      color: message.isMine
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color: message.isMine ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -97,20 +92,13 @@ class _ChatPageState extends State<ChatPage> {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant
-                                  .withValues(alpha: 0.7),
+                              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                             ),
                           ),
                         Text(
                           message.text,
                           style: TextStyle(
-                            color: message.isMine
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                            color: message.isMine ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -132,8 +120,7 @@ class _ChatPageState extends State<ChatPage> {
                       decoration: const InputDecoration(
                         hintText: 'پیام خود را تایپ کنید...',
                         border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       ),
                       onSubmitted: (_) => _sendMessage(context),
                     ),
@@ -147,11 +134,9 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 }
-
-

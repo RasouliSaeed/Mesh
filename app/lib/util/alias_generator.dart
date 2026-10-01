@@ -13,4 +13,3 @@ String generateRandomAlias() {
     fruit: fruits[random.nextInt(fruits.length)],
   );
 }
-

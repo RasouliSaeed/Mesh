@@ -48,5 +48,3 @@ class DevicePlaceholderListTile extends StatelessWidget {
     );
   }
 }
-
-

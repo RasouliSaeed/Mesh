@@ -584,5 +584,3 @@ extension on SessionStatus {
     }
   }
 }
-
-

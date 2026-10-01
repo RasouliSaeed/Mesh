@@ -32,4 +32,3 @@ bool _exclude(RefenaEvent event) {
     _ => false,
   };
 }
-

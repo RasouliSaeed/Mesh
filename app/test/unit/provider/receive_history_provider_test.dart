@@ -187,5 +187,3 @@ ReceiveHistoryEntry _createEntry(String id) {
     timestamp: DateTime(2021, 1, 1),
   );
 }
-
-

@@ -250,5 +250,3 @@ class _SetShowInContextMenuAction extends ReduxAction<SettingsTabController, Set
     return state.copyWith(showInContextMenu: enabled);
   }
 }
-
-

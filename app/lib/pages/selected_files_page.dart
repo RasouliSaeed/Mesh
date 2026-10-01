@@ -150,5 +150,3 @@ class SelectedFilesPage extends StatelessWidget {
     );
   }
 }
-
-

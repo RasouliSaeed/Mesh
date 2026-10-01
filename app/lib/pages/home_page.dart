@@ -17,8 +17,7 @@ import 'package:refena_flutter/refena_flutter.dart';
 enum HomeTab {
   receive(Icons.wifi),
   send(Icons.send),
-  settings(Icons.settings)
-  ;
+  settings(Icons.settings);
 
   const HomeTab(this.icon);
 
@@ -111,125 +110,122 @@ class _HomePageState extends State<HomePage> with Refena {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: Theme.of(context).brightness == Brightness.dark
-                  ? [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF000000)]
-                  : [Color(0xFFF0F9FF), Color(0xFFE0E7FF), Color(0xFFFFFFFF)],
+                    ? [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF000000)]
+                    : [Color(0xFFF0F9FF), Color(0xFFE0E7FF), Color(0xFFFFFFFF)],
               ),
             ),
             child: Scaffold(
               backgroundColor: Colors.transparent,
-            body: Row(
-              children: [
-                if (!sizingInformation.isMobile)
-                  ClipRRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
-                          border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-                        ),
-                        child: NavigationRail(
-                          selectedIndex: vm.currentTab.index,
-                          onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
-                          extended: sizingInformation.isDesktop,
-                          backgroundColor: Colors.transparent,
-                    leading: sizingInformation.isDesktop
-                        ? Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Text(
-                                t.appName,
-                                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 20),
-                            ],
-                          )
-                        : null,
-                    destinations: HomeTab.values.map((tab) {
-                      return NavigationRailDestination(
-                        icon: Icon(tab.icon),
-                        label: Text(tab.label),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-                Expanded(
-                  child: SafeArea(
-                    left: sizingInformation.isMobile,
-                    child: Stack(
-                      children: [
-                        PageView(
-                          controller: vm.controller,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: const [
-                            ReceiveTab(),
-                            SendTab(),
-                            SettingsTab(),
-                          ],
-                        ),
-                        if (_dragAndDropIndicator)
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.file_download, size: 128),
-                                const SizedBox(height: 30),
-                                Text(t.sendTab.placeItems, style: Theme.of(context).textTheme.titleLarge),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            extendBody: true,
-            bottomNavigationBar: sizingInformation.isMobile
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
+              body: Row(
+                children: [
+                  if (!sizingInformation.isMobile)
+                    ClipRRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 10)),
-                            ],
+                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+                            border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
                           ),
-                          child: NavigationBar(
-                            backgroundColor: Colors.transparent,
-                            indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                            elevation: 0,
+                          child: NavigationRail(
                             selectedIndex: vm.currentTab.index,
                             onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
+                            extended: sizingInformation.isDesktop,
+                            backgroundColor: Colors.transparent,
+                            leading: sizingInformation.isDesktop
+                                ? Column(
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Text(
+                                        t.appName,
+                                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 20),
+                                    ],
+                                  )
+                                : null,
                             destinations: HomeTab.values.map((tab) {
-                              return NavigationDestination(icon: Icon(tab.icon), label: tab.label);
+                              return NavigationRailDestination(
+                                icon: Icon(tab.icon),
+                                label: Text(tab.label),
+                              );
                             }).toList(),
                           ),
                         ),
                       ),
                     ),
-                  )
-                : null,
+                  Expanded(
+                    child: SafeArea(
+                      left: sizingInformation.isMobile,
+                      child: Stack(
+                        children: [
+                          PageView(
+                            controller: vm.controller,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: const [
+                              ReceiveTab(),
+                              SendTab(),
+                              SettingsTab(),
+                            ],
+                          ),
+                          if (_dragAndDropIndicator)
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.file_download, size: 128),
+                                  const SizedBox(height: 30),
+                                  Text(t.sendTab.placeItems, style: Theme.of(context).textTheme.titleLarge),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              extendBody: true,
+              bottomNavigationBar: sizingInformation.isMobile
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                              boxShadow: [
+                                BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 10)),
+                              ],
+                            ),
+                            child: NavigationBar(
+                              backgroundColor: Colors.transparent,
+                              indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                              elevation: 0,
+                              selectedIndex: vm.currentTab.index,
+                              onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
+                              destinations: HomeTab.values.map((tab) {
+                                return NavigationDestination(icon: Icon(tab.icon), label: tab.label);
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
           );
         },
       ),
     );
   }
 }
-
-
-
-

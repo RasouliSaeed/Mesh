@@ -19,8 +19,7 @@ import 'package:routerino/routerino.dart';
 
 enum _InputMode {
   hashtag,
-  ip
-  ;
+  ip;
 
   String get label {
     return switch (this) {
@@ -264,5 +263,3 @@ extension on List<String> {
     return where((s) => seen.add(s.ipPrefix)).toList();
   }
 }
-
-

@@ -849,5 +849,3 @@ extension on SendSessionState {
     );
   }
 }
-
-

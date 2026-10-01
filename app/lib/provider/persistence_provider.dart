@@ -593,6 +593,3 @@ class PersistenceService {
     await _prefs.clear();
   }
 }
-
-
-

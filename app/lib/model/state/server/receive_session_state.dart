@@ -68,5 +68,3 @@ class ReceiveSessionState with ReceiveSessionStateMappable implements SessionSta
     return files.values.any((f) => f.file.fileName.contains('/'));
   }
 }
-
-

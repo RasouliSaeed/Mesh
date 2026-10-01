@@ -82,4 +82,3 @@ class RemoveFavoriteAction extends AsyncReduxAction<FavoritesService, List<Favor
     return updated;
   }
 }
-

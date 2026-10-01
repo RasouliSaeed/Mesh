@@ -94,4 +94,3 @@ class QrDialog extends StatelessWidget {
     );
   }
 }
-

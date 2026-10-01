@@ -46,5 +46,3 @@ class _InitialFadeTransitionState extends State<InitialFadeTransition> {
     );
   }
 }
-
-

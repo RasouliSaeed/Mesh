@@ -19,8 +19,7 @@ enum PurchaseItem {
   donate50(
     androidId: 'Locara_android_donate_50',
     iosId: 'Locara_ios_donate_50',
-  )
-  ;
+  );
 
   const PurchaseItem({
     required this.androidId,
@@ -45,4 +44,3 @@ class PurchaseState with PurchaseStateMappable {
     required this.pending,
   });
 }
-

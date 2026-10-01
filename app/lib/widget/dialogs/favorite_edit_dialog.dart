@@ -231,5 +231,3 @@ class _FavoriteEditDialogState extends State<FavoriteEditDialog> with Refena {
     );
   }
 }
-
-

@@ -30,4 +30,3 @@ class HttpLogsService extends Notifier<List<LogEntry>> {
   @override
   String describeState(List<LogEntry> state) => '${state.length} logs';
 }
-

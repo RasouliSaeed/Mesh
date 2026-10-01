@@ -53,4 +53,3 @@ final _apkProvider = FutureFamilyProvider<List<Application>, CachedApkProviderPa
     includeAppIcons: true,
   );
 });
-

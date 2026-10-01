@@ -74,4 +74,3 @@ class AddFileDialog extends StatelessWidget {
     );
   }
 }
-

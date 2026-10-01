@@ -5,4 +5,3 @@ enum ColorMode {
   yaru,
   custom, // user-defined seed color
 }
-

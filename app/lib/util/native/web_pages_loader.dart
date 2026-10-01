@@ -37,5 +37,3 @@ Future<String?> _readOptionalFile(String filePath) async {
     return null;
   }
 }
-
-

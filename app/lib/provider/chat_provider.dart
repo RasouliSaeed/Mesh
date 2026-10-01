@@ -44,4 +44,3 @@ class ChatNotifier extends Notifier<ChatState> {
 final chatProvider = NotifierProvider<ChatNotifier, ChatState>((ref) {
   return ChatNotifier();
 });
-

@@ -95,5 +95,3 @@ class RemoveAllHistoryEntriesAction extends AsyncReduxAction<ReceiveHistoryServi
     return [];
   }
 }
-
-

@@ -48,5 +48,3 @@ String buildSettingsPath({
   final directory = executablePath == null ? fallbackDirectory() : File(executablePath).parent.path;
   return path.join(directory, 'settings.json');
 }
-
-
