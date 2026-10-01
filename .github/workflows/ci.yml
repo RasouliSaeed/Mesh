@@ -89,7 +89,7 @@ jobs:
       - name: Test (signaling server)
         run: cargo test --package server
       - name: Check (plugin crate, CLI)
-        run: cargo check --package rust_lib_Locara_app --package Locara-cli
+        run: cargo check --package rust_lib_localsend_app --package localsend-cli
 
   packaging:
     runs-on: ubuntu-latest
@@ -182,6 +182,7 @@ jobs:
           else
             echo "Toolchain versions match."
           fi
+
 
 
 
