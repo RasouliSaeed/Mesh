@@ -1,5 +1,5 @@
-{
-  "appName": "هم‌رسان",
+﻿{
+  "appName": "Locara",
   "general": {
     "accept": "پذیرفتن",
     "accepted": "پذیرفته شد",
@@ -575,4 +575,5 @@
     "sUnitAssetCountLabel": "تعداد"
   }
 }
+
 

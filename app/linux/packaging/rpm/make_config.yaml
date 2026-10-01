@@ -1,4 +1,4 @@
-display_name: هم‌رسان
+﻿display_name: Locara
 packager: Tienisto
 packagerEmail: dev.tien.donam@gmail.com
 url: https://locara.org
@@ -17,7 +17,7 @@ keywords:
   - Files
 
 generic_name: An open source cross-platform alternative to AirDrop
-summary: انتقال آسان فایل با هم‌رسان
+summary: انتقال آسان فایل با Locara
 group: Applications/Utilities
 
 categories:
@@ -26,4 +26,5 @@ categories:
   - Utility
 
 startup_notify: true
+
 

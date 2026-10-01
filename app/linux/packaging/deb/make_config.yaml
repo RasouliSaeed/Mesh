@@ -1,4 +1,4 @@
-display_name: هم‌رسان
+﻿display_name: Locara
 package_name: locara
 maintainer:
   name: Tienisto
@@ -39,4 +39,5 @@ categories:
   - Utility
 
 startup_notify: true
+
 
