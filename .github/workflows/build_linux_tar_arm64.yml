@@ -47,7 +47,7 @@ jobs:
           toolchain: stable
 
       - name: Check rust-toolchain.toml
-        working-directory: packages/Locara_isolates
+        working-directory: packages/locara_isolates
         run: rustup show
 
       - name: Dependencies
@@ -68,6 +68,7 @@ jobs:
         with:
           name: tar-gz-arm-64-result
           path: ./app/*.tar.gz
+
 
 
 

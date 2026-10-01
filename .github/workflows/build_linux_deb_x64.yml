@@ -45,7 +45,7 @@ jobs:
           toolchain: stable
 
       - name: Check rust-toolchain.toml
-        working-directory: packages/Locara_isolates
+        working-directory: packages/locara_isolates
         run: rustup show
 
       - name: Enable dart_distributor
@@ -78,6 +78,7 @@ jobs:
         with:
           name: deb-x86-64-result
           path: ${{ steps.find_deb.outputs.deb_path }}
+
 
 
 
