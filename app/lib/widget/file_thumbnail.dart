@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:localsend_app/model/cross_file.dart';
 import 'package:localsend_app/util/file_type_ext.dart';
-import 'package:localsend_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/file_type.dart';
 import 'package:uri_content/uri_content.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -220,3 +220,4 @@ class _ContentUriImage extends ImageProvider<Uri> {
     return decode(await ImmutableBuffer.fromUint8List(bytes));
   }
 }
+

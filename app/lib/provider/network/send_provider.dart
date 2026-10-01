@@ -15,19 +15,19 @@ import 'package:localsend_app/provider/http_provider.dart';
 import 'package:localsend_app/provider/selection/selected_sending_files_provider.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/pin_dialog.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
-import 'package:localsend_isolates/model/file_status.dart';
-import 'package:localsend_isolates/model/file_type.dart';
-import 'package:localsend_isolates/model/session_status.dart';
-import 'package:localsend_isolates/rust/api/cancel.dart' as rust_cancel;
-import 'package:localsend_isolates/rust/api/http.dart' as rust_http;
-import 'package:localsend_isolates/rust/api/model.dart' as rust_model;
-import 'package:localsend_isolates/util/file_hash.dart';
-import 'package:localsend_isolates/util/rust.dart';
-import 'package:localsend_isolates/util/sleep.dart';
-import 'package:localsend_isolates/util/transfer_notification.dart';
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/file_status.dart';
+import 'package:locara_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/session_status.dart';
+import 'package:locara_isolates/rust/api/cancel.dart' as rust_cancel;
+import 'package:locara_isolates/rust/api/http.dart' as rust_http;
+import 'package:locara_isolates/rust/api/model.dart' as rust_model;
+import 'package:locara_isolates/util/file_hash.dart';
+import 'package:locara_isolates/util/rust.dart';
+import 'package:locara_isolates/util/sleep.dart';
+import 'package:locara_isolates/util/transfer_notification.dart';
 import 'package:logging/logging.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -849,3 +849,4 @@ extension on SendSessionState {
     );
   }
 }
+

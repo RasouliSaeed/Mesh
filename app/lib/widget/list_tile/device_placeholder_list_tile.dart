@@ -4,7 +4,7 @@ import 'package:localsend_app/util/device_type_ext.dart';
 import 'package:localsend_app/widget/device_bage.dart';
 import 'package:localsend_app/widget/list_tile/custom_list_tile.dart';
 import 'package:localsend_app/widget/opacity_slideshow.dart';
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 class DevicePlaceholderListTile extends StatelessWidget {
@@ -48,3 +48,4 @@ class DevicePlaceholderListTile extends StatelessWidget {
     );
   }
 }
+

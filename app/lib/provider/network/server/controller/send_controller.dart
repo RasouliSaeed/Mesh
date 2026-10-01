@@ -9,10 +9,10 @@ import 'package:localsend_app/provider/network/server/server_utils.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/util/native/directories.dart';
 import 'package:localsend_app/util/user_agent_analyzer.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
-import 'package:localsend_isolates/model/file_type.dart';
-import 'package:localsend_isolates/util/android_channel.dart' as isolate_android_channel;
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/file_type.dart';
+import 'package:locara_isolates/util/android_channel.dart' as isolate_android_channel;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
@@ -226,3 +226,4 @@ extension on WebDownloadState {
     );
   }
 }
+

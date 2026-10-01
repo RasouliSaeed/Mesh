@@ -20,9 +20,9 @@ import 'package:localsend_app/util/ui/asset_picker_translated_text_delegate.dart
 import 'package:localsend_app/widget/dialogs/loading_dialog.dart';
 import 'package:localsend_app/widget/dialogs/message_input_dialog.dart';
 import 'package:localsend_app/widget/dialogs/no_permission_dialog.dart';
-import 'package:localsend_isolates/model/file_type.dart';
-import 'package:localsend_isolates/util/file_path_helper.dart';
-import 'package:localsend_isolates/util/sleep.dart';
+import 'package:locara_isolates/model/file_type.dart';
+import 'package:locara_isolates/util/file_path_helper.dart';
+import 'package:locara_isolates/util/sleep.dart';
 import 'package:logging/logging.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -376,3 +376,4 @@ Future<void> _pickApp(BuildContext context) async {
 extension on int {
   String get twoDigitString => toString().padLeft(2, '0');
 }
+

@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 class ChatMessage {
@@ -44,3 +44,4 @@ class ChatNotifier extends Notifier<ChatState> {
 final chatProvider = NotifierProvider<ChatNotifier, ChatState>((ref) {
   return ChatNotifier();
 });
+

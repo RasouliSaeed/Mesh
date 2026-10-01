@@ -59,6 +59,19 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
             iconTheme: WidgetStateProperty.all(const IconThemeData(color: Colors.white)),
           )
         : null,
+    cardTheme: CardTheme(
+      color: colorScheme.surface.withValues(alpha: 0.5),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+    ),
+    listTileTheme: ListTileThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      tileColor: Colors.transparent,
+      selectedTileColor: colorScheme.primary.withValues(alpha: 0.2),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: colorScheme.secondaryContainer,
@@ -186,6 +199,19 @@ ThemeData _getYaruTheme(Brightness brightness) {
             iconTheme: WidgetStateProperty.all(const IconThemeData(color: Colors.white)),
           )
         : null,
+    cardTheme: CardTheme(
+      color: colorScheme.surface.withValues(alpha: 0.5),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+    ),
+    listTileTheme: ListTileThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      tileColor: Colors.transparent,
+      selectedTileColor: colorScheme.primary.withValues(alpha: 0.2),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: colorScheme.secondaryContainer,
@@ -207,3 +233,4 @@ ThemeData _getYaruTheme(Brightness brightness) {
     ),
   );
 }
+

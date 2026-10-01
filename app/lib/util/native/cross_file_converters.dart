@@ -5,9 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:localsend_app/model/cross_file.dart';
 import 'package:localsend_app/util/native/channel/android_channel.dart' as android_channel;
-import 'package:localsend_isolates/model/file_type.dart';
-import 'package:localsend_isolates/rust/api/metadata.dart';
-import 'package:localsend_isolates/util/file_path_helper.dart';
+import 'package:locara_isolates/model/file_type.dart';
+import 'package:locara_isolates/rust/api/metadata.dart';
+import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:share_handler/share_handler.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -112,3 +112,4 @@ extension CompareFile on CrossFile {
     return (path ?? '') == (otherFile.path ?? '');
   }
 }
+

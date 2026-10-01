@@ -7,11 +7,11 @@ script:
 AppDir:
   path: AppDir
   app_info:
-    id: org.localsend.localsend_app
-    name: LocalSend
-    icon: localsend
+    id: org.Locara.Locara_app
+    name: Locara
+    icon: Locara
     version: 1.18.2
-    exec: localsend_app
+    exec: Locara_app
     exec_args: $@
   apt:
     arch:
@@ -66,3 +66,4 @@ AppDir:
 AppImage:
   arch: arm_64
   update-information: guess
+

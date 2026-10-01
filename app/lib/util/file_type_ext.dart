@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/file_type.dart';
 
 extension FileTypeExt on FileType {
   IconData get icon {
@@ -13,3 +13,4 @@ extension FileTypeExt on FileType {
     };
   }
 }
+

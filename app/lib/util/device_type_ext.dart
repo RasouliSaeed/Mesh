@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/model/device.dart';
 
 extension DeviceTypeExt on DeviceType {
   IconData get icon {
@@ -12,3 +12,4 @@ extension DeviceTypeExt on DeviceType {
     };
   }
 }
+

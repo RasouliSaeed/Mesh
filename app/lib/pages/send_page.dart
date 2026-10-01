@@ -16,8 +16,8 @@ import 'package:localsend_app/widget/animations/initial_slide_transition.dart';
 import 'package:localsend_app/widget/dialogs/error_dialog.dart';
 import 'package:localsend_app/widget/list_tile/device_list_tile.dart';
 import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/session_status.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/session_status.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -260,3 +260,4 @@ class _SendPageState extends State<SendPage> with Refena {
     );
   }
 }
+

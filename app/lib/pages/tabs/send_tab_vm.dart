@@ -17,8 +17,8 @@ import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/add_file_dialog.dart';
 import 'package:localsend_app/widget/dialogs/address_input_dialog.dart';
 import 'package:localsend_app/widget/dialogs/favorite_dialog.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/session_status.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/session_status.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
@@ -233,3 +233,4 @@ class SendTabInitAction extends AsyncGlobalAction {
     }
   }
 }
+

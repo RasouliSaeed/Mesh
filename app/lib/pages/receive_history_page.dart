@@ -15,9 +15,9 @@ import 'package:localsend_app/widget/dialogs/file_info_dialog.dart';
 import 'package:localsend_app/widget/dialogs/history_clear_dialog.dart';
 import 'package:localsend_app/widget/file_thumbnail.dart';
 import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/session_status.dart';
-import 'package:localsend_isolates/util/file_size_helper.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/session_status.dart';
+import 'package:locara_isolates/util/file_size_helper.dart';
 import 'package:path/path.dart' as path;
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -243,3 +243,4 @@ class ReceiveHistoryPage extends StatelessWidget {
     );
   }
 }
+

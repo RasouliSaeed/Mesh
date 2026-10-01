@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localsend_isolates/util/sleep.dart';
+import 'package:locara_isolates/util/sleep.dart';
 
 class RotatingWidget extends StatefulWidget {
   final Duration duration;
@@ -66,3 +66,4 @@ class RotatingWidgetState extends State<RotatingWidget> {
     );
   }
 }
+

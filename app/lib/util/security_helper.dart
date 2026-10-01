@@ -1,5 +1,5 @@
-import 'package:localsend_isolates/model/stored_security_context.dart';
-import 'package:localsend_isolates/rust/api/crypto.dart' as rust;
+import 'package:locara_isolates/model/stored_security_context.dart';
+import 'package:locara_isolates/rust/api/crypto.dart' as rust;
 
 /// Generates a random [StoredSecurityContext].
 Future<StoredSecurityContext> generateSecurityContext() async {
@@ -20,3 +20,4 @@ Future<void> verifyCertificate({
 }) async {
   await rust.verifyCert(cert: cert, publicKey: publicKey);
 }
+

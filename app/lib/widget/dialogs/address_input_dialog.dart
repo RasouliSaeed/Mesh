@@ -11,9 +11,9 @@ import 'package:localsend_app/provider/last_devices.provider.dart';
 import 'package:localsend_app/provider/local_ip_provider.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/error_dialog.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/rust/api/model.dart';
-import 'package:localsend_isolates/util/rust.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/rust/api/model.dart';
+import 'package:locara_isolates/util/rust.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
@@ -264,3 +264,4 @@ extension on List<String> {
     return where((s) => seen.add(s.ipPrefix)).toList();
   }
 }
+

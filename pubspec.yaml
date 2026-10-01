@@ -6,5 +6,5 @@ environment:
 
 workspace:
   - app
-  - packages/localsend_isolates
+  - packages/locara_isolates
   - packages/typed_isolates

@@ -21,11 +21,11 @@ import 'package:localsend_app/widget/custom_progress_bar.dart';
 import 'package:localsend_app/widget/dialogs/cancel_session_dialog.dart';
 import 'package:localsend_app/widget/dialogs/error_dialog.dart';
 import 'package:localsend_app/widget/file_thumbnail.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
-import 'package:localsend_isolates/model/file_status.dart';
-import 'package:localsend_isolates/model/session_status.dart';
-import 'package:localsend_isolates/util/file_size_helper.dart';
-import 'package:localsend_isolates/util/file_speed_helper.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/file_status.dart';
+import 'package:locara_isolates/model/session_status.dart';
+import 'package:locara_isolates/util/file_size_helper.dart';
+import 'package:locara_isolates/util/file_speed_helper.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -613,3 +613,4 @@ extension on SessionStatus {
     }
   }
 }
+

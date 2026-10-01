@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 part 'web_download_file.mapper.dart';
@@ -18,3 +18,4 @@ class WebDownloadFile with WebDownloadFileMappable {
     required this.bytes,
   });
 }
+

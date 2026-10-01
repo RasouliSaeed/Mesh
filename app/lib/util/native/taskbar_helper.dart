@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localsend_app/util/native/macos_channel.dart';
 import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_isolates/model/session_status.dart';
+import 'package:locara_isolates/model/session_status.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 enum TaskbarIcon { regular, error, success }
@@ -86,3 +86,4 @@ class TaskbarHelper {
   final percentage = progress / total;
   return ((percentage * 100).toInt(), 100);
 }
+

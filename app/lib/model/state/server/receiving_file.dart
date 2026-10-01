@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
 
 part 'receiving_file.mapper.dart';
 
@@ -21,3 +21,4 @@ class ReceivingFile with ReceivingFileMappable {
     required this.errorMessage,
   });
 }
+

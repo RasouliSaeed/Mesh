@@ -11,11 +11,11 @@ import 'package:localsend_app/provider/network/server/server_utils.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/util/alias_generator.dart';
 import 'package:localsend_app/util/native/web_pages_loader.dart';
-import 'package:localsend_isolates/constants.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/dto/multicast_dto.dart';
-import 'package:localsend_isolates/rust/api/server.dart' show WebI18n, WebMode, WebParams;
-import 'package:localsend_isolates/util/rust.dart';
+import 'package:locara_isolates/constants.dart';
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/dto/multicast_dto.dart';
+import 'package:locara_isolates/rust/api/server.dart' show WebI18n, WebMode, WebParams;
+import 'package:locara_isolates/util/rust.dart';
 import 'package:logging/logging.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -450,3 +450,4 @@ class ServerService extends Notifier<ServerState?> {
         );
   }
 }
+

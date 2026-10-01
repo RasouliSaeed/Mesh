@@ -18,9 +18,9 @@ import 'package:localsend_app/util/native/taskbar_helper.dart';
 import 'package:localsend_app/util/ui/snackbar.dart';
 import 'package:localsend_app/widget/device_bage.dart';
 import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
-import 'package:localsend_isolates/model/session_status.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/session_status.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -364,3 +364,4 @@ class _Actions extends StatelessWidget {
     );
   }
 }
+

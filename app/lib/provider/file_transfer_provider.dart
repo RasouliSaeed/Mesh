@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/model/file_status.dart';
+import 'package:locara_isolates/model/file_status.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 /// A provider holding the live per-file transfer state (status and progress).
@@ -65,3 +65,4 @@ class FileTransferNotifier extends ChangeNotifier {
     return _sessionMap;
   }
 }
+

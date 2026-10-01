@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:localsend_app/model/state/network_state.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/util/native/platform_check.dart';
-import 'package:localsend_isolates/util/network_interfaces.dart';
+import 'package:locara_isolates/util/network_interfaces.dart';
 import 'package:logging/logging.dart';
 import 'package:network_info_plus/network_info_plus.dart' as plugin;
 import 'package:refena_flutter/refena_flutter.dart';
@@ -135,3 +135,4 @@ extension ListIpExt on List<String> {
     });
   }
 }
+

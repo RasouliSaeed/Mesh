@@ -12,9 +12,9 @@ import 'package:localsend_app/util/native/context_menu_helper.dart';
 import 'package:localsend_app/util/ui/dynamic_colors.dart';
 import 'package:localsend_app/util/ui/snackbar.dart';
 import 'package:localsend_app/widget/dialogs/custom_color_dialog.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/device_info_result.dart';
-import 'package:localsend_isolates/util/sleep.dart';
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/device_info_result.dart';
+import 'package:locara_isolates/util/sleep.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
@@ -250,3 +250,4 @@ class _SetShowInContextMenuAction extends ReduxAction<SettingsTabController, Set
     return state.copyWith(showInContextMenu: enabled);
   }
 }
+

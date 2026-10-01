@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 part 'sending_file.mapper.dart';
@@ -32,3 +32,4 @@ class SendingFile with SendingFileMappable {
     return 'SendingFile(file: $file, token: $token, thumbnail: ${thumbnail != null ? thumbnail!.length : 'null'}, asset: $asset, path: $path, bytes: ${bytes != null ? bytes!.length : 'null'}, errorMessage: $errorMessage)';
   }
 }
+

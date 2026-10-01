@@ -8,9 +8,9 @@ import 'package:localsend_app/provider/http_provider.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/error_dialog.dart';
 import 'package:localsend_app/widget/dialogs/favorite_delete_dialog.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/rust/api/model.dart';
-import 'package:localsend_isolates/util/rust.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/rust/api/model.dart';
+import 'package:locara_isolates/util/rust.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
@@ -231,3 +231,4 @@ class _FavoriteEditDialogState extends State<FavoriteEditDialog> with Refena {
     );
   }
 }
+

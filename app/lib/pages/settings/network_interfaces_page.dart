@@ -7,7 +7,7 @@ import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/text_field_tv.dart';
 import 'package:localsend_app/widget/labeled_checkbox.dart';
 import 'package:localsend_app/widget/responsive_list_view.dart';
-import 'package:localsend_isolates/util/network_interfaces.dart';
+import 'package:locara_isolates/util/network_interfaces.dart';
 import 'package:moform/moform.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
@@ -222,3 +222,4 @@ class _NetworkInterfacesPageState extends State<NetworkInterfacesPage> {
     );
   }
 }
+

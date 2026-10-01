@@ -1,4 +1,4 @@
-import 'package:localsend_isolates/model/device.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 /// This provider stores the last devices that the user sent a file to.
@@ -27,3 +27,4 @@ class AddLastDeviceAction extends ReduxAction<LastDevicesService, List<Device>> 
     }.take(5).toList();
   }
 }
+

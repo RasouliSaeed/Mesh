@@ -19,9 +19,9 @@ import 'package:localsend_app/util/security_helper.dart';
 import 'package:localsend_app/util/shared_preferences/shared_preferences_file.dart';
 import 'package:localsend_app/util/shared_preferences/shared_preferences_portable.dart';
 import 'package:localsend_app/util/ui/animations_status.dart';
-import 'package:localsend_isolates/constants.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/stored_security_context.dart';
+import 'package:locara_isolates/constants.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/stored_security_context.dart';
 import 'package:logging/logging.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -593,3 +593,4 @@ class PersistenceService {
     await _prefs.clear();
   }
 }
+

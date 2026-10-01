@@ -9,11 +9,11 @@ import 'package:localsend_app/provider/network/webrtc/webrtc_receiver.dart';
 import 'package:localsend_app/provider/persistence_provider.dart';
 import 'package:localsend_app/provider/security_provider.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_isolates/constants.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/rust/api/crypto.dart' as crypto;
-import 'package:localsend_isolates/rust/api/model.dart' as rust;
-import 'package:localsend_isolates/rust/api/webrtc.dart';
+import 'package:locara_isolates/constants.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/rust/api/crypto.dart' as crypto;
+import 'package:locara_isolates/rust/api/model.dart' as rust;
+import 'package:locara_isolates/rust/api/webrtc.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 part 'signaling_provider.mapper.dart';
@@ -250,3 +250,4 @@ extension on DeviceType {
     };
   }
 }
+

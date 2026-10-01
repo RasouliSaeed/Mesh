@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localsend_app/model/cross_file.dart';
 import 'package:localsend_app/provider/chat_provider.dart';
 import 'package:localsend_app/provider/network/send_provider.dart';
-import 'package:localsend_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/file_type.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 class ChatPage extends StatefulWidget {
@@ -85,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
                     decoration: BoxDecoration(
                       color: message.isMine
                           ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.surfaceVariant,
+                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -100,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurfaceVariant
-                                  .withOpacity(0.7),
+                                  .withValues(alpha: 0.7),
                             ),
                           ),
                         Text(
@@ -153,3 +153,4 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+

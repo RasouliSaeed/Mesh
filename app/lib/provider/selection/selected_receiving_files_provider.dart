@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:localsend_isolates/model/dto/file_dto.dart';
-import 'package:localsend_isolates/util/file_path_helper.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
+import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -69,3 +69,4 @@ class SelectedReceivingFilesNotifier extends Notifier<Map<String, String>> {
     );
   }
 }
+

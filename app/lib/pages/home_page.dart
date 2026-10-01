@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:localsend_app/config/init.dart';
-import 'package:localsend_app/config/theme.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/pages/home_page_controller.dart';
 import 'package:localsend_app/pages/tabs/receive_tab.dart';
@@ -105,15 +105,34 @@ class _HomePageState extends State<HomePage> with Refena {
       },
       child: ResponsiveBuilder(
         builder: (sizingInformation) {
-          return Scaffold(
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: Theme.of(context).brightness == Brightness.dark
+                  ? [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF000000)]
+                  : [Color(0xFFF0F9FF), Color(0xFFE0E7FF), Color(0xFFFFFFFF)],
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
             body: Row(
               children: [
                 if (!sizingInformation.isMobile)
-                  NavigationRail(
-                    selectedIndex: vm.currentTab.index,
-                    onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
-                    extended: sizingInformation.isDesktop,
-                    backgroundColor: Theme.of(context).cardColorWithElevation,
+                  ClipRRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+                          border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+                        ),
+                        child: NavigationRail(
+                          selectedIndex: vm.currentTab.index,
+                          onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
+                          extended: sizingInformation.isDesktop,
+                          backgroundColor: Colors.transparent,
                     leading: sizingInformation.isDesktop
                         ? Column(
                             children: [
@@ -134,6 +153,9 @@ class _HomePageState extends State<HomePage> with Refena {
                       );
                     }).toList(),
                   ),
+                ),
+              ),
+            ),
                 Expanded(
                   child: SafeArea(
                     left: sizingInformation.isMobile,
@@ -169,13 +191,36 @@ class _HomePageState extends State<HomePage> with Refena {
                 ),
               ],
             ),
+            extendBody: true,
             bottomNavigationBar: sizingInformation.isMobile
-                ? NavigationBar(
-                    selectedIndex: vm.currentTab.index,
-                    onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
-                    destinations: HomeTab.values.map((tab) {
-                      return NavigationDestination(icon: Icon(tab.icon), label: tab.label);
-                    }).toList(),
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 10)),
+                            ],
+                          ),
+                          child: NavigationBar(
+                            backgroundColor: Colors.transparent,
+                            indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                            elevation: 0,
+                            selectedIndex: vm.currentTab.index,
+                            onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
+                            destinations: HomeTab.values.map((tab) {
+                              return NavigationDestination(icon: Icon(tab.icon), label: tab.label);
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
                   )
                 : null,
           );
@@ -184,3 +229,6 @@ class _HomePageState extends State<HomePage> with Refena {
     );
   }
 }
+
+
+

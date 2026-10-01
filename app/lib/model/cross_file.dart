@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:localsend_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/file_type.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 part 'cross_file.mapper.dart';
@@ -38,3 +38,4 @@ class CrossFile with CrossFileMappable {
     return 'CrossFile(name: $name, fileType: $fileType, size: $size, thumbnail: ${thumbnail != null ? thumbnail!.length : 'null'}, asset: $asset, path: $path, bytes: ${bytes != null ? bytes!.length : 'null'})';
   }
 }
+

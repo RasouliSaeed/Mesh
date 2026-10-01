@@ -3,10 +3,10 @@ import 'package:localsend_app/provider/local_ip_provider.dart';
 import 'package:localsend_app/provider/network/server/server_provider.dart';
 import 'package:localsend_app/provider/security_provider.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
-import 'package:localsend_isolates/constants.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/device_info_result.dart';
+import 'package:locara_isolates/constants.dart';
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/device_info_result.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 final deviceRawInfoProvider = Provider<DeviceInfoResult>((ref) {
@@ -48,3 +48,4 @@ final deviceFullInfoProvider = ViewProvider((ref) {
     channels: const [],
   );
 });
+

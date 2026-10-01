@@ -27,15 +27,15 @@ import 'package:localsend_app/util/native/directories.dart';
 import 'package:localsend_app/util/native/platform_check.dart';
 import 'package:localsend_app/util/native/tray_helper.dart';
 import 'package:localsend_app/widget/dialogs/open_file_dialog.dart';
-import 'package:localsend_isolates/isolate.dart';
-import 'package:localsend_isolates/model/device.dart';
-import 'package:localsend_isolates/model/file_status.dart';
-import 'package:localsend_isolates/model/file_type.dart';
-import 'package:localsend_isolates/model/session_status.dart';
-import 'package:localsend_isolates/rust/api/server.dart'
+import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/file_status.dart';
+import 'package:locara_isolates/model/file_type.dart';
+import 'package:locara_isolates/model/session_status.dart';
+import 'package:locara_isolates/rust/api/server.dart'
     show SessionEndReasonV2;
-import 'package:localsend_isolates/util/rust.dart';
-import 'package:localsend_isolates/util/transfer_notification.dart';
+import 'package:locara_isolates/util/rust.dart';
+import 'package:locara_isolates/util/transfer_notification.dart';
 import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -824,3 +824,4 @@ extension on ReceiveSessionState {
     );
   }
 }
+
