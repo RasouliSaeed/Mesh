@@ -13,7 +13,7 @@ import 'package:locara_app/util/ip_helper.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
 import 'package:locara_app/widget/column_list_view.dart';
 import 'package:locara_app/widget/custom_icon_button.dart';
-import 'package:locara_app/widget/local_send_logo.dart';
+import 'package:locara_app/widget/locara_logo.dart';
 import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_app/widget/rotating_widget.dart';
 import 'package:locara_isolates/util/sleep.dart';

@@ -22,7 +22,7 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  void _sendMessage(BuildContext context) {
+  void _sendMessage(BuildContext context) async {
     final text = _controller.text;
     if (text.trim().isEmpty) return;
 
@@ -42,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
       );
 
       context.ref.notifier(chatProvider).addMessage(text, isMine: true);
-      context.ref
+      await context.ref
           .notifier(sendProvider)
           .startSession(
             target: target,

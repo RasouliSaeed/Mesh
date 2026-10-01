@@ -738,7 +738,7 @@ packages:
     dependency: transitive
     description:
       name: image_picker_platform_interface
-      sha256: "567e056716333a1647c64bb6bd873cff7622233a5c3f694be28a583d4715690c"
+      sha256: "567e056716333a1647c64bb6bd873cff7622233a5c3f694be28a583.41.9690c"
       url: "https://pub.dev"
     source: hosted
     version: "2.11.1"
@@ -1229,7 +1229,7 @@ packages:
       path: "."
       ref: "2dadd8afbf81e0e3e4791d7144e689555e58f649"
       resolved-ref: "2dadd8afbf81e0e3e4791d7144e689555e58f649"
-      url: "https://github.com/localsend/permission_handler_windows_noop.git"
+      url: "https://github.com/Locara/permission_handler_windows_noop.git"
     source: git
     version: "0.1.2"
   petitparser:
@@ -2079,3 +2079,5 @@ packages:
 sdks:
   dart: ">=3.13.0 <4.0.0"
   flutter: ">=3.44.0 <4.0.0"
+
+

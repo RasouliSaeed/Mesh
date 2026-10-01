@@ -27,7 +27,7 @@ import 'package:locara_app/widget/dialogs/quick_save_notice.dart';
 import 'package:locara_app/widget/dialogs/text_field_tv.dart';
 import 'package:locara_app/widget/dialogs/text_field_with_actions.dart';
 import 'package:locara_app/widget/labeled_checkbox.dart';
-import 'package:locara_app/widget/local_send_logo.dart';
+import 'package:locara_app/widget/locara_logo.dart';
 import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/model/device.dart';

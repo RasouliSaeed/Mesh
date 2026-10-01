@@ -159,14 +159,14 @@ buildTypes {
 
 ### Bump Flutter
 
-Suppose we want to update flutter to `3.47.5`:
+Suppose we want to update flutter to `3.41.9`:
 
-1. Update flutter from fvm: `fvm use 3.47.5`
+1. Update flutter from fvm: `fvm use 3.41.9`
 2. Update flutter from submodule:
    1. `git submodule update --init`
    2. `cd support/submodules/flutter`
    3. `git fetch`
-   4. `git checkout 3.47.5`
+   4. `git checkout 3.41.9`
    5. `cd ../../..`
    6. `git add support/submodules/flutter`
 3. Update flutter constraints:
@@ -204,5 +204,6 @@ Next, follow the instructions to set up the GitHub runner.
 Start the "Release Draft" workflow from the "Actions" tab: https://github.com/locara/locara/actions/workflows/release.yml
 
 Finally, compile binaries not yet supported by the pipeline.
+
 
 

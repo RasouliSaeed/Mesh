@@ -8,6 +8,7 @@ import 'package:locara_app/model/state/server/receiving_file.dart';
 import 'package:locara_app/pages/home_page.dart';
 import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/progress_page.dart';
+import 'package:locara_app/pages/chat_page.dart';
 import 'package:locara_app/pages/receive_page.dart';
 import 'package:locara_app/provider/chat_provider.dart';
 import 'package:locara_app/provider/device_info_provider.dart';
@@ -190,7 +191,7 @@ class ReceiveController {
 
       // Navigate to ChatPage
       // ignore: use_build_context_synchronously
-      Routerino.context.push(() => const ChatPage());
+      await Routerino.context.push(() => const ChatPage());
 
       return;
     }

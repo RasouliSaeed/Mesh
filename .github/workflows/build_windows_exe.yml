@@ -5,7 +5,7 @@ on:
   workflow_call:
 
 env:
-  FLUTTER_VERSION: "3.47.5"
+  FLUTTER_VERSION: "3.41.9"
 
 jobs:
   build:
@@ -144,6 +144,7 @@ jobs:
           name: windows-exe-x86-64-result
           path: ${{ runner.temp }}\inno-result\Locara-${{ needs.build.outputs.version }}-windows-x86-64.exe
           if-no-files-found: error
+
 
 
 
