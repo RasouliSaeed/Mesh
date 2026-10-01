@@ -12,7 +12,7 @@
 #endif
 
 #define MyAppName "Locara"
-#define MyAppVersion "1.18.2"
+#define MyAppVersion "1.7.9"
 #define MyAppPublisher "Tien Do Nam"
 #define MyAppURL "https://Locara.org"
 #define MyAppExeName "locara_app.exe"
@@ -108,6 +108,7 @@ Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Add-Ap
 #ifndef SkipMsixHelper
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Get-AppxPackage Locara.App | Remove-AppxPackage"; Flags: nowait runhidden
 #endif
+
 
 
 
