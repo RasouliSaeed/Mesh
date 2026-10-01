@@ -40,7 +40,7 @@ jobs:
           haskell: true
           large-packages: true
           docker-images: true
-          swap-storage: true
+          swap-storage: false
       - name: Remove proprietary dependencies
         run: sh support/scripts/remove_proprietary_dependencies.sh
 
@@ -106,6 +106,7 @@ jobs:
             app-armeabi-v7a-release.apk
             app-arm64-v8a-release.apk
             app-x86_64-release.apk
+
 
 
 
