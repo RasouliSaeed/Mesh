@@ -2,16 +2,16 @@
 
 use bytes::Bytes;
 use futures_util::StreamExt;
-use localsend::crypto::hash::sha256_hex;
-use localsend::http::client::{ClientError, LsHttpClient, LsHttpClientV2};
-use localsend::http::dto_v2::{PrepareUploadRequestDtoV2, RegisterDtoV2};
-use localsend::http::server::common::save::FileUploadTarget;
-use localsend::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2, SessionEndReasonV2};
-use localsend::http::server::web::WebConfig;
-use localsend::http::server::{start_with_port, ServerConfigV2};
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::{FileContent, FileDto, FileMetadata};
+use locara::crypto::hash::sha256_hex;
+use locara::http::client::{ClientError, LsHttpClient, LsHttpClientV2};
+use locara::http::dto_v2::{PrepareUploadRequestDtoV2, RegisterDtoV2};
+use locara::http::server::common::save::FileUploadTarget;
+use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2, SessionEndReasonV2};
+use locara::http::server::web::WebConfig;
+use locara::http::server::{start_with_port, ServerConfigV2};
+use locara::http::state::ClientInfo;
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::{FileContent, FileDto, FileMetadata};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -214,7 +214,7 @@ async fn upload_bytes(
     // sent so the progress assertion below still holds.
     let progress = sent.clone();
     let body =
-        localsend::reqwest::Body::wrap_stream(ReceiverStream::new(rx).map(move |chunk: Bytes| {
+        locara::reqwest::Body::wrap_stream(ReceiverStream::new(rx).map(move |chunk: Bytes| {
             progress.fetch_add(chunk.len() as u64, Ordering::Relaxed);
             Ok::<Bytes, std::io::Error>(chunk)
         }));
@@ -274,7 +274,7 @@ async fn test_info_on_legacy_v1_route() {
     let server = start_test_server(None, true, None).await;
 
     let body: serde_json::Value = reqwest::get(format!(
-        "http://127.0.0.1:{}/api/localsend/v1/info",
+        "http://127.0.0.1:{}/api/locara/v1/info",
         server.port
     ))
     .await
@@ -380,7 +380,7 @@ async fn test_full_upload_flow() {
 /// The sender-provided metadata timestamps are applied to the written file.
 #[tokio::test]
 async fn test_upload_applies_file_timestamps() {
-    let save_dir = std::env::temp_dir().join(format!("localsend-test-{}", uuid::Uuid::new_v4()));
+    let save_dir = std::env::temp_dir().join(format!("locara-test-{}", uuid::Uuid::new_v4()));
     tokio::fs::create_dir_all(&save_dir).await.unwrap();
 
     let server = start_test_server(None, true, Some(save_dir.clone())).await;
@@ -607,7 +607,7 @@ async fn test_upload_retry_after_mismatched_sha256() {
 /// up with exactly one file holding the correct content.
 #[tokio::test]
 async fn test_upload_retry_reuses_the_same_path() {
-    let save_dir = std::env::temp_dir().join(format!("localsend-test-{}", uuid::Uuid::new_v4()));
+    let save_dir = std::env::temp_dir().join(format!("locara-test-{}", uuid::Uuid::new_v4()));
     tokio::fs::create_dir_all(&save_dir).await.unwrap();
 
     let server = start_test_server(None, true, Some(save_dir.clone())).await;
@@ -729,7 +729,7 @@ async fn test_upload_mismatched_sha256_attempts_exhausted() {
 
 #[tokio::test]
 async fn test_upload_saved_to_path_by_server() {
-    let save_dir = std::env::temp_dir().join(format!("localsend-test-{}", uuid::Uuid::new_v4()));
+    let save_dir = std::env::temp_dir().join(format!("locara-test-{}", uuid::Uuid::new_v4()));
     tokio::fs::create_dir_all(&save_dir).await.unwrap();
 
     let server = start_test_server(None, true, Some(save_dir.clone())).await;
@@ -801,7 +801,7 @@ async fn test_upload_saved_to_path_by_server() {
 /// the sender streamed a well-formed, complete-looking request.
 #[tokio::test]
 async fn test_upload_of_unreadable_file_fails_instead_of_sending_an_empty_body() {
-    let save_dir = std::env::temp_dir().join(format!("localsend-test-{}", uuid::Uuid::new_v4()));
+    let save_dir = std::env::temp_dir().join(format!("locara-test-{}", uuid::Uuid::new_v4()));
     tokio::fs::create_dir_all(&save_dir).await.unwrap();
 
     let server = start_test_server(None, true, Some(save_dir.clone())).await;
@@ -910,9 +910,9 @@ async fn test_upload_with_invalid_token() {
 async fn test_upload_missing_parameters() {
     let server = start_test_server(None, true, None).await;
 
-    let response = localsend::reqwest::Client::new()
+    let response = locara::reqwest::Client::new()
         .post(format!(
-            "http://127.0.0.1:{}/api/localsend/v2/upload?sessionId=abc",
+            "http://127.0.0.1:{}/api/locara/v2/upload?sessionId=abc",
             server.port
         ))
         .body("data")
@@ -1054,7 +1054,7 @@ async fn test_prepare_upload_aborted_by_sender_disconnect() {
     let body =
         serde_json::to_string(&prepare_upload_request(&[file_dto("file-a", "a.bin", 5)])).unwrap();
     let request = format!(
-        "POST /api/localsend/v2/prepare-upload HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n{body}",
+        "POST /api/locara/v2/prepare-upload HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n{body}",
         body.len()
     );
     let mut stream = tokio::net::TcpStream::connect(("127.0.0.1", port))
@@ -1170,8 +1170,8 @@ async fn test_prepare_upload_cancelled_by_session_less_cancel() {
     });
     tokio::time::sleep(Duration::from_millis(200)).await;
 
-    let cancel_url = format!("http://127.0.0.1:{port}/api/localsend/v2/cancel");
-    let cancel_client = localsend::reqwest::Client::new();
+    let cancel_url = format!("http://127.0.0.1:{port}/api/locara/v2/cancel");
+    let cancel_client = locara::reqwest::Client::new();
 
     // A cancel with a wrong session ID must not cancel the pending request.
     cancel_client
@@ -1217,7 +1217,7 @@ async fn test_prepare_upload_cancelled_by_session_less_cancel() {
 }
 
 /// Same as [test_prepare_upload_aborted_by_sender_disconnect], but over TLS
-/// with mutual certificates - the transport every real LocalSend transfer
+/// with mutual certificates - the transport every real locara transfer
 /// uses - and cancelled through the client's cancellation token, the way a
 /// sender cancels while waiting for the receiver's decision.
 #[tokio::test]
@@ -1225,12 +1225,12 @@ async fn test_prepare_upload_aborted_by_sender_disconnect_tls() {
     let _ = tracing_subscriber::fmt().with_test_writer().try_init();
 
     let server_key = rcgen::KeyPair::generate().unwrap();
-    let server_cert = rcgen::CertificateParams::new(vec!["LocalSend User".to_string()])
+    let server_cert = rcgen::CertificateParams::new(vec!["locara User".to_string()])
         .unwrap()
         .self_signed(&server_key)
         .unwrap();
     let sender_key = rcgen::KeyPair::generate().unwrap();
-    let sender_cert = rcgen::CertificateParams::new(vec!["LocalSend User".to_string()])
+    let sender_cert = rcgen::CertificateParams::new(vec!["locara User".to_string()])
         .unwrap()
         .self_signed(&sender_key)
         .unwrap();
@@ -1263,7 +1263,7 @@ async fn test_prepare_upload_aborted_by_sender_disconnect_tls() {
     let (stop_tx, stop_rx) = oneshot::channel::<()>();
     let handle = start_with_port(
         0,
-        Some(localsend::http::server::TlsConfig {
+        Some(locara::http::server::TlsConfig {
             cert: server_cert.pem(),
             private_key: server_key.serialize_pem(),
         }),
@@ -1462,3 +1462,4 @@ async fn test_pin_too_many_attempts() {
         .await;
     assert_status(result, 429);
 }
+

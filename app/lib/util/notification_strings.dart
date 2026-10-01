@@ -1,7 +1,7 @@
 import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_isolates/util/notification_strings.dart';
 
-/// The translations that `localsend_isolates` needs, taken from the current locale.
+/// The translations that `Locara_isolates` needs, taken from the current locale.
 ///
 /// Lazy, so it resolves after the locale has been applied in `preInit`. The locale is pinned on
 /// app start, so binding the translation members once is enough.
@@ -19,5 +19,6 @@ String _remainingTimeLong({required num h, required num m}) {
   }
   return remainingTime.hours(h: h, m: m);
 }
+
 
 

@@ -2176,7 +2176,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "11d3d7f243d5c5a8b9bb5d6dd2b1602c0cb0b9db1621bafc7ed66e35ff9fe092"
 
 [[package]]
-name = "localsend"
+name = "locara"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -2219,7 +2219,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "localsend-cli"
+name = "locara-cli"
 version = "1.18.2"
 dependencies = [
  "anyhow",
@@ -2229,7 +2229,7 @@ dependencies = [
  "dirs",
  "futures-util",
  "gethostname",
- "localsend",
+ "locara",
  "mime_guess",
  "pem 4.0.0",
  "qrcode",
@@ -3311,13 +3311,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_lib_localsend_app"
+name = "rust_lib_locara_app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "bytes",
  "flutter_rust_bridge",
- "localsend",
+ "locara",
  "tokio",
  "tokio-util",
  "tracing",
@@ -3610,7 +3610,7 @@ dependencies = [
  "axum",
  "base64 0.22.1",
  "futures-util",
- "localsend",
+ "locara",
  "serde",
  "serde_json",
  "tokio",

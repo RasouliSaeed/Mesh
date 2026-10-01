@@ -44,7 +44,7 @@ fn rejected(reason: String) -> Error {
 
 /// Verifies the certificate of the remote peer during the TLS handshake.
 ///
-/// LocalSend peers use self-signed certificates, so there is no authority to
+/// locara peers use self-signed certificates, so there is no authority to
 /// chain to. The peer identity is the uppercase-hex SHA-256 of the certificate
 /// in DER format, the same identity the server side enforces for client
 /// certificates in [`crate::http::server`].
@@ -208,3 +208,4 @@ VRus1zGVD8IVpIdPMyz01WJyS7M0fWaHXKWo+Bo=
         assert!(verify(None).is_ok());
     }
 }
+

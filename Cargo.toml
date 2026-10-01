@@ -3,7 +3,7 @@ resolver = "3"
 members = [
     "cli",
     "packages/core",
-    "packages/localsend_isolates/rust",
+    "packages/locara_isolates/rust",
     "server",
 ]
 
@@ -20,3 +20,4 @@ opt-level = 2
 
 [profile.dev.package.num-bigint-dig]
 opt-level = 2
+

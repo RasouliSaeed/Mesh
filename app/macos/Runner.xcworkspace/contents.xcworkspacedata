@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../ios/MyLocalSendStoreKit.storekit">
+      location = "group:../ios/MylocaraStoreKit.storekit">
    </FileRef>
    <FileRef
       location = "group:Runner.xcodeproj">
@@ -11,3 +11,4 @@
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>
+

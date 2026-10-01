@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:locara_app/gen/assets.gen.dart';
 import 'package:locara_app/gen/strings.g.dart';
 
-class LocalSendLogo extends StatelessWidget {
+class LocaraLogo extends StatelessWidget {
   final bool withText;
 
-  const LocalSendLogo({required this.withText});
+  const LocaraLogo({required this.withText});
 
   @override
   Widget build(BuildContext context) {
@@ -36,4 +36,5 @@ class LocalSendLogo extends StatelessWidget {
     }
   }
 }
+
 

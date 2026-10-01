@@ -25,7 +25,7 @@ String _getSettingsPathFromExecutable() {
 /// Returns [Platform.resolvedExecutable], or null when the VM cannot resolve it.
 /// The getter throws a [TypeError] on some virtual disks (e.g. an ImDisk RAM disk),
 /// where reading it would crash the app before it even starts.
-/// See https://github.com/localsend/localsend/issues/3021
+/// See https://github.com/Locara/Locara/issues/3021
 /// and https://github.com/dart-lang/sdk/issues/53424
 String? _resolveExecutable() {
   try {
@@ -48,4 +48,5 @@ String buildSettingsPath({
   final directory = executablePath == null ? fallbackDirectory() : File(executablePath).parent.path;
   return path.join(directory, 'settings.json');
 }
+
 

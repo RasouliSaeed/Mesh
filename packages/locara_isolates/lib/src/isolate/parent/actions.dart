@@ -143,7 +143,7 @@ class IsolateDiscoveryDeviceLogsAction extends AsyncReduxActionWithResult<Isolat
   }
 }
 
-/// Sends an announcement which makes every other LocalSend device on the
+/// Sends an announcement which makes every other locara device on the
 /// network register with this device's HTTP server.
 class IsolateDiscoveryAnnouncementAction extends ReduxAction<IsolateController, ParentIsolateState> {
   @override
@@ -575,4 +575,5 @@ extension _WrappedTaskConnector<R, T> on IsolateConnector<IsolateTaskStreamResul
     return convertResponseToStream(taskId: wrappedTask.id);
   }
 }
+
 

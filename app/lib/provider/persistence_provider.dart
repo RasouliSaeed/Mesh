@@ -34,12 +34,12 @@ final _logger = Logger('PersistenceService');
 
 String get _windowsFile {
   final appData = Platform.environment['APPDATA'];
-  return '$appData\\LocalSend\\settings.json';
+  return '$appData\\Locara\\settings.json';
 }
 
 String get _windowsLegacyFile {
   final appData = Platform.environment['APPDATA'];
-  return '$appData\\org.localsend\\localsend_app\\shared_preferences.json';
+  return '$appData\\org.Locara\\Locara_app\\shared_preferences.json';
 }
 
 // Version of the storage
@@ -209,7 +209,7 @@ class PersistenceService {
   static Future<void> _initColorSetting(SharedPreferences prefs, bool supportsDynamicColors) async {
     await prefs.setString(
       _colorKey,
-      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.localsend.name,
+      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.Locara.name,
     );
   }
 
@@ -593,5 +593,6 @@ class PersistenceService {
     await _prefs.clear();
   }
 }
+
 
 

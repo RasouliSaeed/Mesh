@@ -134,7 +134,7 @@ class DiscoveryService {
     }
   }
 
-  /// Sends an announcement which triggers a response on every LocalSend member of the network.
+  /// Sends an announcement which triggers a response on every locara member of the network.
   Future<void> sendAnnouncement() async {
     final discovery = _discovery;
     if (discovery == null) {
@@ -224,4 +224,5 @@ class DiscoveryService {
     await discovery.addDevice(device: device.toRsDiscoveredDevice(ip));
   }
 }
+
 

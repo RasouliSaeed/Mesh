@@ -31,7 +31,7 @@ class AboutPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         children: [
           const SizedBox(height: 20),
-          const LocalSendLogo(withText: true),
+          const LocaraLogo(withText: true),
           Text(
             '© ${DateTime.now().year} Tien Do Nam',
             textAlign: TextAlign.center,
@@ -40,9 +40,9 @@ class AboutPage extends StatelessWidget {
           Center(
             child: TextButton(
               onPressed: () async {
-                await launchUrl(Uri.parse('https://localsend.org'));
+                await launchUrl(Uri.parse('https://Locara.org'));
               },
-              child: const Text('localsend.org'),
+              child: const Text('Locara.org'),
             ),
           ),
           const SizedBox(height: 10),
@@ -137,19 +137,19 @@ class AboutPage extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () async {
-                  await launchUrl(Uri.parse('https://localsend.org'));
+                  await launchUrl(Uri.parse('https://Locara.org'));
                 },
                 child: const Text('Homepage'),
               ),
               TextButton(
                 onPressed: () async {
-                  await launchUrl(Uri.parse('https://github.com/localsend/localsend'), mode: LaunchMode.externalApplication);
+                  await launchUrl(Uri.parse('https://github.com/Locara/Locara'), mode: LaunchMode.externalApplication);
                 },
                 child: const Text('Source Code (Github)'),
               ),
               TextButton(
                 onPressed: () async {
-                  await launchUrl(Uri.parse('https://codeberg.org/localsend/localsend'), mode: LaunchMode.externalApplication);
+                  await launchUrl(Uri.parse('https://codeberg.org/Locara/Locara'), mode: LaunchMode.externalApplication);
                 },
                 child: const Text('Source Code (Codeberg)'),
               ),
@@ -220,4 +220,5 @@ InlineSpan _buildContributor({required String label, required Color primaryColor
   // Only full name
   return TextSpan(text: '$newLineStr$label');
 }
+
 

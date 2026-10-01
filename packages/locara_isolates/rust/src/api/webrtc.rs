@@ -1,14 +1,14 @@
 use crate::frb_generated::StreamSink;
 use bytes::Bytes;
 use flutter_rust_bridge::{DartFnFuture, frb};
-use localsend::crypto::token::SigningTokenKey;
-use localsend::model::discovery::DeviceType;
-use localsend::model::transfer::FileDto;
-pub use localsend::webrtc::signaling::{
+use locara::crypto::token::SigningTokenKey;
+use locara::model::discovery::DeviceType;
+use locara::model::transfer::FileDto;
+pub use locara::webrtc::signaling::{
     ClientInfo, ClientInfoWithoutId, ManagedSignalingConnection, SignalingConnection,
     WsServerMessage, WsServerSdpMessage,
 };
-pub use localsend::webrtc::webrtc::{
+pub use locara::webrtc::webrtc::{
     PinConfig, RTCFile, RTCFileError, RTCSendFileResponse, RTCStatus,
 };
 use std::collections::HashSet;
@@ -30,7 +30,7 @@ impl ProposingClientInfo {
             version: self.version.clone(),
             device_model: self.device_model.clone(),
             device_type: self.device_type.clone(),
-            token: localsend::crypto::token::generate_token_timestamp(&signing_key)?,
+            token: locara::crypto::token::generate_token_timestamp(&signing_key)?,
         })
     }
 }
@@ -42,7 +42,7 @@ pub async fn connect(
     private_key: String,
     on_connection: impl Fn(LsSignalingConnection) -> DartFnFuture<()>,
 ) {
-    let Ok(signing_key) = localsend::crypto::token::parse_private_key(&private_key) else {
+    let Ok(signing_key) = locara::crypto::token::parse_private_key(&private_key) else {
         let _ = sink.add_error(anyhow::anyhow!("Invalid private key"));
         return;
     };
@@ -99,9 +99,9 @@ impl LsSignalingConnection {
 
         let managed_connection = self.inner.clone();
 
-        let signing_key = localsend::crypto::token::parse_private_key(private_key)?;
+        let signing_key = locara::crypto::token::parse_private_key(private_key)?;
         let expecting_public_key = match expecting_public_key {
-            Some(key) => Some(localsend::crypto::token::parse_public_key(
+            Some(key) => Some(locara::crypto::token::parse_public_key(
                 &key.public_key,
                 &key.kind,
             )?),
@@ -109,7 +109,7 @@ impl LsSignalingConnection {
         };
 
         tokio::spawn(async move {
-            let result = localsend::webrtc::webrtc::send_offer(
+            let result = locara::webrtc::webrtc::send_offer(
                 &managed_connection,
                 stun_servers,
                 target,
@@ -178,9 +178,9 @@ impl LsSignalingConnection {
 
         let managed_connection = self.inner.clone();
 
-        let signing_key = localsend::crypto::token::parse_private_key(private_key)?;
+        let signing_key = locara::crypto::token::parse_private_key(private_key)?;
         let expecting_public_key = match expecting_public_key {
-            Some(key) => Some(localsend::crypto::token::parse_public_key(
+            Some(key) => Some(locara::crypto::token::parse_public_key(
                 &key.public_key,
                 &key.kind,
             )?),
@@ -188,7 +188,7 @@ impl LsSignalingConnection {
         };
 
         tokio::spawn(async move {
-            let result = localsend::webrtc::webrtc::accept_offer(
+            let result = locara::webrtc::webrtc::accept_offer(
                 &managed_connection,
                 stun_servers,
                 &offer,
@@ -510,3 +510,4 @@ pub struct _RTCSendFileResponse {
     pub success: bool,
     pub error: Option<String>,
 }
+

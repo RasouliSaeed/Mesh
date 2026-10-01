@@ -1,6 +1,6 @@
 import 'package:locara_isolates/model/device.dart';
 
-const _basePath = '/api/localsend';
+const _basePath = '/api/locara';
 
 /// Type-safe API paths
 enum ApiRoute {
@@ -40,4 +40,5 @@ enum ApiRoute {
     return '$protocol://$ip:$port$route';
   }
 }
+
 

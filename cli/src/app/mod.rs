@@ -16,16 +16,16 @@ use crate::ui::{Category, Ui};
 use crate::{Args, Command};
 use crossterm::event::{Event, KeyEvent, KeyEventKind};
 use keys::{Intent, KeyDecoder};
-use localsend::discovery::{
+use locara::discovery::{
     DEFAULT_DISCOVERY_TIMEOUT, DeviceIdentity, DiscoveryConfig, DiscoveryEvent, DiscoveryHandle,
     HttpChannel,
 };
-use localsend::http::server::v2::ServerEventV2;
-use localsend::http::server::web::{WebConfig, WebDownloadEvent};
-use localsend::http::server::{ServerConfigV2, ServerHandle, start_with_port};
-use localsend::model::discovery::ProtocolType;
-use localsend::multicast::{DEFAULT_MULTICAST_GROUP, DEFAULT_MULTICAST_GROUP_V6, DEFAULT_PORT};
-use localsend::util::interface::{InterfaceFilter, local_interface_addresses};
+use locara::http::server::v2::ServerEventV2;
+use locara::http::server::web::{WebConfig, WebDownloadEvent};
+use locara::http::server::{ServerConfigV2, ServerHandle, start_with_port};
+use locara::model::discovery::ProtocolType;
+use locara::multicast::{DEFAULT_MULTICAST_GROUP, DEFAULT_MULTICAST_GROUP_V6, DEFAULT_PORT};
+use locara::util::interface::{InterfaceFilter, local_interface_addresses};
 use receive::{Answer, PendingReceive, ReceiveSession};
 use sending::SendState;
 use std::path::PathBuf;
@@ -138,7 +138,7 @@ async fn start_network(identity: &Arc<storage::Identity>) -> anyhow::Result<Netw
     let (discovery_tx, discovery_rx) = mpsc::channel::<DiscoveryEvent>(16);
     let (discovery_stop_tx, discovery_stop_rx) = oneshot::channel::<()>();
     let discovery = Arc::new(
-        localsend::discovery::start(
+        locara::discovery::start(
             DiscoveryConfig {
                 group: DEFAULT_MULTICAST_GROUP,
                 group_v6: Some(DEFAULT_MULTICAST_GROUP_V6),
@@ -495,3 +495,4 @@ impl App {
         self.ui.resume();
     }
 }
+

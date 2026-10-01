@@ -31,7 +31,7 @@ Future<void> initTray() async {
       String icon;
       if (await File('/.flatpak-info').exists()) {
         // Icon for Flatpak, which must exist in /app/share/icons/hicolor/*x*/apps.
-        icon = 'org.localsend.localsend_app-tray';
+        icon = 'org.Locara.Locara_app-tray';
       } else {
         icon = Assets.img.logo32White.path;
       }
@@ -66,7 +66,7 @@ Future<void> hideToTray() async {
   await windowManager.hide();
   if (checkPlatform([TargetPlatform.macOS])) {
     // This will crash on Windows
-    // https://github.com/localsend/localsend/issues/32
+    // https://github.com/Locara/Locara/issues/32
     await windowManager.setSkipTaskbar(true);
   }
 
@@ -83,7 +83,7 @@ Future<void> showFromTray() async {
   await windowManager.focus();
   if (checkPlatform([TargetPlatform.macOS])) {
     // This will crash on Windows
-    // https://github.com/localsend/localsend/issues/32
+    // https://github.com/Locara/Locara/issues/32
     await windowManager.setSkipTaskbar(false);
   }
 
@@ -100,4 +100,5 @@ Future<void> destroyTray() async {
     await tm.trayManager.destroy();
   }
 }
+
 

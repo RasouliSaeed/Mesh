@@ -2,13 +2,13 @@ use crate::api::cancel::RsCancellationToken;
 use crate::frb_generated::StreamSink;
 
 pub fn verify_cert(cert: String, public_key: String) -> anyhow::Result<()> {
-    localsend::crypto::cert::verify_cert_from_pem(cert, Some(&public_key))
+    locara::crypto::cert::verify_cert_from_pem(cert, Some(&public_key))
 }
 
 pub fn generate_key_pair() -> anyhow::Result<KeyPair> {
-    let signing_key = localsend::crypto::token::generate_key();
-    let private_key = localsend::crypto::token::export_private_key(&signing_key)?;
-    let public_key = localsend::crypto::token::export_public_key(&signing_key)?;
+    let signing_key = locara::crypto::token::generate_key();
+    let private_key = locara::crypto::token::export_private_key(&signing_key)?;
+    let public_key = locara::crypto::token::export_public_key(&signing_key)?;
 
     Ok(KeyPair {
         private_key: private_key.to_string(),
@@ -24,7 +24,7 @@ pub struct KeyPair {
 /// Generates a new device identity: an RSA-2048 key pair and a self-signed
 /// certificate whose SHA-256 fingerprint identifies the device.
 pub fn generate_security_context() -> anyhow::Result<SecurityContext> {
-    let cert = localsend::crypto::cert::generate_self_signed()?;
+    let cert = locara::crypto::cert::generate_self_signed()?;
 
     Ok(SecurityContext {
         private_key: cert.private_key_pem,
@@ -77,11 +77,11 @@ pub async fn hash_file(
 ) {
     let result = async {
         let content = match (path, file_descriptor, bytes) {
-            (Some(path), None, None) => localsend::model::transfer::FileContent::Path(path.into()),
+            (Some(path), None, None) => locara::model::transfer::FileContent::Path(path.into()),
             (None, Some(file_descriptor), None) => {
                 #[cfg(target_os = "android")]
                 {
-                    localsend::model::transfer::FileContent::Fd(file_descriptor)
+                    locara::model::transfer::FileContent::Fd(file_descriptor)
                 }
                 #[cfg(not(target_os = "android"))]
                 {
@@ -90,7 +90,7 @@ pub async fn hash_file(
                 }
             }
             (None, None, Some(bytes)) => {
-                let hash = localsend::crypto::hash::sha256_hex(&bytes);
+                let hash = locara::crypto::hash::sha256_hex(&bytes);
                 let _ = sink.add(RsHashFileEvent::Done { hash });
                 return Ok(());
             }
@@ -114,7 +114,7 @@ pub async fn hash_file(
         };
 
         let hash =
-            localsend::crypto::hash::sha256_file_content(content, &cancel_token.inner, progress)
+            locara::crypto::hash::sha256_file_content(content, &cancel_token.inner, progress)
                 .await?;
         let _ = sink.add(RsHashFileEvent::Done { hash });
         Ok(())
@@ -125,3 +125,4 @@ pub async fn hash_file(
         let _ = sink.add_error(err);
     }
 }
+

@@ -1,10 +1,10 @@
-﻿# Locara 🚀
+# Locara ??
 
-Locara (formerly a fork of LocalSend) is a free, open-source, and highly secure app that allows you to share files and messages with nearby devices over your local network without needing an internet connection.
+Locara (formerly a fork of locara) is a free, open-source, and highly secure app that allows you to share files and messages with nearby devices over your local network without needing an internet connection.
 
 This project has been completely overhauled with a new **Glassmorphism UI**, **True Cyan OLED Dark Mode**, and enhanced security limitations to ensure the best performance and safety.
 
-## ✨ Features
+## ? Features
 
 - **Radical UI Redesign:** Features a sleek floating navigation bar, 20px rounded glassmorphic cards, and dynamic gradient backgrounds.
 - **Secure File Transfer:** Uses a secure communication protocol via REST API and HTTPS encryption. TLS/SSL certificates are generated on the fly.
@@ -46,4 +46,5 @@ To compile Locara from the source code locally:
 | Device not visible | (Windows) Configure your network as "private".                                                                                          |
 | Device not visible | (macOS/iOS) Toggle the "Local Network" permission in OS Privacy settings.                                                               |
 | Device not visible | Temporarily disable your VPN if it blocks local network traffic.                                                                        |
+
 

@@ -36,14 +36,14 @@ Future<void> main(List<String> args) async {
     RefenaScope.withContainer(
       container: container,
       child: TranslationProvider(
-        child: const LocalSendApp(),
+        child: const LocaraApp(),
       ),
     ),
   );
 }
 
-class LocalSendApp extends StatelessWidget {
-  const LocalSendApp();
+class LocaraApp extends StatelessWidget {
+  const LocaraApp();
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class LocalSendApp extends StatelessWidget {
                 break;
               case AppLifecycleState.detached:
                 // The main isolate is only exited when all child isolates are exited.
-                // https://github.com/localsend/localsend/issues/1568
+                // https://github.com/Locara/Locara/issues/1568
                 ref.redux(parentIsolateProvider).dispatch(IsolateDisposeAction());
                 break;
               default:
@@ -102,5 +102,6 @@ class LocalSendApp extends StatelessWidget {
     );
   }
 }
+
 
 

@@ -11,7 +11,7 @@ use crate::model::discovery::{device_type_v2, protocol_type_v2};
 
 /// Register request DTO for v2.2 protocol.
 ///
-/// Sent to POST /api/localsend/v2/register for device discovery.
+/// Sent to POST /api/locara/v2/register for device discovery.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RegisterDtoV2 {
@@ -51,7 +51,7 @@ pub struct RegisterDtoV2 {
 
 /// Register response DTO for v2.2 protocol.
 ///
-/// Response from POST /api/localsend/v2/register.
+/// Response from POST /api/locara/v2/register.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RegisterResponseDtoV2 {
@@ -85,7 +85,7 @@ pub struct RegisterResponseDtoV2 {
 
 /// Prepare upload request DTO for v2.2 protocol.
 ///
-/// Sent to POST /api/localsend/v2/prepare-upload to initiate a file transfer.
+/// Sent to POST /api/locara/v2/prepare-upload to initiate a file transfer.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PrepareUploadRequestDtoV2 {
@@ -98,7 +98,7 @@ pub struct PrepareUploadRequestDtoV2 {
 
 /// Prepare upload response DTO for v2.2 protocol.
 ///
-/// Response from POST /api/localsend/v2/prepare-upload.
+/// Response from POST /api/locara/v2/prepare-upload.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PrepareUploadResponseDtoV2 {
@@ -117,7 +117,7 @@ pub struct PrepareUploadResultV2 {
 
 /// Prepare download response DTO for v2.2 protocol (Download API).
 ///
-/// Response from POST /api/localsend/v2/prepare-download.
+/// Response from POST /api/locara/v2/prepare-download.
 /// Used when the sender provides files for others to download.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -134,7 +134,7 @@ pub struct PrepareDownloadResponseDtoV2 {
 
 /// Info response DTO for v2.2 protocol.
 ///
-/// Response from GET /api/localsend/v2/info.
+/// Response from GET /api/locara/v2/info.
 /// Also used as the `info` field in PrepareDownloadResponseDtoV2.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -256,3 +256,4 @@ mod tests {
         assert!(json.contains("\"fingerprint\":\"sender-fingerprint\""));
     }
 }
+

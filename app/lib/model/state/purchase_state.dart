@@ -5,20 +5,20 @@ part 'purchase_state.mapper.dart';
 
 enum PurchaseItem {
   donate5(
-    androidId: 'localsend_android_donate_5',
-    iosId: 'localsend_ios_donate_5',
+    androidId: 'Locara_android_donate_5',
+    iosId: 'Locara_ios_donate_5',
   ),
   donate10(
-    androidId: 'localsend_android_donate_10',
-    iosId: 'localsend_ios_donate_10',
+    androidId: 'Locara_android_donate_10',
+    iosId: 'Locara_ios_donate_10',
   ),
   donate20(
-    androidId: 'localsend_android_donate_20',
-    iosId: 'localsend_ios_donate_20',
+    androidId: 'Locara_android_donate_20',
+    iosId: 'Locara_ios_donate_20',
   ),
   donate50(
-    androidId: 'localsend_android_donate_50',
-    iosId: 'localsend_ios_donate_50',
+    androidId: 'Locara_android_donate_50',
+    iosId: 'Locara_ios_donate_50',
   )
   ;
 
@@ -45,3 +45,4 @@ class PurchaseState with PurchaseStateMappable {
     required this.pending,
   });
 }
+

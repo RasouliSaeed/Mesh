@@ -1,4 +1,4 @@
-//! UDP multicast discovery for the LocalSend protocol (v2.2).
+//! UDP multicast discovery for the locara protocol (v2.2).
 //!
 //! Devices announce themselves by sending a [`MulticastMessageV2`] to the
 //! multicast group. Announcements are only ever sent, never answered over UDP:
@@ -21,16 +21,16 @@ use tokio::net::UdpSocket;
 use tokio::sync::{mpsc, oneshot, Mutex, RwLock};
 use tokio_util::sync::CancellationToken;
 
-/// The multicast group used by LocalSend.
+/// The multicast group used by locara.
 ///
 /// It is inside `224.0.0.0/24` because on some Android devices this is the only
 /// IP range that can receive UDP multicast messages.
 pub const DEFAULT_MULTICAST_GROUP: Ipv4Addr = Ipv4Addr::new(224, 0, 0, 167);
 
-/// The IPv6 multicast group used by LocalSend, a transient (`ff1x::`) group
+/// The IPv6 multicast group used by locara, a transient (`ff1x::`) group
 /// with link-local scope.
 ///
-/// IPv6 discovery is a LocalSend extension on top of protocol v2.2, so IPv4
+/// IPv6 discovery is a locara extension on top of protocol v2.2, so IPv4
 /// remains the baseline and IPv6 is announced in parallel.
 pub const DEFAULT_MULTICAST_GROUP_V6: Ipv6Addr =
     Ipv6Addr::new(0xff12, 0, 0, 0, 0, 0, 0xfd3a, 0xe420);
@@ -216,7 +216,7 @@ pub struct MulticastHandle {
 }
 
 impl MulticastHandle {
-    /// Announces this device to the network, which makes every other LocalSend
+    /// Announces this device to the network, which makes every other locara
     /// device on it register with this device over HTTP.
     ///
     /// Returns once the whole announcement burst has been sent, which takes a
@@ -423,3 +423,4 @@ mod tests {
         assert!(!json.contains("deviceModel"));
     }
 }
+

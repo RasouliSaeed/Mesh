@@ -6,8 +6,8 @@
 //! interface, a firewall dropping the group), so these tests skip themselves
 //! instead of failing when the environment does not carry the traffic.
 
-use localsend::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
-use localsend::multicast::{
+use locara::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
+use locara::multicast::{
     self, MulticastConfig, MulticastDevice, MulticastEvent, MulticastHandle,
 };
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
@@ -20,7 +20,7 @@ use tokio::sync::{mpsc, oneshot};
 static NEXT_PORT: AtomicU16 = AtomicU16::new(54317);
 
 /// Like the group the protocol uses, but distinct from it so that real
-/// LocalSend instances on the machine stay out.
+/// locara instances on the machine stay out.
 const TEST_GROUP: Ipv4Addr = Ipv4Addr::new(224, 0, 0, 168);
 
 /// See [TEST_GROUP].
@@ -242,3 +242,4 @@ async fn test_port_is_released_after_stop() {
         "the port must be bindable again after the discovery stopped"
     );
 }
+

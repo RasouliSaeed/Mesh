@@ -57,9 +57,10 @@ Future<bool> isContextMenuEnabled() async {
   }
 }
 
-const _windowsFileName = 'LocalSend';
+const _windowsFileName = 'Locara';
 
 String _getWindowsFilePath(String appName) {
   final appData = Platform.environment['APPDATA'];
   return '$appData/Microsoft/Windows/SendTo/$appName.lnk';
 }
+

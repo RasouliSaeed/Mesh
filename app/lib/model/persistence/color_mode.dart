@@ -1,7 +1,8 @@
 enum ColorMode {
   system, // dynamic colors
-  localsend,
+  Locara,
   oled,
   yaru,
   custom, // user-defined seed color
 }
+

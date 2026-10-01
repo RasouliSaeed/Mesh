@@ -8,10 +8,10 @@ use crate::sanitize;
 use crate::slots::slot_label;
 use crate::storage::{PairedChannel, PairedDevices};
 use crate::ui::{Category, Ui};
-use localsend::discovery::{
+use locara::discovery::{
     DeviceChannel, DiscoveredDevice, DiscoveryEvent, DiscoveryHandle, HttpChannel,
 };
-use localsend::http::dto_v2::RegisterDtoV2;
+use locara::http::dto_v2::RegisterDtoV2;
 use std::sync::Arc;
 
 impl App {
@@ -125,3 +125,4 @@ pub(super) fn device_confirmed(
         discovery.add_device(device).await;
     });
 }
+

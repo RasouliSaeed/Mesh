@@ -1,7 +1,7 @@
 #![cfg(feature = "crypto")]
 
-use localsend::crypto::hash::{sha256_file_content, sha256_hex, HashError};
-use localsend::model::transfer::FileContent;
+use locara::crypto::hash::{sha256_file_content, sha256_hex, HashError};
+use locara::model::transfer::FileContent;
 use tokio_util::sync::CancellationToken;
 
 /// SHA-256 of "hello world".
@@ -9,7 +9,7 @@ const HELLO_WORLD_HASH: &str = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee
 
 #[tokio::test]
 async fn hash_file_from_path() {
-    let path = std::env::temp_dir().join(format!("localsend-hash-{}", uuid::Uuid::new_v4()));
+    let path = std::env::temp_dir().join(format!("locara-hash-{}", uuid::Uuid::new_v4()));
     tokio::fs::write(&path, b"hello world").await.unwrap();
 
     let hash = sha256_file_content(
@@ -29,7 +29,7 @@ async fn hash_file_from_path() {
 #[tokio::test]
 async fn hash_large_file_from_path() {
     let content: Vec<u8> = (0..2_000_000).map(|i| (i % 251) as u8).collect();
-    let path = std::env::temp_dir().join(format!("localsend-hash-{}", uuid::Uuid::new_v4()));
+    let path = std::env::temp_dir().join(format!("locara-hash-{}", uuid::Uuid::new_v4()));
     tokio::fs::write(&path, &content).await.unwrap();
 
     let progress = std::sync::Mutex::new(Vec::new());
@@ -72,7 +72,7 @@ async fn hash_cancelled_while_reading() {
 /// A token that is already cancelled must not start reading at all.
 #[tokio::test]
 async fn hash_cancelled_before_start() {
-    let path = std::env::temp_dir().join(format!("localsend-hash-{}", uuid::Uuid::new_v4()));
+    let path = std::env::temp_dir().join(format!("locara-hash-{}", uuid::Uuid::new_v4()));
     tokio::fs::write(&path, b"hello world").await.unwrap();
     let cancel_token = CancellationToken::new();
     cancel_token.cancel();
@@ -85,7 +85,7 @@ async fn hash_cancelled_before_start() {
 
 #[tokio::test]
 async fn hash_missing_file_fails() {
-    let path = std::env::temp_dir().join(format!("localsend-hash-{}", uuid::Uuid::new_v4()));
+    let path = std::env::temp_dir().join(format!("locara-hash-{}", uuid::Uuid::new_v4()));
 
     let result =
         sha256_file_content(FileContent::Path(path), &CancellationToken::new(), |_| {}).await;
@@ -107,3 +107,4 @@ async fn hash_stream() {
 
     assert_eq!(hash, HELLO_WORLD_HASH);
 }
+

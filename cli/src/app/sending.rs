@@ -9,8 +9,8 @@ use crate::storage::Identity;
 use crate::ui::{Category, Ui};
 use crate::util::SpeedMeter;
 use crossterm::event::KeyEvent;
-use localsend::discovery::StatefulDevice;
-use localsend::model::transfer::{FileDto, FileMetadata};
+use locara::discovery::StatefulDevice;
+use locara::model::transfer::{FileDto, FileMetadata};
 use std::collections::HashMap;
 use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
@@ -321,7 +321,7 @@ mod tests {
                 .unwrap()
                 .as_nanos();
             let path = std::env::temp_dir().join(format!(
-                "localsend-cli-{name}-{}-{nonce}",
+                "locara-cli-{name}-{}-{nonce}",
                 std::process::id()
             ));
             fs::create_dir_all(&path).unwrap();
@@ -392,3 +392,4 @@ mod tests {
         assert!(collect_path(&root).is_empty());
     }
 }
+

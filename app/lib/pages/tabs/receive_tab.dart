@@ -81,7 +81,7 @@ class _ReceiveTabState extends State<ReceiveTab> {
                               return RotatingWidget(
                                 duration: const Duration(seconds: 15),
                                 spinning: serverState != null && animations && activeTab == HomeTab.receive,
-                                child: const LocalSendLogo(withText: false),
+                                child: const LocaraLogo(withText: false),
                               );
                             },
                           ),
@@ -248,5 +248,6 @@ class _InfoBox extends StatelessWidget {
     );
   }
 }
+
 
 

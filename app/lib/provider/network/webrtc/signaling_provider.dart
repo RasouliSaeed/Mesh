@@ -50,8 +50,8 @@ class SignalingService extends ReduxNotifier<SignalingState> {
   @override
   SignalingState init() {
     return SignalingState(
-      signalingServers: _persistence.getSignalingServers() ?? ['wss://public.localsend.org/v1/ws'],
-      stunServers: _persistence.getStunServers() ?? ['stun:stun.localsend.org:3478'],
+      signalingServers: _persistence.getSignalingServers() ?? ['wss://public.Locara.org/v1/ws'],
+      stunServers: _persistence.getStunServers() ?? ['stun:stun.Locara.org:3478'],
       connections: {},
     );
   }
@@ -87,7 +87,7 @@ class _SetupSignalingConnection extends AsyncGlobalAction {
 
     LsSignalingConnection? connection;
     final stream = connect(
-      uri: 'wss://public.localsend.org/v1/ws',
+      uri: 'wss://public.Locara.org/v1/ws',
       info: ProposingClientInfo(
         alias: settings.alias,
         version: protocolVersion,
@@ -250,5 +250,6 @@ extension on DeviceType {
     };
   }
 }
+
 
 

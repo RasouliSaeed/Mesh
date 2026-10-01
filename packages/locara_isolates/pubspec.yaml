@@ -1,5 +1,5 @@
 name: locara_isolates
-description: LocalSend network isolates and Rust bindings
+description: locara network isolates and Rust bindings
 publish_to: "none"
 resolution: workspace
 
@@ -23,7 +23,7 @@ dependencies:
   path: ^1.9.1
   pool: ^1.5.2
   refena_flutter: ^3.5.0
-  rust_lib_localsend_app:
+  rust_lib_locara_app:
     path: rust_builder
   typed_isolates:
     path: ../typed_isolates
@@ -36,3 +36,4 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^3.2.5
+

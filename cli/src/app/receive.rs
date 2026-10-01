@@ -6,11 +6,11 @@ use super::web_link::WebMode;
 use crate::sanitize;
 use crate::ui::Category;
 use crate::util::{self, SpeedMeter};
-use localsend::http::client::v2::LsHttpClientV2;
-use localsend::http::server::common::save::FileUploadTarget;
-use localsend::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2, SessionEndReasonV2};
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::FileDto;
+use locara::http::client::v2::LsHttpClientV2;
+use locara::http::server::common::save::FileUploadTarget;
+use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2, SessionEndReasonV2};
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::FileDto;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -500,3 +500,4 @@ impl App {
         }
     }
 }
+

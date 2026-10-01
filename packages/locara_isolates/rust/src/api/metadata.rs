@@ -1,4 +1,4 @@
-use localsend::model::transfer::FileMetadata;
+use locara::model::transfer::FileMetadata;
 
 /// Reads the timestamps of the file at `path` in the protocol's RFC 3339
 /// format with nanosecond precision, which Dart's `DateTime` cannot express.
@@ -6,3 +6,4 @@ use localsend::model::transfer::FileMetadata;
 pub async fn read_file_metadata(path: String) -> Option<FileMetadata> {
     FileMetadata::from_path(std::path::Path::new(&path))
 }
+

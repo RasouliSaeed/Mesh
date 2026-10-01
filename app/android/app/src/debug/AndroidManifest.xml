@@ -7,8 +7,9 @@
     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="LocalSend Debug"
+        android:label="Locara Debug"
         tools:ignore="MissingApplicationIcon"
         tools:replace="android:label" />
 </manifest>
+
 

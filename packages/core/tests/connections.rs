@@ -1,9 +1,9 @@
 #![cfg(feature = "http")]
 //! How the server admits connections and which protocol they may speak.
 
-use localsend::http::server::start_with_port;
-use localsend::http::server::web::WebConfig;
-use localsend::http::state::ClientInfo;
+use locara::http::server::start_with_port;
+use locara::http::server::web::WebConfig;
+use locara::http::state::ClientInfo;
 use std::time::Duration;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
@@ -86,7 +86,7 @@ async fn connections_beyond_the_limit_are_closed() {
     // Closed without an answer.
     let mut excess = connect(port).await;
     excess
-        .write_all(b"GET /api/localsend/v2/info HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        .write_all(b"GET /api/locara/v2/info HTTP/1.1\r\nHost: localhost\r\n\r\n")
         .await
         .ok();
     assert!(read_until_closed(&mut excess).await.is_empty());
@@ -97,7 +97,7 @@ async fn connections_beyond_the_limit_are_closed() {
         loop {
             let mut stream = connect(port).await;
             stream
-                .write_all(b"GET /api/localsend/v2/info HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
+                .write_all(b"GET /api/locara/v2/info HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
                 .await
                 .ok();
             if read_until_closed(&mut stream).await.starts_with(b"HTTP/1.1 ") {
@@ -112,3 +112,4 @@ async fn connections_beyond_the_limit_are_closed() {
         "no connection was served after one was closed"
     );
 }
+

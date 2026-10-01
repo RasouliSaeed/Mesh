@@ -1,13 +1,13 @@
 use crate::frb_generated::StreamSink;
 use flutter_rust_bridge::frb;
-pub use localsend::discovery::DeviceLogKind;
-use localsend::discovery::{
+pub use locara::discovery::DeviceLogKind;
+use locara::discovery::{
     DeviceChannel, DeviceIdentity, DeviceLog, DiscoveredDevice, DiscoveryConfig, DiscoveryEvent,
     DiscoveryHandle, HttpChannel, StatefulDevice,
 };
-use localsend::model::discovery::{DeviceType, ProtocolType};
-use localsend::multicast::{DEFAULT_MULTICAST_GROUP_V6, MulticastDevice};
-use localsend::util::interface::InterfaceFilter;
+use locara::model::discovery::{DeviceType, ProtocolType};
+use locara::multicast::{DEFAULT_MULTICAST_GROUP_V6, MulticastDevice};
+use locara::util::interface::InterfaceFilter;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::{Mutex, mpsc, oneshot};
@@ -147,7 +147,7 @@ static RUNNING_DISCOVERY: Mutex<Option<Arc<DiscoveryInstance>>> = Mutex::const_n
 /// network interfaces, answers announcements of other devices with an HTTP
 /// register request, and keeps the store of confirmed devices.
 ///
-/// Announcements are received from the IPv4 [group] and, as a LocalSend
+/// Announcements are received from the IPv4 [group] and, as a locara
 /// extension, from the (currently hardcoded) IPv6 group `ff12::fd3a:e420`.
 ///
 /// [port] is used both to bind the multicast sockets and as the HTTP server
@@ -192,7 +192,7 @@ pub async fn start_discovery(
     let (event_tx, event_rx) = mpsc::channel::<DiscoveryEvent>(16);
     let (stop_tx, stop_rx) = oneshot::channel::<()>();
 
-    let handle = localsend::discovery::start(
+    let handle = locara::discovery::start(
         DiscoveryConfig {
             group,
             // Hardcoded for now; becomes a parameter once the app exposes it.
@@ -296,7 +296,7 @@ impl RsDiscovery {
             .map(|err| format!("{err:#}"))
     }
 
-    /// Announces this device to the network, which makes every other LocalSend
+    /// Announces this device to the network, which makes every other locara
     /// device on it register with this device over HTTP.
     ///
     /// Devices registering in response arrive at the application as server
@@ -481,3 +481,4 @@ fn rs_stored_device(stored: StatefulDevice) -> RsStoredDevice {
         channels,
     }
 }
+

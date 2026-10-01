@@ -1,13 +1,13 @@
 //! `identity.pem`: this device's certificate and private key.
 
 use anyhow::Context;
-use localsend::crypto::cert::fingerprint_from_cert_der;
-use localsend::http::dto_v2::RegisterDtoV2;
-use localsend::http::server::TlsConfig;
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::DeviceType;
-use localsend::model::discovery::{PROTOCOL_VERSION_V2, ProtocolType};
-use localsend::multicast::MulticastDevice;
+use locara::crypto::cert::fingerprint_from_cert_der;
+use locara::http::dto_v2::RegisterDtoV2;
+use locara::http::server::TlsConfig;
+use locara::http::state::ClientInfo;
+use locara::model::discovery::DeviceType;
+use locara::model::discovery::{PROTOCOL_VERSION_V2, ProtocolType};
+use locara::multicast::MulticastDevice;
 use std::path::Path;
 
 /// This device's identity: a self-signed certificate whose SHA-256
@@ -87,7 +87,7 @@ impl Identity {
     }
 
     fn generate(alias: String, port: u16) -> anyhow::Result<Self> {
-        let cert = localsend::crypto::cert::generate_self_signed()?;
+        let cert = locara::crypto::cert::generate_self_signed()?;
 
         Ok(Self {
             alias,
@@ -141,3 +141,4 @@ impl Identity {
         }
     }
 }
+

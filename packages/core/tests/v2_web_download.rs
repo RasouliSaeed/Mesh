@@ -1,14 +1,14 @@
 #![cfg(feature = "http")]
 
 use bytes::Bytes;
-use localsend::http::client::{ClientError, LsHttpClientV2};
-use localsend::http::server::v2::ServerEventV2;
-use localsend::http::server::web::WebDownloadConfig;
-use localsend::http::server::web::{WebConfig, WebDownloadEvent, WebMode, WebPages};
-use localsend::http::server::{start_with_port, ServerConfigV2};
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::{FileContent, FileDto};
+use locara::http::client::{ClientError, LsHttpClientV2};
+use locara::http::server::v2::ServerEventV2;
+use locara::http::server::web::WebDownloadConfig;
+use locara::http::server::web::{WebConfig, WebDownloadEvent, WebMode, WebPages};
+use locara::http::server::{start_with_port, ServerConfigV2};
+use locara::http::state::ClientInfo;
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::{FileContent, FileDto};
 use std::collections::HashMap;
 use std::net::IpAddr;
 use std::path::PathBuf;
@@ -183,7 +183,7 @@ fn web_download_config(
 ) {
     let disk_content: Vec<u8> = (0..100_000u32).map(|i| i as u8).collect();
     let disk_path =
-        std::env::temp_dir().join(format!("localsend-web-download-{}", uuid::Uuid::new_v4()));
+        std::env::temp_dir().join(format!("locara-web-download-{}", uuid::Uuid::new_v4()));
     std::fs::write(&disk_path, &disk_content).expect("Failed to write test file");
 
     // The config only carries the metadata; the content is streamed by the
@@ -238,13 +238,13 @@ fn assert_status(result: Result<impl Sized, ClientError>, expected_status: u16) 
 async fn test_web_page() {
     let (config, contents, disk_path, _) = web_download_config(None);
     let server = start_test_server(Some((config, contents)), true).await;
-    let client = localsend::reqwest::Client::new();
+    let client = locara::reqwest::Client::new();
     let base_url = format!("http://127.0.0.1:{}", server.port);
 
     let response = client.get(&base_url).send().await.unwrap();
     assert_eq!(response.status().as_u16(), 200);
     let body = response.text().await.unwrap();
-    assert!(body.contains("LocalSend"));
+    assert!(body.contains("locara"));
     assert!(body.contains("prepare-download"));
 
     let response = client
@@ -271,14 +271,14 @@ async fn test_web_page() {
 #[tokio::test]
 async fn test_web_page_disabled() {
     let server = start_test_server(None, true).await;
-    let client = localsend::reqwest::Client::new();
+    let client = locara::reqwest::Client::new();
     let base_url = format!("http://127.0.0.1:{}", server.port);
 
     let response = client.get(&base_url).send().await.unwrap();
     assert_eq!(response.status().as_u16(), 403);
 
     let response = client
-        .post(format!("{base_url}/api/localsend/v2/prepare-download"))
+        .post(format!("{base_url}/api/locara/v2/prepare-download"))
         .send()
         .await
         .unwrap();
@@ -324,14 +324,14 @@ async fn test_upload_page() {
     .expect("Failed to start server");
     let port = handle.port();
 
-    let client = localsend::reqwest::Client::new();
+    let client = locara::reqwest::Client::new();
     let base_url = format!("http://127.0.0.1:{port}");
 
     // The upload page is served at `/` because web download is not active.
     let response = client.get(&base_url).send().await.unwrap();
     assert_eq!(response.status().as_u16(), 200);
     let body = response.text().await.unwrap();
-    assert!(body.contains("LocalSend"));
+    assert!(body.contains("locara"));
     assert!(body.contains("prepare-upload"));
     // The download page is not served without web download.
     assert!(!body.contains("prepare-download"));
@@ -383,7 +383,7 @@ async fn test_custom_web_pages() {
     .await
     .expect("Failed to start server");
 
-    let client = localsend::reqwest::Client::new();
+    let client = locara::reqwest::Client::new();
     let response = client
         .get(format!("http://127.0.0.1:{}", handle.port()))
         .send()
@@ -603,3 +603,4 @@ async fn test_pin_too_many_attempts() {
 
     let _ = std::fs::remove_file(disk_path);
 }
+

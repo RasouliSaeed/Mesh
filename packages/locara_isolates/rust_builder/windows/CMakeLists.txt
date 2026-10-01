@@ -5,18 +5,19 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Project-level configuration.
-set(PROJECT_NAME "rust_lib_localsend_app")
+set(PROJECT_NAME "rust_lib_locara_app")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
 include("../cargokit/cmake/cargokit.cmake")
 
-# Relative to app/windows/flutter/ephemeral/.plugin_symlinks/rust_lib_localsend_app/windows
-apply_cargokit(${PROJECT_NAME} ../../../../../../../packages/localsend_isolates/rust rust_lib_localsend_app "")
+# Relative to app/windows/flutter/ephemeral/.plugin_symlinks/rust_lib_locara_app/windows
+apply_cargokit(${PROJECT_NAME} ../../../../../../../packages/locara_isolates/rust rust_lib_locara_app "")
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
-set(rust_lib_localsend_app_bundled_libraries
+set(rust_lib_locara_app_bundled_libraries
   "${${PROJECT_NAME}_cargokit_lib}"
   PARENT_SCOPE
 )
+

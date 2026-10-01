@@ -5,22 +5,22 @@
 
 use bytes::Bytes;
 use futures_util::StreamExt;
-use localsend::http::client::{ClientError, LsHttpClientV2};
-use localsend::http::dto_v2::{PrepareUploadRequestDtoV2, RegisterDtoV2};
-use localsend::http::server::common::save::FileUploadTarget;
-use localsend::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
-use localsend::http::server::web::{WebConfig, WebMode};
-use localsend::http::server::{start_with_port, ServerConfigV2, TlsConfig};
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::FileDto;
+use locara::http::client::{ClientError, LsHttpClientV2};
+use locara::http::dto_v2::{PrepareUploadRequestDtoV2, RegisterDtoV2};
+use locara::http::server::common::save::FileUploadTarget;
+use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
+use locara::http::server::web::{WebConfig, WebMode};
+use locara::http::server::{start_with_port, ServerConfigV2, TlsConfig};
+use locara::http::state::ClientInfo;
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::FileDto;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use tokio::sync::{mpsc, oneshot, Mutex};
 use tokio_stream::wrappers::ReceiverStream;
 use tokio_util::sync::CancellationToken;
 
-/// A generated self-signed certificate, as LocalSend peers use them.
+/// A generated self-signed certificate, as locara peers use them.
 struct Identity {
     cert: String,
     private_key: String,
@@ -29,7 +29,7 @@ struct Identity {
 }
 
 fn generate_identity() -> Identity {
-    let cert = localsend::crypto::cert::generate_self_signed().unwrap();
+    let cert = locara::crypto::cert::generate_self_signed().unwrap();
 
     Identity {
         cert: cert.certificate_pem,
@@ -207,7 +207,7 @@ async fn upload_bytes(
     let sent = Arc::new(AtomicU64::new(0));
     let progress = sent.clone();
     let body =
-        localsend::reqwest::Body::wrap_stream(ReceiverStream::new(rx).map(move |chunk: Bytes| {
+        locara::reqwest::Body::wrap_stream(ReceiverStream::new(rx).map(move |chunk: Bytes| {
             progress.fetch_add(chunk.len() as u64, Ordering::Relaxed);
             Ok::<Bytes, std::io::Error>(chunk)
         }));
@@ -238,7 +238,7 @@ async fn test_transfer_with_matching_fingerprint() {
     let server = start_tls_server(&server_identity).await;
     let client = client(&sender, Some(&server_identity.fingerprint));
 
-    let content = b"hello localsend".repeat(100);
+    let content = b"hello locara".repeat(100);
     let files = vec![file_dto("file-1", content.len() as u64)];
 
     let result = client
@@ -381,7 +381,7 @@ async fn test_client_without_cert_allowed_in_web_mode() {
     .await;
 
     // A browser-like client: no client certificate, self-signed server cert accepted.
-    let browser = localsend::reqwest::Client::builder()
+    let browser = locara::reqwest::Client::builder()
         .use_rustls_tls()
         .danger_accept_invalid_certs(true)
         .build()
@@ -394,7 +394,7 @@ async fn test_client_without_cert_allowed_in_web_mode() {
     assert_eq!(response.status().as_u16(), 200);
     assert!(response.text().await.unwrap().contains("prepare-upload"));
 
-    // A LocalSend peer still authenticates with its certificate.
+    // A locara peer still authenticates with its certificate.
     let client = client(&sender, Some(&server_identity.fingerprint));
     let response = client
         .register(
@@ -430,3 +430,4 @@ async fn test_register_without_pin_returns_public_key() {
     assert!(response.public_key.is_some());
     assert_eq!(response.body.fingerprint, server_identity.fingerprint);
 }
+

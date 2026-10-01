@@ -1,4 +1,4 @@
-use localsend::webrtc::signaling::{ClientInfoWithoutId, WsServerMessage};
+use locara::webrtc::signaling::{ClientInfoWithoutId, WsServerMessage};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::{mpsc, Mutex};
@@ -31,3 +31,4 @@ impl AppState {
         }
     }
 }
+

@@ -31,8 +31,8 @@ void main(List<String> args) {
   );
   _replace(
     file: '$root/Cargo.lock',
-    pattern: 'name = "localsend-cli"\nversion = ".+"',
-    replacement: 'name = "localsend-cli"\nversion = "$version"',
+    pattern: 'name = "locara-cli"\nversion = ".+"',
+    replacement: 'name = "locara-cli"\nversion = "$version"',
   );
   _replace(
     file: '$root/support/scripts/compile_windows_exe-inno.iss',
@@ -68,3 +68,4 @@ void _replace({required String file, required String pattern, required String re
   File(file).writeAsStringSync(content.replaceFirst(regex, replacement));
   print('$file: $replacement');
 }
+

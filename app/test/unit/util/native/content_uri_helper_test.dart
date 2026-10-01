@@ -102,18 +102,18 @@ void main() {
   group('convertTreeUriToDocumentUri', () {
     test('should return the document uri from the tree uri', () {
       expect(
-        ContentUriHelper.convertTreeUriToDocumentUri(treeUri: 'content://com.android.externalstorage.documents/tree/primary%3ALocalSend'),
-        'content://com.android.externalstorage.documents/tree/primary%3ALocalSend/document/primary%3ALocalSend',
+        ContentUriHelper.convertTreeUriToDocumentUri(treeUri: 'content://com.android.externalstorage.documents/tree/primary%3Alocara'),
+        'content://com.android.externalstorage.documents/tree/primary%3Alocara/document/primary%3Alocara',
       );
     });
 
     test('should return the document uri from the tree uri with a folder', () {
       expect(
         ContentUriHelper.convertTreeUriToDocumentUri(
-          treeUri: 'content://com.android.externalstorage.documents/tree/primary%3ALocalSend',
+          treeUri: 'content://com.android.externalstorage.documents/tree/primary%3Alocara',
           suffix: 'subFolder',
         ),
-        'content://com.android.externalstorage.documents/tree/primary%3ALocalSend/document/primary%3ALocalSend%2FsubFolder',
+        'content://com.android.externalstorage.documents/tree/primary%3Alocara/document/primary%3Alocara%2FsubFolder',
       );
     });
   });
@@ -121,17 +121,18 @@ void main() {
   group('encodeTreeUri', () {
     test('should return the encoded tree uri', () {
       expect(
-        ContentUriHelper.encodeTreeUri('content://com.android.externalstorage.documents/tree/primary%3ALocalSend/subFolder'),
-        'content://com.android.externalstorage.documents/tree/primary%3ALocalSend%2FsubFolder',
+        ContentUriHelper.encodeTreeUri('content://com.android.externalstorage.documents/tree/primary%3Alocara/subFolder'),
+        'content://com.android.externalstorage.documents/tree/primary%3Alocara%2FsubFolder',
       );
     });
 
     test('should return the encoded tree uri with a folder in SD card', () {
       expect(
-        ContentUriHelper.encodeTreeUri('content://com.android.externalstorage.documents/tree/1234-5678:LocalSend/subFolder'),
-        'content://com.android.externalstorage.documents/tree/1234-5678%3ALocalSend%2FsubFolder',
+        ContentUriHelper.encodeTreeUri('content://com.android.externalstorage.documents/tree/1234-5678:locara/subFolder'),
+        'content://com.android.externalstorage.documents/tree/1234-5678%3Alocara%2FsubFolder',
       );
     });
   });
 }
+
 

@@ -1,3 +1,4 @@
-# LocalSend Signaling Server
+# locara Signaling Server
 
-A signaling server for LocalSend. Using Rust and WebSockets.
+A signaling server for locara. Using Rust and WebSockets.
+

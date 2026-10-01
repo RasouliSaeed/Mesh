@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:locara_isolates/util/content_uri_helper.dart';
 import 'package:logging/logging.dart';
 
-const _methodChannel = MethodChannel('org.localsend.localsend_app/localsend');
+const _methodChannel = MethodChannel('org.locara.locara_app/locara');
 final _logger = Logger('AndroidSaf');
 
 /// Opens [uri] for reading and returns an owned Linux file descriptor.
@@ -99,4 +99,5 @@ Future<int> openFileForWritingAndroid({required String uri}) async {
   }
   return fileDescriptor;
 }
+
 

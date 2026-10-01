@@ -83,7 +83,7 @@ Future<void> setupMethodCallHandler() async {
       case 'onPendingStrings':
         _pendingStringsStreamController.add((call.arguments as List).cast<String>());
         break;
-      case 'showLocalSendFromMenuBar':
+      case 'showLocaraFromMenuBar':
         await showFromTray();
         break;
     }
@@ -91,4 +91,5 @@ Future<void> setupMethodCallHandler() async {
 
   await _methodChannel.invokeMethod('methodChannelInitialized');
 }
+
 

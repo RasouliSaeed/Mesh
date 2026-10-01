@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:localsend_isolates/rust/frb_generated.dart';
-import 'package:localsend_isolates/src/task/server/file_saver.dart';
+import 'package:locara_isolates/rust/frb_generated.dart';
+import 'package:locara_isolates/src/task/server/file_saver.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
@@ -71,3 +71,4 @@ class _MockRustLibApi implements RustLibApi {
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnsupportedError('Not mocked: ${invocation.memberName}');
 }
+

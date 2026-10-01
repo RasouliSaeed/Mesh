@@ -23,7 +23,7 @@ class ShortcutWatcher extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
 
         // Add Control+Q binding for Linux
-        // https://github.com/localsend/localsend/issues/194
+        // https://github.com/Locara/Locara/issues/194
         if (checkPlatform([TargetPlatform.linux])) LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyQ): _ExitAppIntent(),
         // Add Command+W to close the window for macOS
         if (checkPlatform([TargetPlatform.macOS])) LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyW): _CloseWindowIntent(),
@@ -84,7 +84,7 @@ class _OpenSettingsIntent extends Intent {}
 
 bool _ignoreMetaLast = false;
 bool _isFakeMetaKey() {
-  // https://github.com/localsend/localsend/issues/2037
+  // https://github.com/Locara/Locara/issues/2037
   // We can detect the "fake" meta key by checking if the last key was a meta key
   // because the real meta key should be the first key pressed.
   if (_ignoreMetaLast) {
@@ -106,4 +106,5 @@ bool _isFakeMetaKey() {
 extension on LogicalKeyboardKey {
   bool get isMeta => this == LogicalKeyboardKey.meta || this == LogicalKeyboardKey.metaLeft || this == LogicalKeyboardKey.metaRight;
 }
+
 

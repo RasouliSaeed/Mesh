@@ -9,7 +9,7 @@ pub fn enable_debug_logging() -> Result<()> {
         // Android discards native stdout/stderr, so route tracing to logcat.
         tracing_subscriber::registry()
             .with(tracing_subscriber::filter::LevelFilter::DEBUG)
-            .with(tracing_android::layer("localsend_rust")?)
+            .with(tracing_android::layer("locara_rust")?)
             .try_init()
             .map_err(|e| anyhow::anyhow!(e.to_string()))?;
     }
@@ -22,3 +22,4 @@ pub fn enable_debug_logging() -> Result<()> {
 
     Ok(())
 }
+

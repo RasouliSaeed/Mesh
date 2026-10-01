@@ -1,20 +1,20 @@
 use crate::frb_generated::StreamSink;
 use flutter_rust_bridge::frb;
-pub use localsend::http::dto_v2::RegisterDtoV2;
-use localsend::http::server::ServerConfigV2;
-pub use localsend::http::server::TlsConfig;
-use localsend::http::server::common::save::FileUploadTarget;
-use localsend::http::server::internal::{InternalConfig, InternalEvent};
-pub use localsend::http::server::v2::SessionEndReasonV2;
-use localsend::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
-use localsend::http::server::web::{
+pub use locara::http::dto_v2::RegisterDtoV2;
+use locara::http::server::ServerConfigV2;
+pub use locara::http::server::TlsConfig;
+use locara::http::server::common::save::FileUploadTarget;
+use locara::http::server::internal::{InternalConfig, InternalEvent};
+pub use locara::http::server::v2::SessionEndReasonV2;
+use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
+use locara::http::server::web::{
     WebConfig, WebMode as CoreWebMode, WebDownloadConfig, WebDownloadEvent,
 };
-pub use localsend::http::server::web::{WebI18n, WebPages};
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::DeviceType;
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::{FileContent, FileDto};
+pub use locara::http::server::web::{WebI18n, WebPages};
+use locara::http::state::ClientInfo;
+use locara::model::discovery::DeviceType;
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::{FileContent, FileDto};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::{Mutex, mpsc, oneshot};
@@ -28,14 +28,14 @@ use tokio::sync::{Mutex, mpsc, oneshot};
 /// including the interface scope, which the Rust HTTP client accepts back as
 /// a host.
 pub enum RsServerEvent {
-    /// A device registered itself via `POST /api/localsend/v2/register`.
+    /// A device registered itself via `POST /api/locara/v2/register`.
     ///
     /// On TLS, this event is only emitted when `info.fingerprint` matches the
     /// fingerprint of the client certificate verified during the mTLS
     /// handshake, so the fingerprint cannot be spoofed.
     Register { ip: String, info: RegisterDtoV2 },
 
-    /// A sender requests to upload files via `POST /api/localsend/v2/prepare-upload`.
+    /// A sender requests to upload files via `POST /api/locara/v2/prepare-upload`.
     PrepareUpload {
         /// The session ID the upload session will have when the request is accepted.
         session_id: String,
@@ -49,7 +49,7 @@ pub enum RsServerEvent {
         files: HashMap<String, FileDto>,
     },
 
-    /// An accepted file is being uploaded via `POST /api/localsend/v2/upload`.
+    /// An accepted file is being uploaded via `POST /api/locara/v2/upload`.
     FileUpload {
         session_id: String,
         file_id: String,
@@ -68,13 +68,13 @@ pub enum RsServerEvent {
     /// no longer needs to be answered.
     PrepareUploadAborted { session_id: String },
 
-    /// `POST /api/localsend/v2/cancel` was received for a session this server
+    /// `POST /api/locara/v2/cancel` was received for a session this server
     /// does not manage: the remote device cancels a transfer this application
     /// is currently *sending* to it. The application must verify that [ip]
     /// matches the target of the send session before cancelling it.
     CancelReceived { ip: String, session_id: String },
 
-    /// A web client requests to download the shared files via `POST /api/localsend/v2/prepare-download`.
+    /// A web client requests to download the shared files via `POST /api/locara/v2/prepare-download`.
     ///
     /// Must be answered with [RsHttpServer::respond_prepare_download].
     WebPrepareDownload {
@@ -83,7 +83,7 @@ pub enum RsServerEvent {
         user_agent: Option<String>,
     },
 
-    /// A web client downloads an offered file via `GET /api/localsend/v2/download`.
+    /// A web client downloads an offered file via `GET /api/locara/v2/download`.
     ///
     /// Must be answered with [RsHttpServer::respond_file_download].
     WebFileDownload {
@@ -93,7 +93,7 @@ pub enum RsServerEvent {
     },
 
     /// Another application instance requested the running application to show itself
-    /// via `POST /api/localsend/v2/show`.
+    /// via `POST /api/locara/v2/show`.
     Show {
         /// Command-line arguments forwarded by the other application instance.
         args: Vec<String>,
@@ -124,7 +124,7 @@ pub struct RsHttpServer {
 /// [RUNNING_SERVER] so that a leftover instance can be stopped without its
 /// Dart owner.
 struct ServerInstance {
-    handle: localsend::http::server::ServerHandle,
+    handle: locara::http::server::ServerHandle,
     stop_tx: Mutex<Option<oneshot::Sender<()>>>,
 }
 
@@ -253,7 +253,7 @@ pub async fn start_server(
         None => (None, None),
     };
 
-    let handle = localsend::http::server::start_with_port(
+    let handle = locara::http::server::start_with_port(
         port,
         tls,
         ClientInfo {
@@ -805,3 +805,4 @@ pub enum _SessionEndReasonV2 {
     Finished,
     Cancelled,
 }
+

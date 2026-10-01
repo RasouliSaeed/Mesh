@@ -1,4 +1,4 @@
-name: _localsend_workspace
+name: _locara_workspace
 publish_to: none
 
 environment:
@@ -8,3 +8,4 @@ workspace:
   - app
   - packages/locara_isolates
   - packages/typed_isolates
+

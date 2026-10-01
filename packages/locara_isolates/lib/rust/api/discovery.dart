@@ -14,7 +14,7 @@ import 'package:locara_isolates/rust/frb_generated.dart';
 /// network interfaces, answers announcements of other devices with an HTTP
 /// register request, and keeps the store of confirmed devices.
 ///
-/// Announcements are received from the IPv4 [group] and, as a LocalSend
+/// Announcements are received from the IPv4 [group] and, as a locara
 /// extension, from the (currently hardcoded) IPv6 group `ff12::fd3a:e420`.
 ///
 /// [port] is used both to bind the multicast sockets and as the HTTP server
@@ -68,7 +68,7 @@ abstract class RsDiscovery implements RustOpaqueInterface {
   /// HTTP server. The device is emitted on [RsDiscovery::listen].
   Future<void> addDevice({required RsDiscoveredDevice device});
 
-  /// Announces this device to the network, which makes every other LocalSend
+  /// Announces this device to the network, which makes every other locara
   /// device on it register with this device over HTTP.
   ///
   /// Devices registering in response arrive at the application as server
@@ -322,4 +322,5 @@ class RsStoredDevice {
           download == other.download &&
           channels == other.channels;
 }
+
 

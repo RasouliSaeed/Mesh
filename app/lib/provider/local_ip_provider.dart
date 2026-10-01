@@ -47,8 +47,8 @@ class InitLocalIpAction extends ReduxAction<LocalIpService, NetworkState> {
       _subscription?.cancel();
 
       if (checkPlatform([TargetPlatform.windows])) {
-        // https://github.com/localsend/localsend/issues/12
-        // https://github.com/localsend/localsend/issues/78
+        // https://github.com/Locara/Locara/issues/12
+        // https://github.com/Locara/Locara/issues/78
       } else {
         _subscription = Connectivity().onConnectivityChanged.listen((_) async {
           await dispatchAsync(FetchLocalIpAction());
@@ -135,5 +135,6 @@ extension ListIpExt on List<String> {
     });
   }
 }
+
 
 

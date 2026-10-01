@@ -89,7 +89,7 @@ class SettingsTab extends StatelessWidget {
                   onTap: () => vm.onTapLanguage(context),
                 ),
                 if (checkPlatformIsDesktop()) ...[
-                  /// Wayland does window position handling, so there's no need for it. See [https://github.com/localsend/localsend/issues/544]
+                  /// Wayland does window position handling, so there's no need for it. See [https://github.com/Locara/Locara/issues/544]
                   if (vm.advanced && checkPlatformIsNotWaylandDesktop())
                     _BooleanEntry(
                       label: defaultTargetPlatform == TargetPlatform.windows
@@ -540,7 +540,7 @@ class SettingsTab extends StatelessWidget {
                   buttonLabel: t.general.open,
                   onTap: () async {
                     await launchUrl(
-                      Uri.parse('https://localsend.org/privacy'),
+                      Uri.parse('https://Locara.org/privacy'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -574,7 +574,7 @@ class SettingsTab extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const LocalSendLogo(withText: true),
+            const LocaraLogo(withText: true),
             const SizedBox(height: 5),
             ref
                 .watch(versionProvider)
@@ -765,12 +765,13 @@ extension on ColorMode {
   String get humanName {
     return switch (this) {
       ColorMode.system => t.settingsTab.general.colorOptions.system,
-      ColorMode.localsend => t.appName,
+      ColorMode.Locara => t.appName,
       ColorMode.oled => t.settingsTab.general.colorOptions.oled,
       ColorMode.yaru => 'Yaru',
       ColorMode.custom => t.settingsTab.general.colorOptions.custom,
     };
   }
 }
+
 
 

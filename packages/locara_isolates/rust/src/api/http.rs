@@ -2,16 +2,16 @@ use crate::api::cancel::RsCancellationToken;
 use crate::api::stream;
 use crate::frb_generated::StreamSink;
 use flutter_rust_bridge::frb;
-pub use localsend::http::client::{ClientError, LsHttpClientVersion};
-pub use localsend::http::dto::{
+pub use locara::http::client::{ClientError, LsHttpClientVersion};
+pub use locara::http::dto::{
     PrepareUploadRequestDto, PrepareUploadResponseDto, PrepareUploadResult,
     RegisterDto, RegisterResponseDto,
 };
-use localsend::model::discovery::ProtocolType;
-use localsend::util::error::ErrorChain;
+use locara::model::discovery::ProtocolType;
+use locara::util::error::ErrorChain;
 
 pub struct RsHttpClient {
-    inner: localsend::http::client::LsHttpClient,
+    inner: locara::http::client::LsHttpClient,
 }
 
 /// Creates an HTTP client.
@@ -28,7 +28,7 @@ pub fn create_client(
     expected_fingerprint: Option<String>,
     timeout_ms: Option<u32>,
 ) -> Result<RsHttpClient, RsHttpClientError> {
-    let inner = localsend::http::client::LsHttpClient::new(
+    let inner = locara::http::client::LsHttpClient::new(
         &private_key,
         &cert,
         version,
@@ -177,16 +177,16 @@ fn resolve_file_content(
     binary: Option<stream::Dart2RustStreamReceiver>,
     path: Option<String>,
     file_descriptor: Option<i32>,
-) -> Result<localsend::model::transfer::FileContent, RsHttpClientError> {
+) -> Result<locara::model::transfer::FileContent, RsHttpClientError> {
     match (binary, path, file_descriptor) {
-        (Some(binary), None, None) => Ok(localsend::model::transfer::FileContent::Stream(
+        (Some(binary), None, None) => Ok(locara::model::transfer::FileContent::Stream(
             binary.receiver,
         )),
-        (None, Some(path), None) => Ok(localsend::model::transfer::FileContent::Path(path.into())),
+        (None, Some(path), None) => Ok(locara::model::transfer::FileContent::Path(path.into())),
         (None, None, Some(file_descriptor)) => {
             #[cfg(target_os = "android")]
             {
-                Ok(localsend::model::transfer::FileContent::Fd(file_descriptor))
+                Ok(locara::model::transfer::FileContent::Fd(file_descriptor))
             }
             #[cfg(not(target_os = "android"))]
             {
@@ -256,3 +256,4 @@ pub struct ResultWithPublicKeyRegisterResponseDto {
     pub public_key: Option<String>,
     pub body: RegisterResponseDto,
 }
+

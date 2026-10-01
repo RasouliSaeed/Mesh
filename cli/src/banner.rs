@@ -1,6 +1,6 @@
 use crate::storage::Repository;
 use crossterm::style::Stylize;
-use localsend::http::server::ServerHandle;
+use locara::http::server::ServerHandle;
 use std::net::SocketAddr;
 
 #[rustfmt::skip]
@@ -17,7 +17,7 @@ pub fn render(storage: &Repository, server: &ServerHandle) -> String {
         .enumerate()
         .map(|(i, line)| {
             let right = match i {
-                1 => "  LocalSend CLI",
+                1 => "  locara CLI",
                 2 => concat!("  v", env!("CARGO_PKG_VERSION")),
                 _ => "",
             };
@@ -132,3 +132,4 @@ mod tests {
         assert_eq!(lines, [" - https://[2a02::1]:53317"]);
     }
 }
+

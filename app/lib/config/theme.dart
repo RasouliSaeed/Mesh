@@ -27,7 +27,7 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
     borderRadius: _borderRadius,
   );
 
-  // https://github.com/localsend/localsend/issues/52
+  // https://github.com/Locara/Locara/issues/52
   final String? fontFamily;
   if (checkPlatform([TargetPlatform.windows])) {
     fontFamily = switch (LocaleSettings.currentLocale) {
@@ -161,7 +161,7 @@ ColorScheme _determineColorScheme(ColorMode mode, Color customColor, Brightness 
 
   final colorScheme = switch (mode) {
     ColorMode.system => brightness == Brightness.light ? dynamicColors?.light : dynamicColors?.dark,
-    ColorMode.localsend => null,
+    ColorMode.Locara => null,
     ColorMode.oled => (dynamicColors?.dark ?? defaultColorScheme).copyWith(
       surface: Colors.black,
     ),
@@ -233,5 +233,6 @@ ThemeData _getYaruTheme(Brightness brightness) {
     ),
   );
 }
+
 
 

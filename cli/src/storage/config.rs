@@ -17,8 +17,8 @@ pub struct Config {
 }
 
 const CONFIG_TEMPLATE: &str = "\
-# LocalSend CLI configuration. Command-line flags and environment variables
-# (LOCALSEND_ALIAS, LOCALSEND_PORT, LOCALSEND_DESTINATION) take precedence.
+# locara CLI configuration. Command-line flags and environment variables
+# (locara_ALIAS, locara_PORT, locara_DESTINATION) take precedence.
 
 # Device name shown to other devices (default: the hostname).
 #alias = \"My Device\"
@@ -90,3 +90,4 @@ fn expand_tilde(path: PathBuf) -> PathBuf {
         _ => path,
     }
 }
+

@@ -174,7 +174,7 @@ class RegisterDtoV2 {
 sealed class RsServerEvent with _$RsServerEvent {
   const RsServerEvent._();
 
-  /// A device registered itself via `POST /api/localsend/v2/register`.
+  /// A device registered itself via `POST /api/locara/v2/register`.
   ///
   /// On TLS, this event is only emitted when `info.fingerprint` matches the
   /// fingerprint of the client certificate verified during the mTLS
@@ -184,7 +184,7 @@ sealed class RsServerEvent with _$RsServerEvent {
     required RegisterDtoV2 info,
   }) = RsServerEvent_Register;
 
-  /// A sender requests to upload files via `POST /api/localsend/v2/prepare-upload`.
+  /// A sender requests to upload files via `POST /api/locara/v2/prepare-upload`.
   const factory RsServerEvent.prepareUpload({
     /// The session ID the upload session will have when the request is accepted.
     required String sessionId,
@@ -199,7 +199,7 @@ sealed class RsServerEvent with _$RsServerEvent {
     required Map<String, FileDto> files,
   }) = RsServerEvent_PrepareUpload;
 
-  /// An accepted file is being uploaded via `POST /api/localsend/v2/upload`.
+  /// An accepted file is being uploaded via `POST /api/locara/v2/upload`.
   const factory RsServerEvent.fileUpload({
     required String sessionId,
     required String fileId,
@@ -220,7 +220,7 @@ sealed class RsServerEvent with _$RsServerEvent {
     required String sessionId,
   }) = RsServerEvent_PrepareUploadAborted;
 
-  /// `POST /api/localsend/v2/cancel` was received for a session this server
+  /// `POST /api/locara/v2/cancel` was received for a session this server
   /// does not manage: the remote device cancels a transfer this application
   /// is currently *sending* to it. The application must verify that [ip]
   /// matches the target of the send session before cancelling it.
@@ -229,7 +229,7 @@ sealed class RsServerEvent with _$RsServerEvent {
     required String sessionId,
   }) = RsServerEvent_CancelReceived;
 
-  /// A web client requests to download the shared files via `POST /api/localsend/v2/prepare-download`.
+  /// A web client requests to download the shared files via `POST /api/locara/v2/prepare-download`.
   ///
   /// Must be answered with [RsHttpServer::respond_prepare_download].
   const factory RsServerEvent.webPrepareDownload({
@@ -238,7 +238,7 @@ sealed class RsServerEvent with _$RsServerEvent {
     String? userAgent,
   }) = RsServerEvent_WebPrepareDownload;
 
-  /// A web client downloads an offered file via `GET /api/localsend/v2/download`.
+  /// A web client downloads an offered file via `GET /api/locara/v2/download`.
   ///
   /// Must be answered with [RsHttpServer::respond_file_download].
   const factory RsServerEvent.webFileDownload({
@@ -248,7 +248,7 @@ sealed class RsServerEvent with _$RsServerEvent {
   }) = RsServerEvent_WebFileDownload;
 
   /// Another application instance requested the running application to show itself
-  /// via `POST /api/localsend/v2/show`.
+  /// via `POST /api/locara/v2/show`.
   const factory RsServerEvent.show_({
     /// Command-line arguments forwarded by the other application instance.
     required List<String> args,
@@ -424,4 +424,5 @@ class WebParams {
       identical(this, other) ||
       other is WebParams && runtimeType == other.runtimeType && mode == other.mode && i18N == other.i18N && pages == other.pages;
 }
+
 

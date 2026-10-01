@@ -25,7 +25,7 @@ use tokio_stream::StreamExt;
 #[derive(Debug)]
 pub enum WebDownloadEvent {
     /// A web client requests to download the shared files
-    /// via `POST /api/localsend/v2/prepare-download`.
+    /// via `POST /api/locara/v2/prepare-download`.
     ///
     /// The application must answer on `decision_tx`.
     /// Dropping `decision_tx` results in a 500 response.
@@ -43,7 +43,7 @@ pub enum WebDownloadEvent {
         decision_tx: oneshot::Sender<bool>,
     },
 
-    /// An accepted web client downloads a file via `GET /api/localsend/v2/download`.
+    /// An accepted web client downloads a file via `GET /api/locara/v2/download`.
     ///
     /// The application must respond on `content_tx` with the file content. The
     /// response body advertises `file.size` bytes, so the application should
@@ -585,3 +585,4 @@ async fn clear_pending_session(web: &WebDownloadState, session_id: &str) {
         sessions.remove(session_id);
     }
 }
+

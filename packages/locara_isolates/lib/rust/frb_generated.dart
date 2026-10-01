@@ -79,7 +79,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   int get rustContentHash => -1979579466;
 
   static const kDefaultExternalLibraryLoaderConfig = ExternalLibraryLoaderConfig(
-    stem: 'rust_lib_localsend_app',
+    stem: 'rust_lib_locara_app',
     ioDirectory: 'rust/target/release/',
     webPrefix: 'pkg/',
     wasmBindgenName: 'wasm_bindgen',
@@ -6342,7 +6342,7 @@ class RsDiscoveryImpl extends RustOpaque implements RsDiscovery {
   Future<void> addDevice({required RsDiscoveredDevice device}) =>
       RustLib.instance.api.crateApiDiscoveryRsDiscoveryAddDevice(that: this, device: device);
 
-  /// Announces this device to the network, which makes every other LocalSend
+  /// Announces this device to the network, which makes every other locara
   /// device on it register with this device over HTTP.
   ///
   /// Devices registering in response arrive at the application as server
@@ -6734,4 +6734,5 @@ class RtcSendControllerImpl extends RustOpaque implements RtcSendController {
 
   Future<void> sendPin({required String pin}) => RustLib.instance.api.crateApiWebrtcRtcSendControllerSendPin(that: this, pin: pin);
 }
+
 

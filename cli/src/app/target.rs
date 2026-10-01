@@ -1,6 +1,6 @@
-use localsend::discovery::{HttpChannel, StatefulDevice};
-use localsend::model::discovery::ProtocolType;
-use localsend::multicast::DEFAULT_PORT;
+use locara::discovery::{HttpChannel, StatefulDevice};
+use locara::model::discovery::ProtocolType;
+use locara::multicast::DEFAULT_PORT;
 use std::net::IpAddr;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -73,10 +73,10 @@ impl std::fmt::Display for TargetSelector {
 #[cfg(test)]
 mod tests {
     use super::TargetSelector;
-    use localsend::discovery::{
+    use locara::discovery::{
         ChannelStatus, DeviceChannel, DiscoveredDevice, HttpChannel, StatefulDevice,
     };
-    use localsend::model::discovery::ProtocolType;
+    use locara::model::discovery::ProtocolType;
     use std::collections::HashMap;
     use std::net::{IpAddr, Ipv4Addr};
 
@@ -188,3 +188,4 @@ mod tests {
         );
     }
 }
+

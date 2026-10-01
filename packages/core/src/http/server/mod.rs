@@ -628,13 +628,13 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/") => Ok(web::index(&state)),
         (&Method::GET, "/i18n.json") => web::i18n(&state),
-        (&Method::POST, "/api/localsend/v2/prepare-download") => {
+        (&Method::POST, "/api/locara/v2/prepare-download") => {
             web::prepare_download(req, state, client_info).await
         }
-        (&Method::GET, "/api/localsend/v2/download") => {
+        (&Method::GET, "/api/locara/v2/download") => {
             web::download(req, state, client_info).await
         }
-        (&Method::POST, "/api/localsend/v2/register") => {
+        (&Method::POST, "/api/locara/v2/register") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
             }
@@ -644,28 +644,28 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
                 .into_response())
         }
         // Old clients (v1.17 and earlier) probe unknown peers on the v1 route
-        (&Method::GET, "/api/localsend/v1/info") | (&Method::GET, "/api/localsend/v2/info") => {
+        (&Method::GET, "/api/locara/v1/info") | (&Method::GET, "/api/locara/v2/info") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
             }
 
             Ok(v2::info(state).await?.into_response())
         }
-        (&Method::POST, "/api/localsend/v2/prepare-upload") => {
+        (&Method::POST, "/api/locara/v2/prepare-upload") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
             }
 
             v2::prepare_upload(req, state, client_info).await
         }
-        (&Method::POST, "/api/localsend/v2/upload") => {
+        (&Method::POST, "/api/locara/v2/upload") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
             }
 
             v2::upload(req, state, client_info).await
         }
-        (&Method::POST, "/api/localsend/v2/cancel") => {
+        (&Method::POST, "/api/locara/v2/cancel") => {
             if !v2_enabled {
                 return Err(AppError::Status(StatusCode::NOT_FOUND));
             }
@@ -673,13 +673,13 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
             v2::cancel(req, state, client_info).await
         }
         // The versioned path is retained for compatibility, but this endpoint is internal.
-        (&Method::POST, "/api/localsend/v2/show") => internal::show(req, state).await,
-        (&Method::POST, "/api/localsend/v3/nonce") => {
+        (&Method::POST, "/api/locara/v2/show") => internal::show(req, state).await,
+        (&Method::POST, "/api/locara/v3/nonce") => {
             Ok(v3::nonce_exchange(req.into_body(), state, client_info)
                 .await?
                 .into_response())
         }
-        (&Method::POST, "/api/localsend/v3/register") => {
+        (&Method::POST, "/api/locara/v3/register") => {
             Ok(v3::register(req.into_body(), state, client_info)
                 .await?
                 .into_response())
@@ -691,3 +691,4 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
         }
     }
 }
+

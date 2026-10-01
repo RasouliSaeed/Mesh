@@ -6,15 +6,15 @@ void main() {
   test('should put settings.json next to the executable', () {
     expect(
       buildSettingsPath(
-        executablePath: path.join('opt', 'localsend', 'localsend_app'),
+        executablePath: path.join('opt', 'locara', 'locara_app'),
         fallbackDirectory: () => fail('The fallback should not be used when the executable is known'),
       ),
-      path.join('opt', 'localsend', 'settings.json'),
+      path.join('opt', 'locara', 'settings.json'),
     );
   });
 
   test('should fall back to the working directory when the executable is unknown', () {
-    // https://github.com/localsend/localsend/issues/3021
+    // https://github.com/locara/locara/issues/3021
     expect(
       buildSettingsPath(
         executablePath: null,
@@ -24,4 +24,5 @@ void main() {
     );
   });
 }
+
 

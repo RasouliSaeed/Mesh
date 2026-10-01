@@ -1,5 +1,5 @@
 use flutter_rust_bridge::frb;
-use localsend::util::filename;
+use locara::util::filename;
 
 /// Rewrites `name` into a file name that is legal on the current platform,
 /// replacing illegal characters with `_`.
@@ -14,3 +14,4 @@ pub fn sanitize_file_name(name: String) -> String {
 pub fn is_valid_file_name(name: String) -> bool {
     filename::is_valid(&name, filename::Rules::current())
 }
+

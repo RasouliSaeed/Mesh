@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY Cargo.toml Cargo.lock ./
 COPY packages/core ./packages/core
-COPY packages/localsend_isolates/rust ./packages/localsend_isolates/rust
+COPY packages/locara_isolates/rust ./packages/locara_isolates/rust
 COPY server ./server
 COPY cli ./cli
 
@@ -20,3 +20,4 @@ COPY --from=builder /server-bin /server
 
 EXPOSE 3000
 ENTRYPOINT ["/server"]
+

@@ -1,7 +1,7 @@
 display_name: هم‌رسان
 packager: Tienisto
 packagerEmail: dev.tien.donam@gmail.com
-url: https://localsend.org
+url: https://locara.org
 buildArch: x86_64
 license: MIT
 
@@ -26,3 +26,4 @@ categories:
   - Utility
 
 startup_notify: true
+

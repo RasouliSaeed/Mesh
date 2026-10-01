@@ -2,7 +2,7 @@
 # - brew install create-dmg
 
 VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' app/pubspec.yaml)
-DMG="LocalSend-$VERSION.dmg"
+DMG="locara-$VERSION.dmg"
 
 cd app
 fvm flutter clean
@@ -14,7 +14,7 @@ echo
 echo "Signing the app..."
 echo
 SIGN_ID="Developer ID Application: Tien Do Nam (3W7H4PYMCV)"
-codesign --deep --force --verbose --options runtime --preserve-metadata=entitlements --sign "$SIGN_ID" build/macos/Build/Products/Release/LocalSend.app
+codesign --deep --force --verbose --options runtime --preserve-metadata=entitlements --sign "$SIGN_ID" build/macos/Build/Products/Release/locara.app
 
 # create dmg
 # brew install create-dmg
@@ -23,13 +23,13 @@ echo "Creating dmg..."
 echo
 rm -f "$DMG"
 create-dmg \
-  --volname "LocalSend" \
+  --volname "locara" \
   --window-size 500 300 \
   --background "../support/build/dmg/background.png" \
-  --icon LocalSend.app 130 110 \
+  --icon locara.app 130 110 \
   --app-drop-link 360 110 \
   "$DMG" \
-  build/macos/Build/Products/Release/LocalSend.app
+  build/macos/Build/Products/Release/locara.app
 
 # sign the dmg
 echo
@@ -53,3 +53,4 @@ echo "Run stapler..."
 echo
 xcrun stapler staple "$DMG"
 cd ..
+

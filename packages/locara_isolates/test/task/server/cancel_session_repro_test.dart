@@ -8,7 +8,7 @@
 //
 // Loads the real Rust dylib and replicates the event loop of
 // `server_isolate.dart` without isolates. Skipped when the dylib is missing;
-// build it with `cargo build -p rust_lib_localsend_app` from the repo root.
+// build it with `cargo build -p rust_lib_locara_app` from the repo root.
 @Timeout(Duration(minutes: 2))
 library;
 
@@ -18,9 +18,9 @@ import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart' show ExternalLibrary;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:localsend_isolates/rust/api/server.dart';
-import 'package:localsend_isolates/rust/frb_generated.dart';
-import 'package:localsend_isolates/util/future_queue.dart';
+import 'package:locara_isolates/rust/api/server.dart';
+import 'package:locara_isolates/rust/frb_generated.dart';
+import 'package:locara_isolates/util/future_queue.dart';
 
 const _port = 40901;
 
@@ -34,9 +34,9 @@ class _ReceiveSession {
 
 void main() {
   test('new session works after receiver-side cancel during transfer', () async {
-    final dylib = File('${Directory.current.path}/../../target/debug/librust_lib_localsend_app.dylib');
+    final dylib = File('${Directory.current.path}/../../target/debug/librust_lib_locara_app.dylib');
     if (!dylib.existsSync()) {
-      markTestSkipped('Rust dylib not built (cargo build -p rust_lib_localsend_app)');
+      markTestSkipped('Rust dylib not built (cargo build -p rust_lib_locara_app)');
       return;
     }
     await RustLib.init(externalLibrary: ExternalLibrary.open(dylib.path));
@@ -139,7 +139,7 @@ void main() {
     final client = HttpClient();
 
     Future<(int, String)> prepareUpload(List<String> fileIds, {required int size}) async {
-      final req = await client.postUrl(Uri.parse('http://127.0.0.1:$_port/api/localsend/v2/prepare-upload'));
+      final req = await client.postUrl(Uri.parse('http://127.0.0.1:$_port/api/locara/v2/prepare-upload'));
       req.headers.contentType = ContentType.json;
       req.write(
         jsonEncode({
@@ -171,7 +171,7 @@ void main() {
     // [senderAbort] completes (like the sender's cancellation token).
     Future<int> upload(String sessionId, String fileId, String token, int size, {bool abortable = false}) async {
       final req = await client.postUrl(
-        Uri.parse('http://127.0.0.1:$_port/api/localsend/v2/upload?sessionId=$sessionId&fileId=$fileId&token=$token'),
+        Uri.parse('http://127.0.0.1:$_port/api/locara/v2/upload?sessionId=$sessionId&fileId=$fileId&token=$token'),
       );
       req.headers.contentLength = size;
       var aborted = false;
@@ -253,3 +253,4 @@ void main() {
     await tempDir.delete(recursive: true);
   });
 }
+

@@ -11,8 +11,8 @@ use crate::sanitize;
 use crate::storage::Repository;
 use crate::ui::{Category, Ui};
 use crate::util;
-use localsend::discovery::{DiscoveryEvent, DiscoveryHandle};
-use localsend::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
+use locara::discovery::{DiscoveryEvent, DiscoveryHandle};
+use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::Ordering;
@@ -235,3 +235,4 @@ fn render_progress(ui: &mut Ui, send: &mut Option<SendState>) {
         width,
     )));
 }
+

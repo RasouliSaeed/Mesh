@@ -5,11 +5,11 @@
 //! Usage:
 //!   cargo run --release --example stress_send --features full -- [host] [port] [pin]
 
-use localsend::http::client::LsHttpClientV2;
-use localsend::http::dto_v2::PrepareUploadRequestDtoV2;
-use localsend::http::dto_v2::RegisterDtoV2;
-use localsend::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
-use localsend::model::transfer::FileDto;
+use locara::http::client::LsHttpClientV2;
+use locara::http::dto_v2::PrepareUploadRequestDtoV2;
+use locara::http::dto_v2::RegisterDtoV2;
+use locara::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
+use locara::model::transfer::FileDto;
 use rand::{Rng, RngExt};
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
@@ -108,7 +108,7 @@ async fn main() -> anyhow::Result<()> {
                 &response.session_id,
                 &id,
                 token,
-                localsend::reqwest::Body::from(bytes),
+                locara::reqwest::Body::from(bytes),
                 CancellationToken::new(),
             )
             .await
@@ -123,3 +123,4 @@ async fn main() -> anyhow::Result<()> {
     println!("Done: {sent} files in {:.1?}", started.elapsed());
     Ok(())
 }
+

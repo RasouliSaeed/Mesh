@@ -1,5 +1,5 @@
 [package]
-name = "localsend"
+name = "locara"
 version = "0.1.0"
 edition = "2021"
 
@@ -60,3 +60,4 @@ multicast = ["if-addrs", "socket2", "tokio-util"]
 webrtc-signaling = ["tokio-tungstenite"]
 webrtc = ["crypto", "flate2", "dep:webrtc", "webrtc-signaling", "x509-parser"]
 full = ["crypto", "discovery", "http", "multicast", "webrtc"]
+

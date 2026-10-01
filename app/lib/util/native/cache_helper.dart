@@ -48,7 +48,7 @@ Future<void> _clear(RootIsolateToken token) async {
     checkPlatform([TargetPlatform.iOS])
         ? PathProviderFoundation()
               .getContainerPath(
-                appGroupIdentifier: 'group.org.localsend.localsendApp',
+                appGroupIdentifier: 'group.org.Locara.LocaraApp',
               )
               .then((directoryPath) async {
                 if (directoryPath == null) {
@@ -75,5 +75,6 @@ Future<void> _clear(RootIsolateToken token) async {
     _logger.warning('Failed to clear cache: $e');
   }
 }
+
 
 

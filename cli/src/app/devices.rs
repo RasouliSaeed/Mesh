@@ -8,7 +8,7 @@ use crate::sanitize;
 use crate::storage::PairedChannel;
 use crate::ui::Category;
 use crossterm::event::KeyEvent;
-use localsend::discovery::StatefulDevice;
+use locara::discovery::StatefulDevice;
 
 impl App {
     pub(super) fn open_device_list(&mut self) {
@@ -171,3 +171,4 @@ fn channel_hosts(stored: &StatefulDevice) -> Vec<String> {
         .map(|http| http.host.clone())
         .collect()
 }
+

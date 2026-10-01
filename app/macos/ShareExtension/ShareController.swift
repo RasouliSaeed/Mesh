@@ -44,9 +44,9 @@ final class ShareController: ExtensionController {
             Defaults[.pendingStrings].append(string)
         }
         
-        // Launch localsend app if it's not running
-        let localsendAppURL = getParentAppURL()
-        launchAppIfNeeded(appURL: localsendAppURL)
+        // Launch locara app if it's not running
+        let locaraAppURL = getParentAppURL()
+        launchAppIfNeeded(appURL: locaraAppURL)
         
         // Close the share extension
         context.completeRequest(returningItems: [], completionHandler: nil)
@@ -54,3 +54,4 @@ final class ShareController: ExtensionController {
         return []
     }
 }
+

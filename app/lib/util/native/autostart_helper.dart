@@ -107,7 +107,7 @@ Future<bool> isAutoStartHidden() async {
   }
 }
 
-const _windowsRegistryKeyValue = 'LocalSend';
+const _windowsRegistryKeyValue = 'Locara';
 
 RegistryKey _getWindowsRegistryKey() {
   return Registry.openPath(
@@ -120,4 +120,5 @@ RegistryKey _getWindowsRegistryKey() {
 String _getLinuxFilePath(String appName) {
   return '${Platform.environment['HOME']}/.config/autostart/$appName.desktop';
 }
+
 

@@ -9,11 +9,11 @@ use super::{App, sending};
 use crate::picker::PickerTarget;
 use crate::ui::Category;
 use crate::util;
-use localsend::http::server::web::{
+use locara::http::server::web::{
     WebConfig, WebDownloadConfig, WebDownloadEvent, WebMode as CoreWebMode,
 };
-use localsend::http::server::{ServerConfigV2, start_with_port};
-use localsend::model::transfer::FileContent;
+use locara::http::server::{ServerConfigV2, start_with_port};
+use locara::model::transfer::FileContent;
 use qrcode::render::unicode;
 use qrcode::{EcLevel, QrCode};
 use std::collections::HashMap;
@@ -265,3 +265,4 @@ impl App {
         }
     }
 }
+

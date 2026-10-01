@@ -9,10 +9,10 @@
 //! This test lowers the descriptor limit of its own process, which is why it
 //! is the only test in this binary.
 
-use localsend::http::server::v2::ServerEventV2;
-use localsend::http::server::web::WebConfig;
-use localsend::http::server::{start_with_port, ServerConfigV2};
-use localsend::http::state::ClientInfo;
+use locara::http::server::v2::ServerEventV2;
+use locara::http::server::web::WebConfig;
+use locara::http::server::{start_with_port, ServerConfigV2};
+use locara::http::state::ClientInfo;
 use std::time::Duration;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::sync::{mpsc, oneshot};
@@ -43,7 +43,7 @@ async fn info_status(port: u16) -> std::io::Result<String> {
     let mut stream = tokio::net::TcpStream::connect(("127.0.0.1", port)).await?;
     stream
         .write_all(
-            b"GET /api/localsend/v2/info HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n",
+            b"GET /api/locara/v2/info HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n",
         )
         .await?;
     let mut buf = Vec::new();
@@ -142,3 +142,4 @@ async fn server_survives_descriptor_exhaustion() {
         "the server stopped accepting after running out of descriptors: {status:?}"
     );
 }
+

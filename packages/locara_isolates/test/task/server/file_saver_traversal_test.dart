@@ -6,8 +6,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:localsend_isolates/rust/frb_generated.dart';
-import 'package:localsend_isolates/src/task/server/file_saver.dart';
+import 'package:locara_isolates/rust/frb_generated.dart';
+import 'package:locara_isolates/src/task/server/file_saver.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
@@ -100,7 +100,7 @@ void main() {
 
 String jsonish(String value) => value.isEmpty ? '<empty>' : value.replaceAll('\u0000', r'\0');
 
-/// Mirrors `localsend::util::filename::sanitize` under `Rules::Posix`; the
+/// Mirrors `locara::util::filename::sanitize` under `Rules::Posix`; the
 /// real one lives in the Rust library, which is not loaded in unit tests.
 class _MockRustLibApi implements RustLibApi {
   @override
@@ -123,3 +123,4 @@ class _MockRustLibApi implements RustLibApi {
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnsupportedError('Not mocked: ${invocation.memberName}');
 }
+

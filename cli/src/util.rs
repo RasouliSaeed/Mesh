@@ -1,6 +1,6 @@
 use crossterm::terminal::{Clear, ClearType};
 use crossterm::{cursor, execute};
-use localsend::util::filename;
+use locara::util::filename;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -143,3 +143,4 @@ impl SpeedMeter {
         self.ema
     }
 }
+

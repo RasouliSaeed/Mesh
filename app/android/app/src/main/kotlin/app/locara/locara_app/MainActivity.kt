@@ -22,7 +22,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 
-private const val CHANNEL = "org.localsend.localsend_app/localsend"
+private const val CHANNEL = "org.Locara.Locara_app/Locara"
 private const val REQUEST_CODE_PICK_DIRECTORY = 1
 private const val REQUEST_CODE_PICK_DIRECTORY_PATH = 2
 private const val REQUEST_CODE_PICK_FILE = 3
@@ -523,4 +523,5 @@ private fun Long.toRfc3339(): String {
     format.timeZone = TimeZone.getTimeZone("UTC")
     return format.format(Date(this))
 }
+
 

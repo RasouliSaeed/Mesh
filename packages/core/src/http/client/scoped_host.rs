@@ -4,7 +4,7 @@
 //! interface index), but URLs cannot carry a zone identifier.
 //!
 //! [`encode`] therefore turns `fe80::1%3` into the synthetic host name
-//! `fe80--1s3.scoped.localsend.internal`, and [`decode`], called by the custom
+//! `fe80--1s3.scoped.locara.internal`, and [`decode`], called by the custom
 //! DNS resolver of the reqwest client, turns it back into a scoped address.
 //! The name is also a valid TLS server name; certificates are verified by
 //! fingerprint, never by name.
@@ -13,7 +13,7 @@ use std::net::{Ipv6Addr, SocketAddr, SocketAddrV6};
 
 /// Marks a synthetic host name produced by [`encode`]. The `.internal` TLD is
 /// reserved for private use and never resolves in public DNS.
-const SUFFIX: &str = ".scoped.localsend.internal";
+const SUFFIX: &str = ".scoped.locara.internal";
 
 /// Encodes a `<IPv6 address>%<scope>` host into a synthetic host name.
 /// Returns `None` for every host that URLs can represent directly.
@@ -58,11 +58,11 @@ mod tests {
     fn test_encode_scoped_host() {
         assert_eq!(
             encode("fe80::1%3").as_deref(),
-            Some("fe80--1s3.scoped.localsend.internal")
+            Some("fe80--1s3.scoped.locara.internal")
         );
         assert_eq!(
             encode("fe80::abcd:ef12:3456:789a%4294967295").as_deref(),
-            Some("fe80--abcd-ef12-3456-789as4294967295.scoped.localsend.internal")
+            Some("fe80--abcd-ef12-3456-789as4294967295.scoped.locara.internal")
         );
     }
 
@@ -89,8 +89,9 @@ mod tests {
     #[test]
     fn test_decode_rejects_other_names() {
         assert_eq!(decode("example.com"), None);
-        assert_eq!(decode("fe80--1.scoped.localsend.internal"), None); // no scope
-        assert_eq!(decode("fe80--1sx.scoped.localsend.internal"), None); // bad scope
-        assert_eq!(decode("s3.scoped.localsend.internal"), None); // no address
+        assert_eq!(decode("fe80--1.scoped.locara.internal"), None); // no scope
+        assert_eq!(decode("fe80--1sx.scoped.locara.internal"), None); // bad scope
+        assert_eq!(decode("s3.scoped.locara.internal"), None); // no address
     }
 }
+

@@ -1,10 +1,10 @@
 use flutter_rust_bridge::frb;
-pub use localsend::http::dto::{
+pub use locara::http::dto::{
     PrepareUploadRequestDto, PrepareUploadResponseDto, RegisterDto, RegisterResponseDto,
 };
-pub use localsend::model::discovery::DeviceType;
-pub use localsend::model::discovery::ProtocolType;
-pub use localsend::model::transfer::{FileDto, FileMetadata};
+pub use locara::model::discovery::DeviceType;
+pub use locara::model::discovery::ProtocolType;
+pub use locara::model::transfer::{FileDto, FileMetadata};
 use std::collections::HashMap;
 
 #[frb(mirror(RegisterDto))]
@@ -72,3 +72,4 @@ pub struct _PrepareUploadResponseDto {
     pub session_id: String,
     pub files: HashMap<String, String>,
 }
+

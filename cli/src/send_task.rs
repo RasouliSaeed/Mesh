@@ -5,13 +5,13 @@ use crate::ui::Category;
 use crate::util;
 use bytes::Bytes;
 use futures_util::StreamExt;
-use localsend::discovery::StatefulDevice;
-use localsend::http::client::ClientError;
-use localsend::http::client::v2::LsHttpClientV2;
-use localsend::http::dto_v2::PrepareUploadRequestDtoV2;
-use localsend::model::discovery::ProtocolType;
-use localsend::model::transfer::{FileContent, FileDto};
-use localsend::reqwest;
+use locara::discovery::StatefulDevice;
+use locara::http::client::ClientError;
+use locara::http::client::v2::LsHttpClientV2;
+use locara::http::dto_v2::PrepareUploadRequestDtoV2;
+use locara::model::discovery::ProtocolType;
+use locara::model::transfer::{FileContent, FileDto};
+use locara::reqwest;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -274,3 +274,4 @@ fn upload_body(content: FileContent, progress: impl Fn(u64) + Send + 'static) ->
     });
     reqwest::Body::wrap_stream(stream)
 }
+

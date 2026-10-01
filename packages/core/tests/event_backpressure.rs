@@ -8,16 +8,16 @@
 //! application to catch up would stall an HTTP request handler, or a scan, for
 //! as long as the application is busy.
 
-use localsend::crypto::cert::generate_self_signed;
-use localsend::discovery::{self, DeviceIdentity, DiscoveryConfig, DiscoveryEvent};
-use localsend::http::client::LsHttpClientV2;
-use localsend::http::dto_v2::RegisterDtoV2;
-use localsend::http::server::v2::ServerEventV2;
-use localsend::http::server::web::WebConfig;
-use localsend::http::server::{start_with_port, ServerConfigV2};
-use localsend::http::state::ClientInfo;
-use localsend::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
-use localsend::multicast::MulticastDevice;
+use locara::crypto::cert::generate_self_signed;
+use locara::discovery::{self, DeviceIdentity, DiscoveryConfig, DiscoveryEvent};
+use locara::http::client::LsHttpClientV2;
+use locara::http::dto_v2::RegisterDtoV2;
+use locara::http::server::v2::ServerEventV2;
+use locara::http::server::web::WebConfig;
+use locara::http::server::{start_with_port, ServerConfigV2};
+use locara::http::state::ClientInfo;
+use locara::model::discovery::{DeviceType, ProtocolType, PROTOCOL_VERSION_V2};
+use locara::multicast::MulticastDevice;
 use std::net::Ipv4Addr;
 use std::sync::atomic::{AtomicU16, Ordering};
 use std::time::Duration;
@@ -154,3 +154,4 @@ async fn subnet_scan_finishes_when_events_are_not_consumed() {
         found.len()
     );
 }
+
