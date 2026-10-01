@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: "3.41.9"
+  FLUTTER_VERSION: "3.47.5"
 
 jobs:
   build_macos:
@@ -34,6 +34,7 @@ jobs:
         with:
           name: macos-app-unsigned
           path: app/build/macos/Build/Products/Release/Locara-macOS-unsigned.zip
+
 
 
 
