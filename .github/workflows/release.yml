@@ -71,6 +71,9 @@ jobs:
       - build_cli_linux
       - build_cli_windows_exe
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@v4
