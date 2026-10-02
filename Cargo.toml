@@ -21,3 +21,10 @@ opt-level = 2
 [profile.dev.package.num-bigint-dig]
 opt-level = 2
 
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = 'z'
+
