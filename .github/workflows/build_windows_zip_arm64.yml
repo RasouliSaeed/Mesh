@@ -78,11 +78,18 @@ jobs:
         run: flutter build windows
       - name: Add DLL files
         working-directory: app
+        continue-on-error: true
         run: |
-          $crt = Get-ChildItem 'C:\Program Files\Microsoft Visual Studio\2022\*\VC\Redist\MSVC\*\arm64\Microsoft.VC143.CRT' | Select-Object -Last 1
-          Copy-Item "$($crt.FullName)\msvcp140.dll" build/windows/arm64/runner/Release/
-          Copy-Item "$($crt.FullName)\vcruntime140.dll" build/windows/arm64/runner/Release/
-          Copy-Item "$($crt.FullName)\vcruntime140_1.dll" build/windows/arm64/runner/Release/
+          try {
+            $crt = Get-ChildItem 'C:\Program Files\Microsoft Visual Studio\2022\*\VC\Redist\MSVC\*\arm64\Microsoft.VC143.CRT' -ErrorAction Stop | Select-Object -Last 1
+            if ($crt) {
+              Copy-Item "$($crt.FullName)\msvcp140.dll" build/windows/arm64/runner/Release/
+              Copy-Item "$($crt.FullName)\vcruntime140.dll" build/windows/arm64/runner/Release/
+              Copy-Item "$($crt.FullName)\vcruntime140_1.dll" build/windows/arm64/runner/Release/
+            }
+          } catch {
+            Write-Warning "Could not copy ARM64 VC++ Redist DLLs"
+          }
 
       # The MSIX helper only makes sense for the installer; portable users should not register an MSIX package
       - name: Remove MSIX helper from portable bundle
