@@ -2,6 +2,7 @@ name: Build windows exe (unsigned)
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 env:
   FLUTTER_VERSION: "3.47.5"
@@ -73,6 +74,7 @@ jobs:
           name: windows-exe-x86-64-unsigned
           path: ${{ runner.temp }}\inno-result\Locara-${{ needs.build.outputs.version }}-windows-x86-64.exe
           if-no-files-found: error
+
 
 
 
