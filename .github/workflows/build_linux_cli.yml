@@ -38,11 +38,11 @@ jobs:
         run: rustup toolchain install # version from rust-toolchain.toml
 
       - name: Compile CLI
-        run: cargo build --release --package Locara-cli
+        run: cargo build --release --package locara-cli
 
       # tar preserves the executable bit, which a bare artifact upload would lose
       - name: Create tar.gz archive
-        run: tar -czvf Locara-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz -C target/release Locara-cli
+        run: tar -czvf Locara-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz -C target/release locara-cli
 
       - name: Upload CLI
         uses: actions/upload-artifact@v4
@@ -50,6 +50,8 @@ jobs:
           name: cli-${{ matrix.suffix }}-result
           path: Locara-CLI-${{ needs.build.outputs.version }}-${{ matrix.suffix }}.tar.gz
           if-no-files-found: error
+
+
 
 
 

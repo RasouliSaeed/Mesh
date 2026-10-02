@@ -41,7 +41,7 @@ jobs:
       contents: read
 
   build_windows_exe_x86_64:
-    uses: ./.github/workflows/build_windows_exe.yml
+    uses: ./.github/workflows/build_windows_exe_unsigned.yml
     secrets: inherit
     permissions:
       id-token: write # OIDC token for Azure login
@@ -377,5 +377,6 @@ jobs:
           asset_path: result-cli.exe
           asset_name: Locara-CLI-${{ steps.get_version.outputs.version }}-windows-arm-64.exe
           asset_content_type: application/vnd.microsoft.portable-executable
+
 
 

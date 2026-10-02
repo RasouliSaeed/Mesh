@@ -41,8 +41,9 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
-
       - name: Azure login
+        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
+
         uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -59,6 +60,8 @@ jobs:
       # signing the surrounding installer does not cover it. Sign before "flutter build windows"
       # so CMake bundles the signed msix into the Release directory.
       - name: Sign MSIX helper (Azure Trusted Signing)
+        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
+
         uses: azure/trusted-signing-action@v2
         with:
           endpoint: https://neu.codesigning.azure.net/
@@ -83,8 +86,9 @@ jobs:
       - name: Compile for Windows
         working-directory: app
         run: flutter build windows
-
       - name: Sign app binaries (Azure Trusted Signing)
+        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
+
         uses: azure/trusted-signing-action@v2
         with:
           endpoint: https://neu.codesigning.azure.net/
@@ -144,6 +148,9 @@ jobs:
           name: windows-exe-x86-64-result
           path: ${{ runner.temp }}\inno-result\Locara-${{ needs.build.outputs.version }}-windows-x86-64.exe
           if-no-files-found: error
+
+
+
 
 
 

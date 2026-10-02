@@ -7,11 +7,11 @@ script:
 AppDir:
   path: AppDir
   app_info:
-    id: org.Locara.Locara_app
+    id: org.locara.locara_app
     name: Locara
     icon: Locara
     version: 1.7.9
-    exec: Locara_app
+    exec: locara_app
     exec_args: $@
   apt:
     arch:
@@ -66,5 +66,6 @@ AppDir:
 AppImage:
   arch: arm_64
   update-information: guess
+
 
 

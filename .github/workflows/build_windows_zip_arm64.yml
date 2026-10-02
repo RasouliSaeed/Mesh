@@ -76,8 +76,9 @@ jobs:
       - name: Compile for Windows
         working-directory: app
         run: flutter build windows
-
       - name: Azure login
+        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
+
         uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -86,6 +87,8 @@ jobs:
 
       # Sign before "Add DLL files" so the Microsoft-signed CRT DLLs keep their original signature
       - name: Sign app binaries (Azure Trusted Signing)
+        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
+
         uses: azure/trusted-signing-action@v2
         with:
           endpoint: https://neu.codesigning.azure.net/
@@ -134,6 +137,9 @@ jobs:
           name: windows-zip-arm-64-result
           path: app/Locara-${{ needs.build.outputs.version }}-windows-arm-64.zip
           if-no-files-found: error
+
+
+
 
 
 
