@@ -291,11 +291,11 @@ jobs:
       - name: Download windows exe file
         uses: actions/download-artifact@v7
         with:
-          name: windows-exe-x86-64-result
-          path: windows-exe-x86-64-result
+          name: windows-exe-x86-64-unsigned
+          path: windows-exe-x86-64-unsigned
 
       - name: Copy exe file to root
-        run: cp windows-exe-x86-64-result/*.exe result.exe
+        run: cp windows-exe-x86-64-unsigned/*.exe result.exe
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
