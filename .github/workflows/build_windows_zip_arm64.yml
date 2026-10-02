@@ -76,41 +76,6 @@ jobs:
       - name: Compile for Windows
         working-directory: app
         run: flutter build windows
-      - name: Azure login
-        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
-
-        uses: azure/login@v3
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Sign before "Add DLL files" so the Microsoft-signed CRT DLLs keep their original signature
-      - name: Sign app binaries (Azure Trusted Signing)
-        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
-
-        uses: azure/trusted-signing-action@v2
-        with:
-          endpoint: https://neu.codesigning.azure.net/
-          trusted-signing-account-name: tienisto
-          certificate-profile-name: Locara
-          files-folder: ${{ github.workspace }}\app\build\windows\arm64\runner\Release
-          files-folder-filter: exe,dll
-          file-digest: SHA256
-          timestamp-rfc3161: http://timestamp.acs.microsoft.com
-          timestamp-digest: SHA256
-
-      - name: Verify signature
-        continue-on-error: true
-        run: |
-          $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\10.*\arm64\signtool.exe' | Select-Object -Last 1
-          & $signtool.FullName verify /pa /v app\build\windows\arm64\runner\Release\Locara_app.exe
-
-      - name: Create empty settings.json
-        working-directory: app
-        run: echo {} > build/windows/arm64/runner/Release/settings.json
-
-      # support/build/windows only carries x64 runtime DLLs, so take the arm64 ones from the Visual Studio redist
       - name: Add DLL files
         working-directory: app
         run: |
@@ -137,6 +102,7 @@ jobs:
           name: windows-zip-arm-64-result
           path: app/Locara-${{ needs.build.outputs.version }}-windows-arm-64.zip
           if-no-files-found: error
+
 
 
 
