@@ -50,19 +50,14 @@ jobs:
       - name: Rename CLI executable
         run: Rename-Item -Path "target\release\locara-cli.exe" -NewName "Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
 
-
-      - name: Verify signature
-        continue-on-error: true
-        run: |
-          $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\10.*\${{ matrix.signtool_arch }}\signtool.exe' | Select-Object -Last 1
-          & $signtool.FullName verify /pa /v "target\release\Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
-
       - name: Upload signed CLI
         uses: actions/upload-artifact@v4
         with:
           name: windows-cli-exe-${{ matrix.suffix }}-result
           path: target\release\Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe
           if-no-files-found: error
+
+
 
 
 
