@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
           const SizedBox(height: 20),
           const LocaraLogo(withText: true),
           Text(
-            '© ${DateTime.now().year} Tien Do Nam',
+            '© ${DateTime.now().year} SaeedR',
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
@@ -51,7 +51,7 @@ class AboutPage extends StatelessWidget {
           Text(t.aboutPage.author, style: const TextStyle(fontWeight: FontWeight.bold)),
           Text.rich(
             _buildContributor(
-              label: 'Tien Do Nam (@Tienisto)',
+              label: 'SaeedR (@SaeedR)',
               primaryColor: primaryColor,
             ),
           ),

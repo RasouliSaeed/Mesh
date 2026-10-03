@@ -13,7 +13,7 @@ fvm flutter build macos
 echo
 echo "Signing the app..."
 echo
-SIGN_ID="Developer ID Application: Tien Do Nam (3W7H4PYMCV)"
+SIGN_ID="Developer ID Application: SaeedR (3W7H4PYMCV)"
 codesign --deep --force --verbose --options runtime --preserve-metadata=entitlements --sign "$SIGN_ID" build/macos/Build/Products/Release/locara.app
 
 # create dmg

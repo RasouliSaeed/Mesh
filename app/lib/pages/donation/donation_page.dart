@@ -106,14 +106,14 @@ class _LinkDonation extends StatelessWidget {
       children: [
         TextButton.icon(
           onPressed: () async {
-            await launchUrl(Uri.parse('https://github.com/sponsors/Tienisto'), mode: LaunchMode.externalApplication);
+            await launchUrl(Uri.parse('https://github.com/sponsors/SaeedR'), mode: LaunchMode.externalApplication);
           },
           icon: const Icon(Icons.open_in_new),
           label: const Text('Github'),
         ),
         TextButton.icon(
           onPressed: () async {
-            await launchUrl(Uri.parse('https://ko-fi.com/tienisto'), mode: LaunchMode.externalApplication);
+            await launchUrl(Uri.parse('https://ko-fi.com/SaeedR'), mode: LaunchMode.externalApplication);
           },
           icon: const Icon(Icons.open_in_new),
           label: const Text('Ko-fi'),

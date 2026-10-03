@@ -1,5 +1,5 @@
-﻿display_name: Locara
-packager: Tienisto
+display_name: Locara
+packager: SaeedR
 packagerEmail: dev.tien.donam@gmail.com
 url: https://locara.org
 buildArch: x86_64
@@ -17,7 +17,7 @@ keywords:
   - Files
 
 generic_name: An open source cross-platform alternative to AirDrop
-summary: انتقال آسان فایل با Locara
+summary: ?????? ???? ???? ?? Locara
 group: Applications/Utilities
 
 categories:

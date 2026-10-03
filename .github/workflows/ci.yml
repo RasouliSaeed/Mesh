@@ -145,7 +145,7 @@ jobs:
 
       # Binaries must carry identical copyright strings (macOS conventionally uses
       # the © symbol, which is normalized for the comparison). License files use the
-      # Apache boilerplate format ("Copyright 2022-2026 Tien Do Nam") and typed_isolates
+      # Apache boilerplate format ("Copyright 2022-2026 SaeedR") and typed_isolates
       # has its own start year, so only their end year is compared.
       # The vendored cargokit LICENSE is third-party and deliberately not checked.
       - name: Compare copyright strings
@@ -154,8 +154,8 @@ jobs:
           CLI_COPYRIGHT=$(grep -o 'Copyright (C) [^"]*' cli/build.rs)
           MACOS_COPYRIGHT=$(sed -n 's/^PRODUCT_COPYRIGHT = //p' app/macos/Runner/Configs/AppInfo.xcconfig | sed 's/©/(C)/')
           APP_YEAR=$(echo "$APP_COPYRIGHT" | grep -o '[0-9]\{4\}' | tail -1)
-          ROOT_LICENSE_YEAR=$(grep -o 'Copyright [0-9][0-9-]* Tien Do Nam' LICENSE | grep -o '[0-9]\{4\}' | tail -1)
-          TYPED_LICENSE_YEAR=$(grep -o 'Copyright [0-9][0-9-]* Tien Do Nam' packages/typed_isolates/LICENSE | grep -o '[0-9]\{4\}' | tail -1)
+          ROOT_LICENSE_YEAR=$(grep -o 'Copyright [0-9][0-9-]* SaeedR' LICENSE | grep -o '[0-9]\{4\}' | tail -1)
+          TYPED_LICENSE_YEAR=$(grep -o 'Copyright [0-9][0-9-]* SaeedR' packages/typed_isolates/LICENSE | grep -o '[0-9]\{4\}' | tail -1)
           echo "App copyright is:                   $APP_COPYRIGHT"
           echo "CLI copyright is:                   $CLI_COPYRIGHT"
           echo "macOS copyright is:                 $MACOS_COPYRIGHT"

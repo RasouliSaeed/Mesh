@@ -11,5 +11,5 @@ PRODUCT_NAME = Locara
 PRODUCT_BUNDLE_IDENTIFIER = org.locara.locaraApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022-2026 Tien Do Nam
+PRODUCT_COPYRIGHT = Copyright © 2022-2026 SaeedR
 

@@ -20,7 +20,7 @@ cp target/x86_64-apple-darwin/release/locara-cli "$X64_NAME/locara-cli"
 echo
 echo "Signing the CLI..."
 echo
-SIGN_ID="Developer ID Application: Tien Do Nam (3W7H4PYMCV)"
+SIGN_ID="Developer ID Application: SaeedR (3W7H4PYMCV)"
 codesign --force --verbose --options runtime --sign "$SIGN_ID" "$ARM_NAME/locara-cli"
 codesign --force --verbose --options runtime --sign "$SIGN_ID" "$X64_NAME/locara-cli"
 

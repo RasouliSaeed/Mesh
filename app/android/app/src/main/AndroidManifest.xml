@@ -1,4 +1,4 @@
-﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="app.locara.locara_app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="app.locara.locara_app">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -76,7 +76,7 @@
         <!-- Quick tile to launch the app -->
         <service
             android:name=".QuickTileService"
-            android:icon="@mipmap/ic_launcher_quicktile_foreground"
+            android:icon="@mipmap/ic_launcher"
             android:label="Locara"
             android:process=":quick_tile_service"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"

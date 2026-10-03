@@ -10,7 +10,7 @@ param(
 cd app
 fvm flutter clean
 fvm flutter pub get
-fvm dart run msix:create --certificate-path ../secrets/windows-tienisto.pfx --certificate-password $CERTIFICATE_PASSWORD
+fvm dart run msix:create --certificate-path ../secrets/windows-SaeedR.pfx --certificate-password $CERTIFICATE_PASSWORD
 
 Move-Item -Path build/windows/x64/runner/Release/locara_app.msix -Destination locara-XXX-windows-x86-64.msix
 

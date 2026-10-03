@@ -66,14 +66,14 @@ Git based distribution:
 
 | Channel        | Repository          | Maintainer                                         |
 |----------------|---------------------|----------------------------------------------------|
-| [Winget][]     | [Winget Repo][]     | [@sitiom][], [@Tienisto], Github Actions           |
-| [Scoop][]      | [Scoop Repo][]      | [@sitiom][], [@Tienisto], Github Actions           |
+| [Winget][]     | [Winget Repo][]     | [@sitiom][], [@SaeedR], Github Actions           |
+| [Scoop][]      | [Scoop Repo][]      | [@sitiom][], [@SaeedR], Github Actions           |
 | [Chocolatey][] | [Chocolatey Repo][] | [@brogers5][]                                      |
-| [Homebrew][]   | [Homebrew Repo][]   | [@Tienisto][], Github Actions                      |
-| [Flathub][]    | [Flathub Repo][]    | [@proletarius101][], [@Tienisto][], Github Actions |
+| [Homebrew][]   | [Homebrew Repo][]   | [@SaeedR][], Github Actions                      |
+| [Flathub][]    | [Flathub Repo][]    | [@proletarius101][], [@SaeedR][], Github Actions |
 | [AUR][]        | [AUR Repo][]        | [@Nixuge][]                                        |
 | [Nixpkgs][]    | [Nixpkgs Repo][]    | [@sikmir][], [@linsui][]                           |
-| [F-Droid][]    | [F-Droid Repo][]    | [@linsui][], [@Tienisto][], [F-Droid CI][]         |
+| [F-Droid][]    | [F-Droid Repo][]    | [@linsui][], [@SaeedR][], [F-Droid CI][]         |
 | [Snap][]       | [Snap Repo][]       | [@thatLeaflet][]                                   |
 
 [winget]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/locara/locara
@@ -99,9 +99,9 @@ Manual distribution:
 
 | Channel        | Maintainer                               |
 |----------------|------------------------------------------|
-| [App Store][]  | [@Tienisto](https://github.com/Tienisto) |
-| [Play Store][] | [@Tienisto](https://github.com/Tienisto) |
-| [Amazon][]     | [@Tienisto](https://github.com/Tienisto) |
+| [App Store][]  | [@SaeedR](https://github.com/SaeedR) |
+| [Play Store][] | [@SaeedR](https://github.com/SaeedR) |
+| [Amazon][]     | [@SaeedR](https://github.com/SaeedR) |
 
 [app store]: https://apps.apple.com/us/app/locara/id1661733229
 [play store]: https://play.google.com/store/apps/details?id=org.locara.locara_app
@@ -111,16 +111,16 @@ Binary distribution:
 
 | Type        | Maintainer    | Credits                      |
 |-------------|---------------|------------------------------|
-| Windows ZIP | [@Tienisto][] |                              |
-| MSIX        | [@Tienisto][] |                              |
-| EXE         | [@Tienisto][] |                              |
-| APK         | [@Tienisto][] |                              |
-| TAR         | [@Tienisto][] |                              |
-| DEB         | [@Tienisto][] |                              |
-| AppImage    | [@Tienisto][] | [@TheGB0077][]               |
-| DMG         | [@Tienisto][] |                              |
+| Windows ZIP | [@SaeedR][] |                              |
+| MSIX        | [@SaeedR][] |                              |
+| EXE         | [@SaeedR][] |                              |
+| APK         | [@SaeedR][] |                              |
+| TAR         | [@SaeedR][] |                              |
+| DEB         | [@SaeedR][] |                              |
+| AppImage    | [@SaeedR][] | [@TheGB0077][]               |
+| DMG         | [@SaeedR][] |                              |
 
-[@Tienisto]: https://github.com/Tienisto
+[@SaeedR]: https://github.com/SaeedR
 [@TheGB0077]: https://github.com/TheGB0077
 [@sitiom]: https://github.com/sitiom
 [@Nixuge]: https://github.com/Nixuge

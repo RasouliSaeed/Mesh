@@ -8,17 +8,17 @@ const _packagers = <String, List<String>>{
   ],
   'Winget': [
     '@sitiom',
-    '@Tienisto',
+    '@SaeedR',
   ],
   'Scoop': [
     '@sitiom',
   ],
   'Homebrew': [
-    '@Tienisto',
+    '@SaeedR',
   ],
   'Flathub': [
     '@proletarius101',
-    '@Tienisto',
+    '@SaeedR',
   ],
   'Nix': [
     '@sikmir',
@@ -32,6 +32,6 @@ const _packagers = <String, List<String>>{
   ],
   'F-Droid': [
     '@linsui',
-    '@Tienisto',
+    '@SaeedR',
   ],
 };

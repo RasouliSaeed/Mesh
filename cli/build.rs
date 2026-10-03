@@ -5,10 +5,10 @@ fn main() {
         let mut res = winresource::WindowsResource::new();
         res.set("ProductName", "locara");
         res.set("FileDescription", "locara CLI");
-        res.set("CompanyName", "Tien Do Nam");
+        res.set("CompanyName", "SaeedR");
         res.set("OriginalFilename", "locara-cli.exe");
         res.set("InternalName", "locara-cli");
-        res.set("LegalCopyright", "Copyright (C) 2022-2026 Tien Do Nam");
+        res.set("LegalCopyright", "Copyright (C) 2022-2026 SaeedR");
         // FileVersion/ProductVersion are derived from CARGO_PKG_VERSION automatically.
         res.compile().expect("failed to compile Windows resources");
     }

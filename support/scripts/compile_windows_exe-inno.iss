@@ -13,7 +13,7 @@
 
 #define MyAppName "Locara"
 #define MyAppVersion "1.7.9"
-#define MyAppPublisher "Tien Do Nam"
+#define MyAppPublisher "SaeedR"
 #define MyAppURL "https://Locara.org"
 #define MyAppExeName "locara_app.exe"
 #define MyAppMsixHelper "locara_msix_helper.msix"
