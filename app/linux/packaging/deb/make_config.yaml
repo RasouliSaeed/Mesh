@@ -2,7 +2,7 @@ display_name: Locara
 package_name: locara
 maintainer:
   name: SaeedR
-  email: dev.tien.donam@gmail.com
+  email: info@locara.app
 co_authors:
   - name: TheGB0077
     email: gb.lima.dev@gmail.com
@@ -39,5 +39,6 @@ categories:
   - Utility
 
 startup_notify: true
+
 
 

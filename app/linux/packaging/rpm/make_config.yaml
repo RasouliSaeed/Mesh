@@ -1,6 +1,6 @@
 display_name: Locara
 packager: SaeedR
-packagerEmail: dev.tien.donam@gmail.com
+packagerEmail: info@locara.app
 url: https://locara.org
 buildArch: x86_64
 license: MIT
@@ -26,5 +26,6 @@ categories:
   - Utility
 
 startup_notify: true
+
 
 

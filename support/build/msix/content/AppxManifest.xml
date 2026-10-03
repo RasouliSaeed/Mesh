@@ -22,10 +22,10 @@
         xmlns:com3="http://schemas.microsoft.com/appx/manifest/com/windows10/3" 
         IgnorableNamespaces="uap3 desktop">
   <Identity Name="locara.App" Version="1.7.9.0"
-            Publisher="CN=Tien Do Nam, O=Tien Do Nam, L=Berlin, C=DE" ProcessorArchitecture="x64" />
+            Publisher="CN=SaeedR, O=SaeedR, L=Berlin, C=DE" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>locara MSIX Helper</DisplayName>
-    <PublisherDisplayName>Tien Do Nam</PublisherDisplayName>
+    <PublisherDisplayName>SaeedR</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <Description>An open source cross-platform alternative to AirDrop</Description>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
@@ -73,4 +73,5 @@
     </Application>
   </Applications>
 </Package>
+
 
