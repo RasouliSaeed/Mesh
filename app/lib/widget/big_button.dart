@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:locara_app/config/theme.dart';
 import 'package:locara_app/widget/responsive_builder.dart';
 
 class BigButton extends StatelessWidget {
@@ -41,15 +40,15 @@ class BigButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(
-                  icon, 
+                  icon,
                   color: filled ? colorScheme.onPrimary : colorScheme.primary,
                   size: 26,
                 ),
                 FittedBox(
                   alignment: Alignment.bottomCenter,
                   child: Text(
-                    label, 
-                    maxLines: 1, 
+                    label,
+                    maxLines: 1,
                     style: TextStyle(
                       color: filled ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
@@ -64,5 +63,4 @@ class BigButton extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/gen/strings.g.dart';
-import 'package:locara_app/model/state/server/server_state.dart';
 import 'package:locara_app/pages/home_page.dart';
 import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/receive_history_page.dart';
@@ -12,7 +11,6 @@ import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
 import 'package:locara_app/widget/custom_icon_button.dart';
 import 'package:locara_app/widget/locara_logo.dart';
-import 'package:locara_isolates/util/sleep.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -124,9 +122,9 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Device Name
               InitialFadeTransition(
                 duration: const Duration(milliseconds: 300),
@@ -137,9 +135,8 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                   textAlign: TextAlign.center,
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
 
               // Status Indicator (Pill)
               InitialFadeTransition(
@@ -151,14 +148,10 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       decoration: BoxDecoration(
-                        color: serverState == null 
-                            ? colorScheme.error.withValues(alpha: 0.1) 
-                            : colorScheme.primary.withValues(alpha: 0.1),
+                        color: serverState == null ? colorScheme.error.withValues(alpha: 0.1) : colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: serverState == null 
-                              ? colorScheme.error.withValues(alpha: 0.3) 
-                              : colorScheme.primary.withValues(alpha: 0.3),
+                          color: serverState == null ? colorScheme.error.withValues(alpha: 0.3) : colorScheme.primary.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -217,9 +210,9 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // IP Addresses
               if (serverState != null)
                 InitialFadeTransition(
@@ -231,9 +224,9 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                     textAlign: TextAlign.center,
                   ),
                 ),
-                
+
               const SizedBox(height: 40),
-              
+
               // Link Button
               InitialFadeTransition(
                 duration: const Duration(milliseconds: 300),
@@ -255,7 +248,7 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
             ],
           ),
         ),
-        
+
         // Top Right Actions
         Align(
           alignment: Alignment.topRight,
@@ -278,4 +271,3 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
     );
   }
 }
-

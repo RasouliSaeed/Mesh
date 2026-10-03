@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:locara_app/config/theme.dart';
 
 class CustomListTile extends StatelessWidget {
   final Widget? icon;
@@ -24,22 +23,22 @@ class CustomListTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark 
-            ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
-            : colorScheme.surface,
+        color: Theme.of(context).brightness == Brightness.dark ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5) : colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).brightness == Brightness.dark 
+          color: Theme.of(context).brightness == Brightness.dark
               ? colorScheme.outline.withValues(alpha: 0.3)
               : colorScheme.outline.withValues(alpha: 0.5),
         ),
-        boxShadow: Theme.of(context).brightness == Brightness.light ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ] : null,
+        boxShadow: Theme.of(context).brightness == Brightness.light
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Material(
         type: MaterialType.transparency,
@@ -96,5 +95,4 @@ class CustomListTile extends StatelessWidget {
       ),
     );
   }
-
 }

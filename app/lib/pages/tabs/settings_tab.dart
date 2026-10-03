@@ -734,22 +734,22 @@ class _SettingsSection extends StatelessWidget {
       padding: padding,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark 
-              ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
-              : colorScheme.surface,
+          color: Theme.of(context).brightness == Brightness.dark ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3) : colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Theme.of(context).brightness == Brightness.dark 
+            color: Theme.of(context).brightness == Brightness.dark
                 ? colorScheme.outline.withValues(alpha: 0.2)
                 : colorScheme.outline.withValues(alpha: 0.5),
           ),
-          boxShadow: Theme.of(context).brightness == Brightness.light ? [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
+          boxShadow: Theme.of(context).brightness == Brightness.light
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
@@ -757,11 +757,11 @@ class _SettingsSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title, 
+                title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                )
+                ),
               ),
               const SizedBox(height: 16),
               ...children,

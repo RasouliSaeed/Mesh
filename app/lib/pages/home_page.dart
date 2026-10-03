@@ -107,7 +107,6 @@ class _HomePageState extends State<HomePage> with Refena {
           return Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Scaffold(
-
               backgroundColor: Colors.transparent,
               body: Padding(
                 padding: sizingInformation.isMobile ? EdgeInsets.zero : const EdgeInsets.all(24.0),
@@ -170,17 +169,19 @@ class _HomePageState extends State<HomePage> with Refena {
                       ),
                     Expanded(
                       child: Container(
-                        decoration: sizingInformation.isMobile ? null : BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
+                        decoration: sizingInformation.isMobile
+                            ? null
+                            : BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.05),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
                         child: ClipRRect(
                           borderRadius: sizingInformation.isMobile ? BorderRadius.zero : BorderRadius.circular(24),
                           child: SafeArea(
@@ -205,7 +206,10 @@ class _HomePageState extends State<HomePage> with Refena {
                                       children: [
                                         Icon(Icons.file_download, size: 128, color: Theme.of(context).colorScheme.primary),
                                         const SizedBox(height: 30),
-                                        Text(t.sendTab.placeItems, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                                        Text(
+                                          t.sendTab.placeItems,
+                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                                        ),
                                       ],
                                     ),
                                   ),

@@ -478,9 +478,9 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
                         builder: (context, ref) {
                           final chatState = ref.watch(chatProvider);
                           if (chatState.messages.isEmpty) return const SizedBox.shrink();
-                          
+
                           final recentMessages = chatState.messages.reversed.take(3).toList().reversed.toList();
-                          
+
                           return Container(
                             constraints: const BoxConstraints(maxHeight: 150),
                             margin: const EdgeInsets.only(bottom: 10),
@@ -508,7 +508,9 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
                                     margin: const EdgeInsets.symmetric(vertical: 2),
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: msg.isMine ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
+                                      color: msg.isMine
+                                          ? Theme.of(context).colorScheme.primary
+                                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
@@ -526,7 +528,7 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
                         },
                       ),
                     ),
-                    
+
                     // Original Progress Card + Chat Input Combined
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -586,7 +588,7 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
                                       ),
                                       onSubmitted: (text) async {
                                         if (text.trim().isEmpty) return;
-                                        
+
                                         final target = ref.read(chatProvider).currentTarget;
                                         if (target != null) {
                                           final bytes = utf8.encode(text);
