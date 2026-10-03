@@ -27,29 +27,40 @@ class BigButton extends StatelessWidget {
     final buttonWidth = width ?? (sizingInformation.isDesktop ? desktopWidth : mobileWidth);
     return SizedBox(
       width: buttonWidth,
-      height: 65.0,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: filled ? colorScheme.primary : colorScheme.secondaryContainerIfDark,
-          foregroundColor: filled ? colorScheme.onPrimary : colorScheme.onSecondaryContainerIfDark,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 8),
-        ),
-        onPressed: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(icon),
-            FittedBox(
-              alignment: Alignment.bottomCenter,
-              child: Text(label, maxLines: 1),
+      height: 75.0,
+      child: Material(
+        color: filled ? colorScheme.primary : colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  icon, 
+                  color: filled ? colorScheme.onPrimary : colorScheme.primary,
+                  size: 26,
+                ),
+                FittedBox(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    label, 
+                    maxLines: 1, 
+                    style: TextStyle(
+                      color: filled ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
-}

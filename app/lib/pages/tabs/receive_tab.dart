@@ -6,49 +6,40 @@ import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/receive_history_page.dart';
 import 'package:locara_app/pages/web_share_page.dart';
 import 'package:locara_app/provider/animation_provider.dart';
-import 'package:locara_app/provider/local_ip_provider.dart';
 import 'package:locara_app/provider/network/server/server_provider.dart';
+import 'package:locara_app/provider/network/local_ip_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
-import 'package:locara_app/util/ip_helper.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
-import 'package:locara_app/widget/column_list_view.dart';
 import 'package:locara_app/widget/custom_icon_button.dart';
 import 'package:locara_app/widget/locara_logo.dart';
-import 'package:locara_app/widget/responsive_list_view.dart';
-import 'package:locara_app/widget/rotating_widget.dart';
 import 'package:locara_isolates/util/sleep.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
 class ReceiveTab extends StatefulWidget {
-  const ReceiveTab();
+  const ReceiveTab({super.key});
 
   @override
   State<ReceiveTab> createState() => _ReceiveTabState();
 }
 
-class _ReceiveTabState extends State<ReceiveTab> {
-  /// Whether the advanced network info is shown
-  bool _showAdvanced = false;
+class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
 
-  /// Whether the history button is shown
-  /// This extra boolean is needed to delay the animation
-  bool _showHistoryButton = true;
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
 
-  Future<void> _toggleAdvanced() async {
-    if (_showAdvanced) {
-      setState(() => _showAdvanced = false);
-      await sleepAsync(200);
-      if (mounted) {
-        setState(() => _showHistoryButton = true);
-      }
-    } else {
-      setState(() {
-        _showAdvanced = true;
-        _showHistoryButton = false;
-      });
-    }
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,195 +47,198 @@ class _ReceiveTabState extends State<ReceiveTab> {
     final alias = context.watch(settingsProvider.select((s) => s.alias));
     final serverState = context.watch(serverProvider);
     final localIps = context.watch(localIpProvider.select((s) => s.localIps));
+    final animations = context.watch(animationProvider);
+    final activeTab = context.watch(homePageControllerProvider.select((state) => state.currentTab));
+    final isScanning = serverState != null && animations && activeTab == HomeTab.receive;
+
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Stack(
       children: [
         Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: ResponsiveListView.defaultMaxWidth),
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: ColumnListView(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InitialFadeTransition(
-                          duration: const Duration(milliseconds: 300),
-                          delay: const Duration(milliseconds: 200),
-                          child: Consumer(
-                            builder: (context, ref) {
-                              final animations = ref.watch(animationProvider);
-                              final activeTab = ref.watch(homePageControllerProvider.select((state) => state.currentTab));
-                              return RotatingWidget(
-                                duration: const Duration(seconds: 15),
-                                spinning: serverState != null && animations && activeTab == HomeTab.receive,
-                                child: const LocaraLogo(withText: false),
-                              );
-                            },
-                          ),
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(serverState?.alias ?? alias, style: const TextStyle(fontSize: 48)),
-                        ),
-                        InitialFadeTransition(
-                          duration: const Duration(milliseconds: 300),
-                          delay: const Duration(milliseconds: 500),
-                          child: Text(
-                            serverState == null ? t.general.offline : localIps.map((ip) => '#${ip.visualId}').toSet().join(' '),
-                            style: const TextStyle(fontSize: 24),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Center(
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
-                          await context.global.dispatchAsync(NavigateAction.push(const WebSharePage()));
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Radar / Device Centerpiece
+              SizedBox(
+                width: 320,
+                height: 320,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    if (isScanning) ...[
+                      // Outer Pulse Ring
+                      AnimatedBuilder(
+                        animation: _pulseController,
+                        builder: (context, child) {
+                          return Container(
+                            width: 200 + (_pulseController.value * 120),
+                            height: 200 + (_pulseController.value * 120),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: colorScheme.primary.withValues(alpha: 0.1 * (1 - _pulseController.value)),
+                                width: 2,
+                              ),
+                            ),
+                          );
                         },
-                        icon: Icon(Icons.language),
-                        label: Text(t.receiveTab.link),
+                      ),
+                      // Inner Pulse Ring
+                      AnimatedBuilder(
+                        animation: _pulseController,
+                        builder: (context, child) {
+                          return Container(
+                            width: 160 + (_pulseController.value * 60),
+                            height: 160 + (_pulseController.value * 60),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: colorScheme.primary.withValues(alpha: 0.2 * (1 - _pulseController.value)),
+                                width: 2,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    // Central Glow
+                    Container(
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colorScheme.surface,
+                        boxShadow: [
+                          BoxShadow(
+                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: const LocaraLogo(withText: false),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                ],
+                  ],
+                ),
               ),
-            ),
+              
+              const SizedBox(height: 40),
+              
+              // Device Name
+              InitialFadeTransition(
+                duration: const Duration(milliseconds: 300),
+                delay: const Duration(milliseconds: 200),
+                child: Text(
+                  serverState?.alias ?? alias,
+                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              
+              const SizedBox(height: 12),
+              
+              // Status Indicator (Pill)
+              InitialFadeTransition(
+                duration: const Duration(milliseconds: 300),
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: serverState == null 
+                        ? colorScheme.error.withValues(alpha: 0.1) 
+                        : colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: serverState == null 
+                          ? colorScheme.error.withValues(alpha: 0.3) 
+                          : colorScheme.primary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: serverState == null ? colorScheme.error : colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        serverState == null ? t.general.offline : "Ready to receive",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: serverState == null ? colorScheme.error : colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // IP Addresses
+              if (serverState != null)
+                InitialFadeTransition(
+                  duration: const Duration(milliseconds: 300),
+                  delay: const Duration(milliseconds: 500),
+                  child: Text(
+                    localIps.map((ip) => '#').toSet().join('  •  '),
+                    style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                
+              const SizedBox(height: 40),
+              
+              // Link Button
+              InitialFadeTransition(
+                duration: const Duration(milliseconds: 300),
+                delay: const Duration(milliseconds: 600),
+                child: TextButton.icon(
+                  onPressed: () async {
+                    await context.global.dispatchAsync(NavigateAction.push(const WebSharePage()));
+                  },
+                  icon: const Icon(Icons.language),
+                  label: Text(t.receiveTab.link),
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorScheme.primary,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    backgroundColor: colorScheme.primary.withValues(alpha: 0.05),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        _InfoBox(
-          serverState: serverState,
-          localIps: localIps,
-          showAdvanced: _showAdvanced,
-        ),
-        _CornerButtons(
-          showAdvanced: _showAdvanced,
-          showHistoryButton: _showHistoryButton,
-          toggleAdvanced: _toggleAdvanced,
-        ),
-      ],
-    );
-  }
-}
-
-class _CornerButtons extends StatelessWidget {
-  final bool showAdvanced;
-  final bool showHistoryButton;
-  final Future<void> Function() toggleAdvanced;
-
-  const _CornerButtons({
-    required this.showAdvanced,
-    required this.showHistoryButton,
-    required this.toggleAdvanced,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (!showAdvanced)
-              AnimatedOpacity(
-                opacity: showHistoryButton ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: CustomIconButton(
+        
+        // Top Right Actions
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomIconButton(
                   onPressed: () async {
                     await context.push(() => const ReceiveHistoryPage());
                   },
-                  child: const Icon(Icons.history),
+                  child: Icon(Icons.history, color: colorScheme.onSurfaceVariant),
                 ),
-              ),
-            CustomIconButton(
-              key: const ValueKey('info-btn'),
-              onPressed: toggleAdvanced,
-              child: const Icon(Icons.info),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _InfoBox extends StatelessWidget {
-  final ServerState? serverState;
-  final List<String> localIps;
-  final bool showAdvanced;
-
-  const _InfoBox({
-    required this.serverState,
-    required this.localIps,
-    required this.showAdvanced,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedCrossFade(
-      crossFadeState: showAdvanced ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-      duration: const Duration(milliseconds: 200),
-      firstChild: Container(),
-      secondChild: Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Table(
-                columnWidths: const {
-                  0: IntrinsicColumnWidth(),
-                  1: IntrinsicColumnWidth(),
-                  2: IntrinsicColumnWidth(),
-                },
-                children: [
-                  TableRow(
-                    children: [
-                      Text(t.receiveTab.infoBox.alias),
-                      const SizedBox(width: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 30),
-                        child: SelectableText(serverState?.alias ?? '-'),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(t.receiveTab.infoBox.ip),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (localIps.isEmpty) Text(t.general.unknown),
-                          ...localIps.map((ip) => SelectableText(ip)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(t.receiveTab.infoBox.port),
-                      const SizedBox(width: 10),
-                      SelectableText(serverState?.port.toString() ?? '-'),
-                    ],
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

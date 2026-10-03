@@ -109,79 +109,114 @@ class _HomePageState extends State<HomePage> with Refena {
             child: Scaffold(
 
               backgroundColor: Colors.transparent,
-              body: Row(
-                children: [
-                  if (!sizingInformation.isMobile)
-                    ClipRRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
-                            border: Border(right: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-                          ),
+              body: Padding(
+                padding: sizingInformation.isMobile ? EdgeInsets.zero : const EdgeInsets.all(24.0),
+                child: Row(
+                  children: [
+                    if (!sizingInformation.isMobile)
+                      Container(
+                        margin: const EdgeInsets.only(right: 24.0),
+                        width: sizingInformation.isDesktop ? 260 : 80,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
                           child: NavigationRail(
                             selectedIndex: vm.currentTab.index,
                             onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
                             extended: sizingInformation.isDesktop,
                             backgroundColor: Colors.transparent,
+                            indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                            unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+                            unselectedLabelTextStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
+                            selectedLabelTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
                             leading: sizingInformation.isDesktop
-                                ? Column(
-                                    children: [
-                                      SizedBox(height: 20),
-                                      Text(
-                                        t.appName,
-                                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      SizedBox(height: 20),
-                                    ],
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 32.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.rocket_launch, color: Theme.of(context).colorScheme.primary, size: 28),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          t.appName,
+                                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                                        ),
+                                      ],
+                                    ),
                                   )
-                                : null,
+                                : const SizedBox(height: 32),
                             destinations: HomeTab.values.map((tab) {
                               return NavigationRailDestination(
-                                icon: Icon(tab.icon),
+                                icon: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: Icon(tab.icon),
+                                ),
                                 label: Text(tab.label),
                               );
                             }).toList(),
                           ),
                         ),
                       ),
-                    ),
-                  Expanded(
-                    child: SafeArea(
-                      left: sizingInformation.isMobile,
-                      child: Stack(
-                        children: [
-                          PageView(
-                            controller: vm.controller,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: const [
-                              ReceiveTab(),
-                              SendTab(),
-                              SettingsTab(),
-                            ],
-                          ),
-                          if (_dragAndDropIndicator)
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.file_download, size: 128),
-                                  const SizedBox(height: 30),
-                                  Text(t.sendTab.placeItems, style: Theme.of(context).textTheme.titleLarge),
-                                ],
-                              ),
+                    Expanded(
+                      child: Container(
+                        decoration: sizingInformation.isMobile ? null : BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
                             ),
-                        ],
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: sizingInformation.isMobile ? BorderRadius.zero : BorderRadius.circular(24),
+                          child: SafeArea(
+                            left: sizingInformation.isMobile,
+                            child: Stack(
+                              children: [
+                                PageView(
+                                  controller: vm.controller,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: const [
+                                    ReceiveTab(),
+                                    SendTab(),
+                                    SettingsTab(),
+                                  ],
+                                ),
+                                if (_dragAndDropIndicator)
+                                  Container(
+                                    width: double.infinity,
+                                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.file_download, size: 128, color: Theme.of(context).colorScheme.primary),
+                                        const SizedBox(height: 30),
+                                        Text(t.sendTab.placeItems, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               extendBody: true,
               bottomNavigationBar: sizingInformation.isMobile
