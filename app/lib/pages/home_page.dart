@@ -105,16 +105,9 @@ class _HomePageState extends State<HomePage> with Refena {
       child: ResponsiveBuilder(
         builder: (sizingInformation) {
           return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: Theme.of(context).brightness == Brightness.dark
-                    ? [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF000000)]
-                    : [Color(0xFFF0F9FF), Color(0xFFE0E7FF), Color(0xFFFFFFFF)],
-              ),
-            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Scaffold(
+
               backgroundColor: Colors.transparent,
               body: Row(
                 children: [
@@ -193,28 +186,41 @@ class _HomePageState extends State<HomePage> with Refena {
               extendBody: true,
               bottomNavigationBar: sizingInformation.isMobile
                   ? Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
+                            height: 70,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+                                width: 1,
+                              ),
                               boxShadow: [
-                                BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 10)),
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
                               ],
                             ),
                             child: NavigationBar(
                               backgroundColor: Colors.transparent,
-                              indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                              indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                               elevation: 0,
+                              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
                               selectedIndex: vm.currentTab.index,
                               onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
                               destinations: HomeTab.values.map((tab) {
-                                return NavigationDestination(icon: Icon(tab.icon), label: tab.label);
+                                return NavigationDestination(
+                                  icon: Icon(tab.icon, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  selectedIcon: Icon(tab.icon, color: Theme.of(context).colorScheme.primary),
+                                  label: tab.label,
+                                );
                               }).toList(),
                             ),
                           ),
