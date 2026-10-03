@@ -55,7 +55,7 @@ jobs:
 
       - name: Compile for Windows
         working-directory: app
-        run: flutter build windows
+        run: flutter build windows --obfuscate --split-debug-info=debug_info
       - name: Add DLL files
         working-directory: app
         run: |
@@ -73,7 +73,7 @@ jobs:
 
       - name: Zip compiled files
         working-directory: app
-        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath "Locara-${{ needs.build.outputs.version }}-windows-x86-64.zip"
+        run: Get-ChildItem -Path build/windows/x64/runner/Release -Exclude *.pdb | Compress-Archive -DestinationPath "Locara-${{ needs.build.outputs.version }}-windows-x86-64.zip"
 
       - name: Upload signed zip
         uses: actions/upload-artifact@v4
@@ -81,6 +81,8 @@ jobs:
           name: windows-zip-x86-64-result
           path: app/Locara-${{ needs.build.outputs.version }}-windows-x86-64.zip
           if-no-files-found: error
+
+
 
 
 
