@@ -96,3 +96,5 @@ class CustomListTile extends StatelessWidget {
       ),
     );
   }
+
+}

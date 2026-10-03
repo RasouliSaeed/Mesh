@@ -7,7 +7,7 @@ import 'package:locara_app/pages/receive_history_page.dart';
 import 'package:locara_app/pages/web_share_page.dart';
 import 'package:locara_app/provider/animation_provider.dart';
 import 'package:locara_app/provider/network/server/server_provider.dart';
-import 'package:locara_app/provider/network/local_ip_provider.dart';
+import 'package:locara_app/provider/local_ip_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
 import 'package:locara_app/widget/custom_icon_button.dart';
@@ -242,3 +242,4 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
     );
   }
 }
+
