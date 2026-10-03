@@ -27,6 +27,7 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
+        android:extractNativeLibs="true"
         android:label="Locara"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
@@ -101,6 +102,7 @@
             android:value="2" />
     </application>
 </manifest>
+
 
 
 
