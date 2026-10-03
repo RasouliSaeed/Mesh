@@ -55,7 +55,7 @@ jobs:
 
       - name: Compile for Windows
         working-directory: app
-        run: flutter build windows --obfuscate --split-debug-info=debug_info
+        run: flutter build windows
       - name: Add DLL files
         working-directory: app
         run: |
@@ -81,6 +81,7 @@ jobs:
           name: windows-zip-x86-64-result
           path: app/Locara-${{ needs.build.outputs.version }}-windows-x86-64.zip
           if-no-files-found: error
+
 
 
 

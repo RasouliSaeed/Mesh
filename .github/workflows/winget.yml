@@ -20,3 +20,4 @@ jobs:
           installers-regex: 'Locara-CLI-.*\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
 
+

@@ -56,7 +56,7 @@ jobs:
 
       - name: Compile linux
         working-directory: app
-        run: flutter build linux --obfuscate --split-debug-info=debug_info
+        run: flutter build linux
 
       - name: Create tar.gz archive
         run: |
@@ -68,6 +68,7 @@ jobs:
         with:
           name: tar-gz-arm-64-result
           path: ./app/*.tar.gz
+
 
 
 

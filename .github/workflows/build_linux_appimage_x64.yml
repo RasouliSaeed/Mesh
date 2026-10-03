@@ -54,7 +54,7 @@ jobs:
 
       - name: Compile linux
         working-directory: app
-        run: flutter build linux --obfuscate --split-debug-info=debug_info
+        run: flutter build linux
 
       - name: Copy compiled linux files
         run: |
@@ -83,6 +83,7 @@ jobs:
         with:
           name: appimage-x86-64-result
           path: ./*.AppImage
+
 
 
 

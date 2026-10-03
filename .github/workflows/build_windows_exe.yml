@@ -50,7 +50,7 @@ jobs:
 
       - name: Compile for Windows
         working-directory: app
-        run: flutter build windows --obfuscate --split-debug-info=debug_info
+        run: flutter build windows
 
       - name: Prepare Inno Setup payload
         run: |
@@ -73,6 +73,7 @@ jobs:
           name: windows-exe-x86-64-unsigned
           path: ${{ runner.temp }}\inno-result\Locara-${{ needs.build.outputs.version }}-windows-x86-64.exe
           if-no-files-found: error
+
 
 
 

@@ -25,7 +25,7 @@ jobs:
         run: flutter pub get
       - name: Build iOS app (unsigned)
         working-directory: app
-        run: flutter build ios --no-codesign --obfuscate --split-debug-info=debug_info
+        run: flutter build ios --no-codesign
       - name: Archive iOS Runner
         working-directory: app/build/ios/iphoneos
         run: zip -r Locara-iOS-unsigned-app.zip Runner.app
@@ -34,6 +34,7 @@ jobs:
         with:
           name: ios-app-unsigned
           path: app/build/ios/iphoneos/Locara-iOS-unsigned-app.zip
+
 
 
 
