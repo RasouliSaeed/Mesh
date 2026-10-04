@@ -21,7 +21,7 @@
         xmlns:com2="http://schemas.microsoft.com/appx/manifest/com/windows10/2" 
         xmlns:com3="http://schemas.microsoft.com/appx/manifest/com/windows10/3" 
         IgnorableNamespaces="uap3 desktop">
-  <Identity Name="locara.App" Version="1.7.9.0"
+  <Identity Name="locara.App" Version="1.8.0.0"
             Publisher="CN=SaeedR, O=SaeedR, L=Berlin, C=DE" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>locara MSIX Helper</DisplayName>

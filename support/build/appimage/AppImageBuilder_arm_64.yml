@@ -10,7 +10,7 @@ AppDir:
     id: org.locara.locara_app
     name: Locara
     icon: Locara
-    version: 1.7.9
+    version: 1.8.0
     exec: locara_app
     exec_args: $@
   apt:
