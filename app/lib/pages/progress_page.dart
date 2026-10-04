@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:locara_app/config/theme.dart';
 import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/cross_file.dart';
 import 'package:locara_app/model/state/server/receive_session_state.dart';
 import 'package:locara_app/pages/web_share_page.dart';
+import 'package:locara_app/provider/chat_provider.dart';
 import 'package:locara_app/provider/file_transfer_provider.dart';
 import 'package:locara_app/provider/network/send_provider.dart';
 import 'package:locara_app/provider/network/server/server_provider.dart';
@@ -23,15 +25,12 @@ import 'package:locara_app/widget/dialogs/error_dialog.dart';
 import 'package:locara_app/widget/file_thumbnail.dart';
 import 'package:locara_isolates/model/dto/file_dto.dart';
 import 'package:locara_isolates/model/file_status.dart';
+import 'package:locara_isolates/model/file_type.dart';
 import 'package:locara_isolates/model/session_status.dart';
 import 'package:locara_isolates/util/file_size_helper.dart';
 import 'package:locara_isolates/util/file_speed_helper.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
-import 'package:locara_app/provider/chat_provider.dart';
-import 'dart:convert';
-import 'package:locara_app/model/cross_file.dart';
-import 'package:locara_isolates/model/file_type.dart';
 import 'package:routerino/routerino.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
@@ -67,7 +66,7 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
   Timer? _finishTimer;
   Timer? _wakelockPlusTimer;
 
-  bool _advanced = false;
+  final bool _advanced = false;
 
   /// On Android the foreground service keeps the process and the connection alive,
   /// so there is no reason to also keep the screen on.
@@ -255,7 +254,6 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
       speedInBytes = null;
     }
 
-    final finishedCount = transferNotifier.getStatuses(widget.sessionId).where((s) => s == FileStatus.finished).length;
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {

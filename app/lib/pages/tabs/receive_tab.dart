@@ -5,8 +5,8 @@ import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/receive_history_page.dart';
 import 'package:locara_app/pages/web_share_page.dart';
 import 'package:locara_app/provider/animation_provider.dart';
-import 'package:locara_app/provider/network/server/server_provider.dart';
 import 'package:locara_app/provider/local_ip_provider.dart';
+import 'package:locara_app/provider/network/server/server_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
 import 'package:locara_app/widget/custom_icon_button.dart';
@@ -167,7 +167,7 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                           ),
                           const SizedBox(width: 12),
                           Text(
-                            serverState == null ? t.general.offline : "Ready to receive",
+                            serverState == null ? t.general.offline : 'Ready to receive',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -196,7 +196,7 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                             const Icon(Icons.lock_outline, size: 16, color: Color(0xFF16A36A)),
                             const SizedBox(width: 8),
                             const Text(
-                              "Secured",
+                              'Secured',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
