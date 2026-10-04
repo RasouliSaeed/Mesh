@@ -254,7 +254,6 @@ class _ProgressPageState extends State<ProgressPage> with Refena {
       speedInBytes = null;
     }
 
-
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
