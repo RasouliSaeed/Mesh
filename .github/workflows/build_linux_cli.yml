@@ -34,6 +34,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
       - name: Install Rust
         run: rustup toolchain install # version from rust-toolchain.toml
 

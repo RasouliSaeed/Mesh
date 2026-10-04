@@ -69,6 +69,9 @@ jobs:
           & $makepri.FullName new /pr support\build\msix\content /cf support\build\msix\priconfig.xml /mn support\build\msix\content\AppxManifest.xml /of support\build\msix\content\resources.pri /o
           & "$($makepri.Directory.FullName)\makeappx.exe" pack /o /d support\build\msix\content /nv /p app\windows\Locara_msix_helper.msix
 
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
       - name: Dependencies
         working-directory: app
         run: flutter pub get

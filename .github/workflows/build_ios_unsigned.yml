@@ -16,6 +16,9 @@ jobs:
         run: |
           VERSION=$(sed -n "s/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p" app/pubspec.yaml)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
