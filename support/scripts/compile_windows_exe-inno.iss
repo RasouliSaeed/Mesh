@@ -12,7 +12,7 @@
 #endif
 
 #define MyAppName "Locara"
-#define MyAppVersion "1.7.9"
+#define MyAppVersion "1.8.0"
 #define MyAppPublisher "SaeedR"
 #define MyAppURL "https://Locara.org"
 #define MyAppExeName "locara_app.exe"

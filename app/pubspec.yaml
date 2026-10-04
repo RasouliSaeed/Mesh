@@ -4,7 +4,7 @@ homepage: https://locara.org/
 publish_to: "none"
 resolution: workspace
 
-version: 1.7.9+66
+version: 1.8.0+67
 
 environment:
   flutter: ^3.41.0
