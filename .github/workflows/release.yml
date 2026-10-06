@@ -2,31 +2,59 @@ name: Release Draft
 
 on:
   workflow_dispatch:
+    inputs:
+      build_android:
+        description: 'Build Android APK'
+        required: true
+        type: boolean
+        default: true
+      build_windows:
+        description: 'Build Windows Apps'
+        required: true
+        type: boolean
+        default: true
+      build_linux:
+        description: 'Build Linux Apps'
+        required: true
+        type: boolean
+        default: false
+      build_macos:
+        description: 'Build macOS/iOS Apps'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   # Each platform build lives in its own reusable workflow (also dispatchable standalone),
   # so the release build and the individual workflows cannot drift apart.
   # Each called workflow computes the version from pubspec.yaml itself.
   build_apk:
+    if: ${{ github.event.inputs.build_android == 'true' }}
     uses: ./.github/workflows/build_android_apk.yml
     secrets: inherit
 
   build_tar_x86_64:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_tar_x64.yml
 
   build_tar_arm_64:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_tar_arm64.yml
 
   build_deb_x86_64:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_deb_x64.yml
 
   build_deb_arm_64:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_deb_arm64.yml
 
   build_appimage_x86_64:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_appimage_x64.yml
 
   build_windows_zip_x86_64:
+    if: ${{ github.event.inputs.build_windows == 'true' }}
     uses: ./.github/workflows/build_windows_zip_x64.yml
     secrets: inherit
     permissions:
@@ -34,6 +62,7 @@ jobs:
       contents: read
 
   build_windows_zip_arm_64:
+    if: ${{ github.event.inputs.build_windows == 'true' }}
     uses: ./.github/workflows/build_windows_zip_arm64.yml
     secrets: inherit
     permissions:
@@ -41,6 +70,7 @@ jobs:
       contents: read
 
   build_windows_exe_x86_64:
+    if: ${{ github.event.inputs.build_windows == 'true' }}
     uses: ./.github/workflows/build_windows_exe_unsigned.yml
     secrets: inherit
     permissions:
@@ -48,9 +78,11 @@ jobs:
       contents: read
 
   build_cli_linux:
+    if: ${{ github.event.inputs.build_linux == 'true' }}
     uses: ./.github/workflows/build_linux_cli.yml
 
   build_cli_windows_exe:
+    if: ${{ github.event.inputs.build_windows == 'true' }}
     uses: ./.github/workflows/build_windows_cli_exe.yml
     secrets: inherit
     permissions:
@@ -58,6 +90,7 @@ jobs:
       contents: read
 
   release:
+    if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     needs:
       - build_apk
       - build_tar_x86_64
@@ -95,15 +128,18 @@ jobs:
 
       # APK
       - name: Download apk file
+        if: ${{ github.event.inputs.build_android == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: apk-result
           path: apk-result
 
       - name: Copy apk file to root
+        if: ${{ github.event.inputs.build_android == 'true' }}
         run: cp apk-result/*.apk .
 
       - name: Upload Release Asset (arm32v7)
+        if: ${{ github.event.inputs.build_android == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,6 +150,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Release Asset (arm64v8)
+        if: ${{ github.event.inputs.build_android == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -124,6 +161,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Release Asset (x64)
+        if: ${{ github.event.inputs.build_android == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -135,18 +173,22 @@ jobs:
 
       # TAR.GZ (x86_64)
       - name: Download tar.gz file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: tar-gz-x86-64-result
           path: tar-gz-x86-64-result
 
       - name: List files in tar.gz-directory
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: ls -l tar-gz-x86-64-result
 
       - name: Copy tar.gz file to root
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: cp tar-gz-x86-64-result/* result.tar.gz
 
       - name: Upload Release Asset (tar.gz)
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -158,18 +200,22 @@ jobs:
 
       # TAR.GZ (arm_64)
       - name: Download tar.gz file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: tar-gz-arm-64-result
           path: tar-gz-arm-64-result
 
       - name: List files in tar.gz-directory
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: ls -l tar-gz-arm-64-result
 
       - name: Copy tar.gz file to root
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: cp tar-gz-arm-64-result/* result.tar.gz
 
       - name: Upload Release Asset (tar.gz)
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -181,15 +227,18 @@ jobs:
 
       # DEB (x86_64)
       - name: Download deb file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: deb-x86-64-result
           path: deb-x86-64-result
 
       - name: Copy deb file to root
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: cp deb-x86-64-result/*.deb result.deb
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -201,15 +250,18 @@ jobs:
 
       # DEB (arm_64)
       - name: Download deb file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: deb-arm-64-result
           path: deb-arm-64-result
 
       - name: Copy deb file to root
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: cp deb-arm-64-result/*.deb result.deb
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -221,15 +273,18 @@ jobs:
 
       # APPIMAGE (x86_64)
       - name: Download AppImage file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: appimage-x86-64-result
           path: appimage-x86-64-result
 
       - name: List files in appimage-directory
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: ls -l appimage-x86-64-result
 
       - name: Copy AppImage file to root
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         run: |
           for file in appimage-x86-64-result/*; do
             if [[ $file == *.AppImage && $file != *.AppImage.zsync ]]; then
@@ -238,6 +293,7 @@ jobs:
           done
 
       - name: Upload Release Asset (AppImage)
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -249,15 +305,18 @@ jobs:
 
       # WINDOWS ZIP (x86_64)
       - name: Download windows zip file
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: windows-zip-x86-64-result
           path: windows-zip-x86-64-result
 
       - name: Copy zip file to root
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         run: cp windows-zip-x86-64-result/*.zip result.zip
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -269,15 +328,18 @@ jobs:
 
       # WINDOWS ZIP (arm_64)
       - name: Download windows zip file
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: windows-zip-arm-64-result
           path: windows-zip-arm-64-result
 
       - name: Copy zip file to root
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         run: cp windows-zip-arm-64-result/*.zip result.zip
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -289,15 +351,18 @@ jobs:
 
       # WINDOWS EXE (x86_64)
       - name: Download windows exe file
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: windows-exe-x86-64-unsigned
           path: windows-exe-x86-64-unsigned
 
       - name: Copy exe file to root
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         run: cp windows-exe-x86-64-unsigned/*.exe result.exe
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -309,12 +374,14 @@ jobs:
 
       # LINUX CLI (x86_64)
       - name: Download linux CLI file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: cli-linux-x86-64-result
           path: cli-linux-x86-64-result
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -326,12 +393,14 @@ jobs:
 
       # LINUX CLI (arm_64)
       - name: Download linux CLI file
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: cli-linux-arm-64-result
           path: cli-linux-arm-64-result
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_linux == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -343,15 +412,18 @@ jobs:
 
       # WINDOWS CLI EXE (x86_64)
       - name: Download windows CLI exe file
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: windows-cli-exe-x86-64-result
           path: windows-cli-exe-x86-64-result
 
       - name: Copy CLI exe file to root
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         run: cp windows-cli-exe-x86-64-result/*.exe result-cli.exe
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -363,15 +435,18 @@ jobs:
 
       # WINDOWS CLI EXE (arm_64)
       - name: Download windows CLI exe file
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/download-artifact@v7
         with:
           name: windows-cli-exe-arm-64-result
           path: windows-cli-exe-arm-64-result
 
       - name: Copy CLI exe file to root
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         run: cp windows-cli-exe-arm-64-result/*.exe result-cli.exe
 
       - name: Upload Release Asset
+        if: ${{ github.event.inputs.build_windows == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
