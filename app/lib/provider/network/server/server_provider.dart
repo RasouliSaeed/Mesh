@@ -368,6 +368,18 @@ class ServerService extends Notifier<ServerState?> {
       case HttpServerListenerFailedEvent():
         // ignore: discarded_futures
         _restartAfterListenerFailure(event.error);
+      case HttpServerPrepareUploadV3Event():
+        // ignore: discarded_futures
+        _receiveController.onPrepareUploadV3(event);
+      case HttpServerTransferProgressV3Event():
+        _receiveController.onTransferProgressV3(event);
+      case HttpServerTransferFinishedV3Event():
+        // ignore: discarded_futures
+        _receiveController.onTransferFinishedV3(event);
+      case HttpServerTransferFailedV3Event():
+        _receiveController.onTransferFailedV3(event);
+      case HttpServerTransferCancelledV3Event():
+        _receiveController.onTransferCancelledV3(event);
     }
   }
 

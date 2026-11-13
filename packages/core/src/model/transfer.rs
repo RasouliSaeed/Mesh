@@ -255,10 +255,32 @@ mod tests {
     }
 
     #[test]
-    fn formats_nanosecond_timestamp() {
+    fn formats_subsecond_timestamp_100ns_roundtrip() {
+        // Cross-platform 100-nanosecond aligned timestamp (representable on all OS clocks including Windows FILETIME).
+        let time = SystemTime::UNIX_EPOCH + Duration::from_nanos(123_456_700);
+        let formatted = format_timestamp(time).unwrap();
+        assert_eq!(formatted, "1970-01-01T00:00:00.1234567Z");
+        assert_eq!(parse_timestamp(&formatted), Some(time));
+    }
+
+    #[cfg(not(windows))]
+    #[test]
+    fn formats_nanosecond_timestamp_unix() {
+        // On Unix platforms, SystemTime is backed by timespec with 1-nanosecond resolution.
         let time = SystemTime::UNIX_EPOCH + Duration::from_nanos(123_456_789);
         let formatted = format_timestamp(time).unwrap();
         assert_eq!(formatted, "1970-01-01T00:00:00.123456789Z");
+        assert_eq!(parse_timestamp(&formatted), Some(time));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn formats_nanosecond_timestamp_windows() {
+        // On Windows platforms, SystemTime is backed by FILETIME with 100-nanosecond resolution.
+        // Adding arbitrary nanoseconds truncates to the nearest 100ns tick (123_456_789 -> 123_456_700).
+        let time = SystemTime::UNIX_EPOCH + Duration::from_nanos(123_456_789);
+        let formatted = format_timestamp(time).unwrap();
+        assert_eq!(formatted, "1970-01-01T00:00:00.1234567Z");
         assert_eq!(parse_timestamp(&formatted), Some(time));
     }
 

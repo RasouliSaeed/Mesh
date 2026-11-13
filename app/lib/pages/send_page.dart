@@ -13,6 +13,7 @@ import 'package:locara_app/util/favorites.dart';
 import 'package:locara_app/util/native/taskbar_helper.dart';
 import 'package:locara_app/widget/animations/initial_fade_transition.dart';
 import 'package:locara_app/widget/animations/initial_slide_transition.dart';
+import 'package:locara_app/widget/design/mesh_sas_badge.dart';
 import 'package:locara_app/widget/dialogs/error_dialog.dart';
 import 'package:locara_app/widget/list_tile/device_list_tile.dart';
 import 'package:locara_app/widget/responsive_list_view.dart';
@@ -144,19 +145,32 @@ class _SendPageState extends State<SendPage> with Refena {
                             delay: const Duration(milliseconds: 400),
                             child: Padding(
                               padding: const EdgeInsets.only(top: 8),
-                              child: TextButton.icon(
-                                onPressed: !targetDevice.https
-                                    ? null
-                                    : () async => await context.push(
-                                        () => VerifyPage(
-                                          fingerprint: CombinedFingerprint.load(context, targetDevice.fingerprint),
-                                        ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (targetDevice.https && targetDevice.fingerprint.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.only(end: 8),
+                                      child: LocaraSasBadge(
+                                        device: targetDevice,
+                                        compact: false,
                                       ),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSurface,
-                                ),
-                                icon: Icon(Icons.verified_user),
-                                label: Text(t.verifyPage.title),
+                                    ),
+                                  TextButton.icon(
+                                    onPressed: !targetDevice.https
+                                        ? null
+                                        : () async => await context.push(
+                                            () => VerifyPage(
+                                              fingerprint: CombinedFingerprint.load(context, targetDevice.fingerprint),
+                                            ),
+                                          ),
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                    icon: Icon(Icons.verified_user),
+                                    label: Text(t.verifyPage.title),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

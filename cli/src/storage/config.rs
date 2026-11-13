@@ -17,8 +17,8 @@ pub struct Config {
 }
 
 const CONFIG_TEMPLATE: &str = "\
-# locara CLI configuration. Command-line flags and environment variables
-# (locara_ALIAS, locara_PORT, locara_DESTINATION) take precedence.
+# Mesh CLI configuration. Command-line flags and environment variables
+# (MESH_ALIAS, MESH_PORT, MESH_DESTINATION) take precedence.
 
 # Device name shown to other devices (default: the hostname).
 #alias = \"My Device\"

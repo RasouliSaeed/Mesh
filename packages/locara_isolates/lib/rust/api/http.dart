@@ -12,8 +12,8 @@ import 'package:locara_isolates/rust/frb_generated.dart';
 
 part 'http.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `resolve_file_content`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `from`
+// These functions are ignored because they are not marked as `pub`: `map_client_error_v3`, `resolve_file_content`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`
 
 /// Creates an HTTP client.
 ///
@@ -35,9 +35,13 @@ RsHttpClient createClient({
   timeoutMs: timeoutMs,
 );
 
+RsSourceFileInfoV3 validateSourceFileV3({required String filePath}) => RustLib.instance.api.crateApiHttpValidateSourceFileV3(filePath: filePath);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RsHttpClient>>
 abstract class RsHttpClient implements RustOpaqueInterface {
   Future<void> cancel({required ProtocolType protocol, required String ip, required int port, required String sessionId});
+
+  bool isV3();
 
   Future<PrepareUploadResult> prepareUpload({
     required ProtocolType protocol,
@@ -54,6 +58,19 @@ abstract class RsHttpClient implements RustOpaqueInterface {
     required String ip,
     required int port,
     required RegisterDto payload,
+  });
+
+  /// Orchestrates a V3 chunked transfer of a file, emitting [RsTransferEventV3]s on [sink].
+  /// Progress events are throttled according to Master Spec Rule 34 (<= 10 updates/sec).
+  Stream<RsTransferEventV3> transferV3({
+    required ProtocolType protocol,
+    required String ip,
+    required int port,
+    String? publicKey,
+    required String transferId,
+    required String filePath,
+    required RsTransferConfigV3 config,
+    required RsCancellationToken cancelToken,
   });
 
   /// Uploads a single file, emitting [RsUploadEvent]s on [sink].
@@ -141,6 +158,162 @@ sealed class RsHttpClientError with _$RsHttpClientError implements FrbException 
   ) = RsHttpClientError_Other;
 }
 
+/// Validated source file metadata for V3 chunk transfers.
+class RsSourceFileInfoV3 {
+  final String path;
+  final String fileName;
+  final BigInt fileSize;
+
+  const RsSourceFileInfoV3({
+    required this.path,
+    required this.fileName,
+    required this.fileSize,
+  });
+
+  @override
+  int get hashCode => path.hashCode ^ fileName.hashCode ^ fileSize.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RsSourceFileInfoV3 &&
+          runtimeType == other.runtimeType &&
+          path == other.path &&
+          fileName == other.fileName &&
+          fileSize == other.fileSize;
+}
+
+/// Configuration options for V3 transfer orchestration.
+class RsTransferConfigV3 {
+  final BigInt chunkSize;
+  final int maxConcurrency;
+  final int maxRetries;
+  final int retryBaseDelayMs;
+  final int retryMaxDelayMs;
+  final bool verifyChunkHashes;
+
+  const RsTransferConfigV3({
+    required this.chunkSize,
+    required this.maxConcurrency,
+    required this.maxRetries,
+    required this.retryBaseDelayMs,
+    required this.retryMaxDelayMs,
+    required this.verifyChunkHashes,
+  });
+
+  static Future<RsTransferConfigV3> default_() => RustLib.instance.api.crateApiHttpRsTransferConfigV3Default();
+
+  @override
+  int get hashCode =>
+      chunkSize.hashCode ^
+      maxConcurrency.hashCode ^
+      maxRetries.hashCode ^
+      retryBaseDelayMs.hashCode ^
+      retryMaxDelayMs.hashCode ^
+      verifyChunkHashes.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RsTransferConfigV3 &&
+          runtimeType == other.runtimeType &&
+          chunkSize == other.chunkSize &&
+          maxConcurrency == other.maxConcurrency &&
+          maxRetries == other.maxRetries &&
+          retryBaseDelayMs == other.retryBaseDelayMs &&
+          retryMaxDelayMs == other.retryMaxDelayMs &&
+          verifyChunkHashes == other.verifyChunkHashes;
+}
+
+@freezed
+sealed class RsTransferErrorV3 with _$RsTransferErrorV3 {
+  const RsTransferErrorV3._();
+
+  const factory RsTransferErrorV3.invalidConfiguration({
+    required String message,
+  }) = RsTransferErrorV3_InvalidConfiguration;
+  const factory RsTransferErrorV3.unsupportedSource({
+    required String message,
+  }) = RsTransferErrorV3_UnsupportedSource;
+  const factory RsTransferErrorV3.sourceChanged({
+    required String message,
+  }) = RsTransferErrorV3_SourceChanged;
+  const factory RsTransferErrorV3.networkOrTimeout({
+    required String message,
+  }) = RsTransferErrorV3_NetworkOrTimeout;
+  const factory RsTransferErrorV3.peerIdentityMismatch({
+    required String message,
+  }) = RsTransferErrorV3_PeerIdentityMismatch;
+  const factory RsTransferErrorV3.conflict({
+    required String message,
+  }) = RsTransferErrorV3_Conflict;
+  const factory RsTransferErrorV3.integrityVerificationFailed({
+    required String message,
+  }) = RsTransferErrorV3_IntegrityVerificationFailed;
+  const factory RsTransferErrorV3.destinationCollision({
+    required String message,
+  }) = RsTransferErrorV3_DestinationCollision;
+  const factory RsTransferErrorV3.insufficientStorage({
+    required String message,
+  }) = RsTransferErrorV3_InsufficientStorage;
+  const factory RsTransferErrorV3.cancelled() = RsTransferErrorV3_Cancelled;
+  const factory RsTransferErrorV3.unexpected({
+    required String message,
+  }) = RsTransferErrorV3_Unexpected;
+}
+
+@freezed
+sealed class RsTransferEventV3 with _$RsTransferEventV3 {
+  const RsTransferEventV3._();
+
+  const factory RsTransferEventV3.progress({
+    required BigInt bytesTransferred,
+    required BigInt totalBytes,
+    required double progress,
+  }) = RsTransferEventV3_Progress;
+  const factory RsTransferEventV3.success({
+    required RsTransferResultV3 result,
+  }) = RsTransferEventV3_Success;
+  const factory RsTransferEventV3.failed({
+    required RsTransferErrorV3 error,
+  }) = RsTransferEventV3_Failed;
+}
+
+/// Detailed outcome of a completed V3 file transfer.
+class RsTransferResultV3 {
+  final String transferId;
+  final String fileName;
+  final BigInt fileSize;
+  final BigInt totalChunks;
+  final BigInt chunksUploaded;
+  final BigInt chunksResumed;
+
+  const RsTransferResultV3({
+    required this.transferId,
+    required this.fileName,
+    required this.fileSize,
+    required this.totalChunks,
+    required this.chunksUploaded,
+    required this.chunksResumed,
+  });
+
+  @override
+  int get hashCode =>
+      transferId.hashCode ^ fileName.hashCode ^ fileSize.hashCode ^ totalChunks.hashCode ^ chunksUploaded.hashCode ^ chunksResumed.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RsTransferResultV3 &&
+          runtimeType == other.runtimeType &&
+          transferId == other.transferId &&
+          fileName == other.fileName &&
+          fileSize == other.fileSize &&
+          totalChunks == other.totalChunks &&
+          chunksUploaded == other.chunksUploaded &&
+          chunksResumed == other.chunksResumed;
+}
+
 @freezed
 sealed class RsUploadEvent with _$RsUploadEvent {
   const RsUploadEvent._();
@@ -155,4 +328,3 @@ sealed class RsUploadEvent with _$RsUploadEvent {
     required RsHttpClientError error,
   }) = RsUploadEvent_Failed;
 }
-

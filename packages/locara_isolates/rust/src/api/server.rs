@@ -6,7 +6,7 @@ pub use locara::http::server::TlsConfig;
 use locara::http::server::common::save::FileUploadTarget;
 use locara::http::server::internal::{InternalConfig, InternalEvent};
 pub use locara::http::server::v2::SessionEndReasonV2;
-use locara::http::server::v2::{PrepareUploadDecisionV2, ServerEventV2};
+use locara::http::server::v2::{PrepareUploadDecisionV2, PrepareUploadDecisionV3, ServerEventV2};
 use locara::http::server::web::{
     WebConfig, WebDownloadConfig, WebDownloadEvent, WebMode as CoreWebMode,
 };
@@ -107,12 +107,53 @@ pub enum RsServerEvent {
         /// Description of the failure.
         error: String,
     },
+
+    /// A sender requests to upload a file via V3 protocol.
+    PrepareUploadV3 {
+        session_id: String,
+        ip: String,
+        file_name: String,
+        file_size: u64,
+        total_chunks: u64,
+        chunk_size: u64,
+        cert_fingerprint: Option<String>,
+    },
+
+    /// Progress update for an active V3 transfer.
+    TransferProgressV3 {
+        session_id: String,
+        bytes_received: u64,
+        total_bytes: u64,
+        progress: f64,
+    },
+
+    /// An active V3 transfer completed and was committed to destination.
+    TransferFinishedV3 {
+        session_id: String,
+        file_name: String,
+        file_size: u64,
+        destination_path: String,
+        saved_to_gallery: bool,
+    },
+
+    /// An active V3 transfer failed.
+    TransferFailedV3 {
+        session_id: String,
+        file_name: String,
+        error: String,
+    },
+
+    /// An active V3 transfer was cancelled.
+    TransferCancelledV3 {
+        session_id: String,
+    },
 }
 
 pub struct RsHttpServer {
     instance: Arc<ServerInstance>,
     event_rx: Mutex<Option<mpsc::Receiver<ServerEventV2>>>,
     pending_decision: Mutex<Option<(String, oneshot::Sender<PrepareUploadDecisionV2>)>>,
+    pending_decision_v3: Mutex<Option<(String, oneshot::Sender<PrepareUploadDecisionV3>)>>,
     pending_uploads: Mutex<HashMap<(String, String), oneshot::Sender<FileUploadTarget>>>,
     web_event_rx: Mutex<Option<mpsc::Receiver<WebDownloadEvent>>>,
     pending_download_decisions: Mutex<HashMap<String, oneshot::Sender<bool>>>,
@@ -284,6 +325,7 @@ pub async fn start_server(
         instance,
         event_rx: Mutex::new(Some(event_rx)),
         pending_decision: Mutex::new(None),
+        pending_decision_v3: Mutex::new(None),
         pending_uploads: Mutex::new(HashMap::new()),
         web_event_rx: Mutex::new(web_event_rx),
         pending_download_decisions: Mutex::new(HashMap::new()),
@@ -421,6 +463,12 @@ impl RsHttpServer {
                         *pending = None;
                     }
                 }
+                {
+                    let mut pending_v3 = self.pending_decision_v3.lock().await;
+                    if pending_v3.as_ref().is_some_and(|(sid, _)| sid == &session_id) {
+                        *pending_v3 = None;
+                    }
+                }
                 sink.add(RsServerEvent::PrepareUploadAborted { session_id })
                     .is_ok()
             }
@@ -432,6 +480,91 @@ impl RsHttpServer {
                 .is_ok(),
             ServerEventV2::ListenerFailed { error } => {
                 sink.add(RsServerEvent::ListenerFailed { error }).is_ok()
+            }
+            ServerEventV2::PrepareUploadV3 {
+                session_id,
+                file_name,
+                file_size,
+                chunk_size,
+                total_chunks,
+                ip,
+                cert_fingerprint,
+                decision_tx,
+            } => {
+                *self.pending_decision_v3.lock().await = Some((session_id.clone(), decision_tx));
+                sink.add(RsServerEvent::PrepareUploadV3 {
+                    session_id,
+                    ip: ip.to_string(),
+                    file_name,
+                    file_size,
+                    total_chunks,
+                    chunk_size,
+                    cert_fingerprint,
+                })
+                .is_ok()
+            }
+            ServerEventV2::TransferProgressV3 {
+                session_id,
+                bytes_received,
+                total_bytes,
+                progress,
+            } => sink
+                .add(RsServerEvent::TransferProgressV3 {
+                    session_id,
+                    bytes_received,
+                    total_bytes,
+                    progress,
+                })
+                .is_ok(),
+            ServerEventV2::TransferFinishedV3 {
+                session_id,
+                file_name,
+                file_size,
+                destination_path,
+                saved_to_gallery,
+            } => {
+                {
+                    let mut pending = self.pending_decision_v3.lock().await;
+                    if pending.as_ref().is_some_and(|(sid, _)| sid == &session_id) {
+                        *pending = None;
+                    }
+                }
+                sink.add(RsServerEvent::TransferFinishedV3 {
+                    session_id,
+                    file_name,
+                    file_size,
+                    destination_path,
+                    saved_to_gallery,
+                })
+                .is_ok()
+            }
+            ServerEventV2::TransferFailedV3 {
+                session_id,
+                file_name,
+                error,
+            } => {
+                {
+                    let mut pending = self.pending_decision_v3.lock().await;
+                    if pending.as_ref().is_some_and(|(sid, _)| sid == &session_id) {
+                        *pending = None;
+                    }
+                }
+                sink.add(RsServerEvent::TransferFailedV3 {
+                    session_id,
+                    file_name,
+                    error,
+                })
+                .is_ok()
+            }
+            ServerEventV2::TransferCancelledV3 { session_id } => {
+                {
+                    let mut pending = self.pending_decision_v3.lock().await;
+                    if pending.as_ref().is_some_and(|(sid, _)| sid == &session_id) {
+                        *pending = None;
+                    }
+                }
+                sink.add(RsServerEvent::TransferCancelledV3 { session_id })
+                    .is_ok()
             }
         }
     }
@@ -504,6 +637,36 @@ impl RsHttpServer {
         Ok(())
     }
 
+    /// Answers the pending [RsServerEvent::PrepareUploadV3] event.
+    ///
+    /// Passing [accept] = true accepts the request with optional [destination_path].
+    /// Passing [accept] = false declines the request.
+    pub async fn respond_prepare_upload_v3(
+        &self,
+        session_id: String,
+        accept: bool,
+        destination_path: Option<String>,
+    ) -> anyhow::Result<()> {
+        let mut pending = self.pending_decision_v3.lock().await;
+        let Some((sid, decision_tx)) = pending.take() else {
+            return Err(anyhow::anyhow!("No pending prepare-upload v3 request"));
+        };
+
+        if sid != session_id {
+            *pending = Some((sid, decision_tx));
+            return Err(anyhow::anyhow!("Session ID mismatch for prepare-upload v3"));
+        }
+
+        decision_tx
+            .send(PrepareUploadDecisionV3 {
+                accept,
+                destination_path: destination_path.map(std::path::PathBuf::from),
+            })
+            .map_err(|_| anyhow::anyhow!("Prepare-upload v3 request already ended"))?;
+
+        Ok(())
+    }
+
     /// Answers the pending [RsServerEvent::FileUpload] event with the target
     /// the file should be saved to (either a path or a file descriptor)
     /// and waits until the file has been received completely.
@@ -560,7 +723,7 @@ impl RsHttpServer {
             });
 
             let (result_tx, result_rx) = oneshot::channel::<Result<(), String>>();
-            let target = resolve_upload_target(path, file_descriptor, result_tx, progress_tx)?;
+            let target = resolve_upload_target(path, file_descriptor, result_tx, progress_tx).await?;
 
             target_tx
                 .send(target)
@@ -700,23 +863,31 @@ async fn recv_opt<T>(rx: &mut Option<mpsc::Receiver<T>>) -> Option<T> {
     }
 }
 
-fn resolve_upload_target(
+async fn resolve_upload_target(
     path: Option<String>,
     file_descriptor: Option<i32>,
     result_tx: oneshot::Sender<Result<(), String>>,
     progress_tx: mpsc::Sender<u64>,
 ) -> anyhow::Result<FileUploadTarget> {
     match (path, file_descriptor) {
-        (Some(path), None) => Ok(FileUploadTarget::Path {
-            path: path.into(),
-            result_tx,
-            progress_tx: Some(progress_tx),
-        }),
+        (Some(path), None) => {
+            let handle = locara::model::storage_adapter::DesktopStorageHandle::new(path.into())
+                .await
+                .map_err(|e| anyhow::anyhow!("Failed to open storage: {e}"))?;
+            Ok(FileUploadTarget::Storage {
+                handle: Box::new(handle),
+                result_tx,
+                progress_tx: Some(progress_tx),
+            })
+        }
         (None, Some(file_descriptor)) => {
             #[cfg(target_os = "android")]
             {
-                Ok(FileUploadTarget::Fd {
-                    fd: file_descriptor,
+                let handle = locara::model::storage_adapter::AndroidSafStorageHandle::new(file_descriptor)
+                    .await
+                    .map_err(|e| anyhow::anyhow!("Failed to open SAF storage: {e}"))?;
+                Ok(FileUploadTarget::Storage {
+                    handle: Box::new(handle),
                     result_tx,
                     progress_tx: Some(progress_tx),
                 })

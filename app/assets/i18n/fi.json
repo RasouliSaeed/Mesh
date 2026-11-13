@@ -1,5 +1,5 @@
 {
-  "appName": "Locara",
+  "appName": "Mesh",
   "general": {
     "accept": "Hyväksy",
     "accepted": "Hyväksytty",
@@ -109,7 +109,7 @@
       "minimizeToTray": "Poistu: Minimoi ilmoitusalueelle",
       "launchAtStartup": "Automaattinen käynnistys",
       "launchMinimized": "Automaattinen käynnistys: Käynnistä piiilotettuna",
-      "showInContextMenu": "Näytä Locara kontekstivalikossa",
+      "showInContextMenu": "Näytä Mesh kontekstivalikossa",
       "animations": "Animaatiot"
     },
     "receive": {
@@ -131,7 +131,7 @@
     },
     "network": {
       "title": "Verkko",
-      "needRestart": "Käynnistä Locara uudelleen saadaksesi muutokset käyttöön!",
+      "needRestart": "Käynnistä Mesh uudelleen saadaksesi muutokset käyttöön!",
       "server": "Palvelin",
       "alias": "Laitteen nimi",
       "deviceType": "Laitteen tyyppi",
@@ -152,7 +152,7 @@
     },
     "other": {
       "title": "Muut",
-      "support": "Tue Locaraia",
+      "support": "Tue Meshia",
       "donate": "Lahjoita",
       "privacyPolicy": "Tietosuojakäytäntö",
       "termsOfUse": "Käyttöehdot"
@@ -180,7 +180,7 @@
   },
   "networkInterfacesPage": {
     "title": "Verkkokäyttöliittymät",
-    "info": "Oletuksena Locara käyttää kaikkia saatavilla olevia verkkoliitäntöjä. Voit sulkea pois verkkoliitännät, joita et halua. Sinun tulee uudelleenkäynnistää Locara ottaaksesi muutokset käyttöön.",
+    "info": "Oletuksena Mesh käyttää kaikkia saatavilla olevia verkkoliitäntöjä. Voit sulkea pois verkkoliitännät, joita et halua. Sinun tulee uudelleenkäynnistää Mesh ottaaksesi muutokset käyttöön.",
     "preview": "Esikatselu",
     "whitelist": "Sallittujen lista",
     "blacklist": "Estettyjen lista"
@@ -241,7 +241,7 @@
   "receiveOptionsPage": {
     "title": "Asetukset",
     "destination": "Vastaanottoasetukset",
-    "appDirectory": "(Locara-kansio)",
+    "appDirectory": "(Mesh-kansio)",
     "saveToGallery": "Tallenna galleriaan",
     "saveToGalleryOff": "Poistettu käytöstä automaattisesti, koska lähetetyissä tiedostoissa on kansioita."
   },
@@ -293,17 +293,17 @@
     "autoAccept": "Hyväksy pyynnöt automaattisesti",
     "requirePin": "Vaadi PIN-koodi",
     "pinHint": "PIN-koodi on \"{pin}\"",
-    "encryptionHint": "Locara käyttää itse allekirjoitettua sertifikaattia. Sinun on hyväksyttävä se selaimessasi.",
+    "encryptionHint": "Mesh käyttää itse allekirjoitettua sertifikaattia. Sinun on hyväksyttävä se selaimessasi.",
     "pendingRequests": "Odottavat pyynnöt: {n}"
   },
   "webReceivePage": {
     "title": "Vastaanota linkin kautta"
   },
   "aboutPage": {
-    "title": "Tietoja Locaraista",
+    "title": "Tietoja Meshista",
     "description": [
-      "Locara on ilmainen, avoimen lähdekoodin sovellus, jonka avulla voit turvallisesti jakaa tiedostoja ja lähettää viestejä läheisten laitteiden kanssa paikallisessa verkossasi ilman internet-yhteyttä.",
-      "Locara on saatavilla Androidille, iOS:lle, Linuxille, macOS:lle ja Windowsille. Kaikki latausvaihtoehdot löytyvät virallisilta kotisivuilta."
+      "Mesh on ilmainen, avoimen lähdekoodin sovellus, jonka avulla voit turvallisesti jakaa tiedostoja ja lähettää viestejä läheisten laitteiden kanssa paikallisessa verkossasi ilman internet-yhteyttä.",
+      "Mesh on saatavilla Androidille, iOS:lle, Linuxille, macOS:lle ja Windowsille. Kaikki latausvaihtoehdot löytyvät virallisilta kotisivuilta."
     ],
     "author": "Tekijä",
     "contributors": "Avustajat",
@@ -312,7 +312,7 @@
   },
   "donationPage": {
     "title": "Lahjoita",
-    "info": "Locara on ilmainen, avoimen lähdekoodin sovellus ilman mainoksia. Voit tukea projektia lahjoituksella, jos pidät sovelluksesta.",
+    "info": "Mesh on ilmainen, avoimen lähdekoodin sovellus ilman mainoksia. Voit tukea projektia lahjoituksella, jos pidät sovelluksesta.",
     "donate": "Lahjoita {amount}",
     "thanks": "Suuret kiitokset!",
     "restore": "Palauta ostos"
@@ -477,7 +477,7 @@
     },
     "localNetworkUnauthorized": {
       "title": "@:dialogs.noPermission.title",
-      "description": "Locara ei löydä muita laitteita ilman lupaa skannata paikallisverkkoa. Anna tämä lupa asetuksissa.",
+      "description": "Mesh ei löydä muita laitteita ilman lupaa skannata paikallisverkkoa. Anna tämä lupa asetuksissa.",
       "gotoSettings": "Asetukset"
     },
     "messageInput": {
@@ -524,7 +524,7 @@
       "title": "Lähetystilat",
       "single": "Lähettää tiedostoja yhdelle vastaanottajalle. Valinta tyhjennetään tiedostonsiirron päätyttyä.",
       "multiple": "Lähettää tiedostoja useille vastaanottajille. Valinta ei tyhjene.",
-      "link": "Vastaanottajat, joilla ei ole Locaraia asennettuna, voivat ladata valitut tiedostot avaamalla linkin selaimessaan."
+      "link": "Vastaanottajat, joilla ei ole Meshia asennettuna, voivat ladata valitut tiedostot avaamalla linkin selaimessaan."
     },
     "zoom": {
       "title": "URL"
@@ -537,7 +537,7 @@
   "tray": {
     "@info": "Applen ohjeistukset ovat hyvin tiukat 'sulje'-sanan käytöstä.",
     "open": "Avaa",
-    "close": "Lopeta Locara",
+    "close": "Lopeta Mesh",
     "closeWindows": "Poistu"
   },
   "web": {

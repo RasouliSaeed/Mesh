@@ -167,4 +167,3 @@ Future<void> setupDiscoveryIsolate(
     },
   );
 }
-

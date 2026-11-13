@@ -68,14 +68,14 @@ consumers: "" {
   }
 }
 
-locara_isolates: ||md
+mesh_isolates: ||md
   <table>
     <tr>
-      <td style="width:100%"><h6 style="margin:0;font-size:1em;color:inherit">locara Isolates</h6></td>
+      <td style="width:100%"><h6 style="margin:0;font-size:1em;color:inherit">mesh Isolates</h6></td>
       <td align="right" style="white-space:nowrap">Dart + Rust</td>
     </tr>
     <tr>
-      <td colspan="2">/packages/locara_isolates/</td>
+      <td colspan="2">/packages/mesh_isolates/</td>
     </tr>
     <tr>
       <td colspan="2">Background thread and Rust bindings</td>
@@ -95,7 +95,7 @@ core: ||md
       <td colspan="2">/packages/core/</td>
     </tr>
     <tr>
-      <td colspan="2">Library implementing the locara protocol</td>
+      <td colspan="2">Library implementing the mesh protocol</td>
     </tr>
   </table>
 || {
@@ -109,9 +109,9 @@ core_hub: "" {
   style.opacity: 0
 }
 
-consumers.app -> locara_isolates
+consumers.app -> mesh_isolates
 consumers.cli -- core_hub
 consumers.server -- core_hub
-locara_isolates -- core_hub
+mesh_isolates -- core_hub
 core_hub -> core
 

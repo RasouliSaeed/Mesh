@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_app/model/persistence/color_mode.dart';
 import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/theme/mesh_design_tokens.dart';
 import 'package:locara_app/util/native/platform_check.dart';
 import 'package:locara_app/util/ui/dynamic_colors.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -51,7 +52,7 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
 
   return ThemeData(
     colorScheme: colorScheme,
-    scaffoldBackgroundColor: colorScheme.brightness == Brightness.dark ? const Color(0xFF101827) : const Color(0xFFF4F6FA),
+    scaffoldBackgroundColor: colorScheme.brightness == Brightness.dark ? LocaraDesignTokens.deepNavy : const Color(0xFFF4F6FA),
     useMaterial3: true,
     // same density on all platforms so desktop matches mobile (defaults to compact on desktop)
     visualDensity: VisualDensity.standard,
@@ -61,11 +62,17 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
           )
         : null,
     cardTheme: CardThemeData(
-      color: colorScheme.surface.withValues(alpha: 0.5),
+      color: colorScheme.brightness == Brightness.dark
+          ? LocaraDesignTokens.cardSurface.withValues(alpha: 0.85)
+          : colorScheme.surface.withValues(alpha: 0.5),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        side: BorderSide(
+          color: colorScheme.brightness == Brightness.dark
+              ? LocaraDesignTokens.cardBorderSubtle
+              : Colors.white.withValues(alpha: 0.1),
+        ),
       ),
     ),
     listTileTheme: ListTileThemeData(
@@ -163,18 +170,18 @@ ColorScheme _determineColorScheme(ColorMode mode, Color customColor, Brightness 
   final colorScheme =
       ColorScheme(
         brightness: brightness,
-        primary: isDark ? const Color(0xFF1769FF) : const Color(0xFF3685FF),
+        primary: isDark ? LocaraDesignTokens.primaryBlue : const Color(0xFF3685FF),
         onPrimary: Colors.white,
-        secondary: const Color(0xFF27B7D9),
+        secondary: isDark ? LocaraDesignTokens.cyan : const Color(0xFF27B7D9),
         onSecondary: Colors.white,
-        error: const Color(0xFFDC4C4C),
+        error: isDark ? LocaraDesignTokens.error : const Color(0xFFDC4C4C),
         onError: Colors.white,
-        surface: isDark ? const Color(0xFF17243A) : const Color(0xFFFFFFFF),
-        onSurface: isDark ? const Color(0xFFF1F5F9) : const Color(0xFF172033),
+        surface: isDark ? LocaraDesignTokens.cardSurface : const Color(0xFFFFFFFF),
+        onSurface: isDark ? LocaraDesignTokens.primaryText : const Color(0xFF172033),
       ).copyWith(
-        surfaceContainerHighest: isDark ? const Color(0xFF1D2A40) : const Color(0xFFF8FAFD),
-        onSurfaceVariant: isDark ? const Color(0xFF9BAAC0) : const Color(0xFF64748B),
-        outline: isDark ? const Color(0xFF2B3B53) : const Color(0xFFE2E8F0),
+        surfaceContainerHighest: isDark ? LocaraDesignTokens.cardSurfaceLight : const Color(0xFFF8FAFD),
+        onSurfaceVariant: isDark ? LocaraDesignTokens.secondaryText : const Color(0xFF64748B),
+        outline: isDark ? LocaraDesignTokens.cardBorder : const Color(0xFFE2E8F0),
       );
 
   return colorScheme;

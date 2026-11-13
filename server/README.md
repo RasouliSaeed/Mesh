@@ -1,4 +1,4 @@
-# locara Signaling Server
+# mesh Signaling Server
 
-A signaling server for locara. Using Rust and WebSockets.
+A signaling server for mesh. Using Rust and WebSockets.
 

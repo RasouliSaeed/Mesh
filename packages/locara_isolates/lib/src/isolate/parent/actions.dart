@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/rust/api/http.dart' show RsTransferConfigV3;
 import 'package:locara_isolates/rust/api/server.dart' show WebParams;
 import 'package:locara_isolates/src/isolate/child/discovery_isolate.dart';
 import 'package:locara_isolates/src/isolate/child/server_isolate.dart';
@@ -267,6 +268,43 @@ class IsolateHttpUploadFilesAction extends ReduxActionWithResult<IsolateControll
   }
 }
 
+class IsolateHttpUploadFilesV3Action extends ReduxActionWithResult<IsolateController, ParentIsolateState, IsolateHttpUploadActionResult> {
+  final List<HttpUploadFileV3> files;
+  final Device device;
+  final RsTransferConfigV3? config;
+
+  IsolateHttpUploadFilesV3Action({
+    required this.files,
+    required this.device,
+    this.config,
+  });
+
+  @override
+  (ParentIsolateState, IsolateHttpUploadActionResult) reduce() {
+    final connection = state.httpUpload;
+    if (connection == null) {
+      throw StateError('httpUpload is not initialized');
+    }
+    final taskId = IdProvider.instance.getNextId();
+    final events = connection.sendWrappedTaskAndListenStream(
+      task: HttpUploadFilesV3Task(
+        files: files,
+        device: device,
+        config: config,
+      ),
+      taskId: taskId,
+    );
+
+    return (
+      state,
+      IsolateHttpUploadActionResult(
+        taskId: taskId,
+        events: events,
+      ),
+    );
+  }
+}
+
 class IsolateHttpUploadCancelAction extends ReduxAction<IsolateController, ParentIsolateState> {
   final int taskId;
 
@@ -388,6 +426,42 @@ class IsolateHttpServerPrepareUploadDecisionAction extends ReduxAction<IsolateCo
         data: IsolateTask(
           data: HttpServerPrepareUploadDecisionTask(
             config: config,
+          ),
+        ),
+      ),
+    );
+
+    return state;
+  }
+}
+
+/// Answers a pending [HttpServerPrepareUploadV3Event].
+class IsolateHttpServerPrepareUploadV3DecisionAction extends ReduxAction<IsolateController, ParentIsolateState> {
+  final String sessionId;
+  final bool accept;
+  final String? destinationPath;
+
+  IsolateHttpServerPrepareUploadV3DecisionAction({
+    required this.sessionId,
+    required this.accept,
+    this.destinationPath,
+  });
+
+  @override
+  ParentIsolateState reduce() {
+    final connection = state.httpServer;
+    if (connection == null) {
+      throw StateError('httpServer is not initialized');
+    }
+
+    connection.sendToIsolate(
+      SendToIsolateData(
+        syncState: null,
+        data: IsolateTask(
+          data: HttpServerPrepareUploadV3DecisionTask(
+            sessionId: sessionId,
+            accept: accept,
+            destinationPath: destinationPath,
           ),
         ),
       ),
@@ -575,5 +649,3 @@ extension _WrappedTaskConnector<R, T> on IsolateConnector<IsolateTaskStreamResul
     return convertResponseToStream(taskId: wrappedTask.id);
   }
 }
-
-

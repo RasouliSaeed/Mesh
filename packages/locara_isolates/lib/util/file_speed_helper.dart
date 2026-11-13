@@ -41,4 +41,3 @@ int _getRemainingTime({
 }) {
   return remainingBytes ~/ bytesPerSeconds;
 }
-

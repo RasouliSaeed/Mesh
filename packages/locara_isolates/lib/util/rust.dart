@@ -106,6 +106,17 @@ extension HumanErrorMessageExt on Object {
     final e = this;
     return switch (e) {
       rust_http.RsHttpClientError_StatusCode(:final status, :final message) when message != null => '[$status] $message',
+      rust_http.RsTransferErrorV3_InvalidConfiguration(:final message) => 'Invalid configuration: $message',
+      rust_http.RsTransferErrorV3_UnsupportedSource(:final message) => 'Unsupported source: $message',
+      rust_http.RsTransferErrorV3_SourceChanged(:final message) => 'File changed during transfer: $message',
+      rust_http.RsTransferErrorV3_NetworkOrTimeout(:final message) => 'Network error: $message',
+      rust_http.RsTransferErrorV3_PeerIdentityMismatch(:final message) => 'Security mismatch: $message',
+      rust_http.RsTransferErrorV3_Conflict(:final message) => 'Transfer conflict: $message',
+      rust_http.RsTransferErrorV3_IntegrityVerificationFailed(:final message) => 'Checksum failed: $message',
+      rust_http.RsTransferErrorV3_DestinationCollision(:final message) => 'File already exists: $message',
+      rust_http.RsTransferErrorV3_InsufficientStorage(:final message) => 'Receiver out of storage: $message',
+      rust_http.RsTransferErrorV3_Cancelled() => 'Transfer cancelled',
+      rust_http.RsTransferErrorV3_Unexpected(:final message) => 'Error: $message',
       AnyhowException(:final message) => message,
       _ => e.toString(),
     };
@@ -227,4 +238,3 @@ extension RegisterResponseDtoExt on rust_model.RegisterResponseDto {
     );
   }
 }
-

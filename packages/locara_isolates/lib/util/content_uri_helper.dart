@@ -84,4 +84,3 @@ class ContentUriHelper {
     return uri.substring(0, treeIndex + 6) + encodedPath;
   }
 }
-

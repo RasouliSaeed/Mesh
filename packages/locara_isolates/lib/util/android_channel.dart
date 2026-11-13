@@ -99,5 +99,3 @@ Future<int> openFileForWritingAndroid({required String uri}) async {
   }
   return fileDescriptor;
 }
-
-

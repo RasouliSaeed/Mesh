@@ -36,14 +36,14 @@ Future<void> main(List<String> args) async {
     RefenaScope.withContainer(
       container: container,
       child: TranslationProvider(
-        child: const LocaraApp(),
+        child: const MeshApp(),
       ),
     ),
   );
 }
 
-class LocaraApp extends StatelessWidget {
-  const LocaraApp();
+class MeshApp extends StatelessWidget {
+  const MeshApp();
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class LocaraApp extends StatelessWidget {
               navigatorKey: context.read(navigationProvider).key,
               home: RouterinoHome(
                 builder: () => const HomePage(
-                  initialTab: HomeTab.receive,
+                  initialTab: HomeTab.home,
                   appStart: true,
                 ),
               ),
@@ -102,3 +102,6 @@ class LocaraApp extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias for the root application widget
+typedef LocaraApp = MeshApp;

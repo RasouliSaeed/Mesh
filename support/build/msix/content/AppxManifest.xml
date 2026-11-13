@@ -21,10 +21,10 @@
         xmlns:com2="http://schemas.microsoft.com/appx/manifest/com/windows10/2" 
         xmlns:com3="http://schemas.microsoft.com/appx/manifest/com/windows10/3" 
         IgnorableNamespaces="uap3 desktop">
-  <Identity Name="locara.App" Version="1.8.0.0"
+  <Identity Name="mesh.App" Version="1.8.0.0"
             Publisher="CN=SaeedR, O=SaeedR, L=Berlin, C=DE" ProcessorArchitecture="x64" />
   <Properties>
-    <DisplayName>locara MSIX Helper</DisplayName>
+    <DisplayName>mesh MSIX Helper</DisplayName>
     <PublisherDisplayName>SaeedR</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <Description>An open source cross-platform alternative to AirDrop</Description>
@@ -40,11 +40,11 @@
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
   <Applications>
-    <Application Id="locaraapp" Executable="locara_app.exe" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="meshapp" Executable="mesh_app.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements AppListEntry="none" BackgroundColor="transparent"
-        DisplayName="locara" Square150x150Logo="Images\Square150x150Logo.png"
+        DisplayName="mesh" Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png" Description="An open source cross-platform alternative to AirDrop">
-        <uap:DefaultTile ShortName="locara" Square310x310Logo="Images\LargeTile.png"
+        <uap:DefaultTile ShortName="mesh" Square310x310Logo="Images\LargeTile.png"
           Square71x71Logo="Images\SmallTile.png" Wide310x150Logo="Images\Wide310x150Logo.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
@@ -56,11 +56,11 @@
         <uap:LockScreen BadgeLogo="Images\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
       <Extensions>
-        <desktop:Extension Category="windows.startupTask" Executable="locara_app.exe" EntryPoint="Windows.FullTrustApplication" uap10:Parameters="autostart">
-          <desktop:StartupTask TaskId="locara" Enabled="false" DisplayName="locara"/>
+        <desktop:Extension Category="windows.startupTask" Executable="mesh_app.exe" EntryPoint="Windows.FullTrustApplication" uap10:Parameters="autostart">
+          <desktop:StartupTask TaskId="mesh" Enabled="false" DisplayName="mesh"/>
         </desktop:Extension>
         <uap:Extension Category="windows.shareTarget">
-          <uap:ShareTarget Description="Send to locara">
+          <uap:ShareTarget Description="Send to mesh">
             <uap:SupportedFileTypes>
               <uap:SupportsAnyFileType />
             </uap:SupportedFileTypes>

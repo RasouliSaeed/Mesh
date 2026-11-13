@@ -31,8 +31,8 @@ void main(List<String> args) {
   );
   _replace(
     file: '$root/Cargo.lock',
-    pattern: 'name = "locara-cli"\nversion = ".+"',
-    replacement: 'name = "locara-cli"\nversion = "$version"',
+    pattern: 'name = "mesh-cli"\nversion = ".+"',
+    replacement: 'name = "mesh-cli"\nversion = "$version"',
   );
   _replace(
     file: '$root/support/scripts/compile_windows_exe-inno.iss',

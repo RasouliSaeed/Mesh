@@ -70,4 +70,3 @@ class UpdateSyncStateAction extends ReduxAction<SyncService, SyncState> {
     return newState;
   }
 }
-

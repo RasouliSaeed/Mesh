@@ -6,6 +6,7 @@ import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_app/model/persistence/receive_history_entry.dart';
 import 'package:locara_app/pages/receive_page.dart';
 import 'package:locara_app/provider/receive_history_provider.dart';
+import 'package:locara_app/provider/recovery_contract_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/util/native/directories.dart';
 import 'package:locara_app/util/native/open_file.dart';
@@ -14,6 +15,7 @@ import 'package:locara_app/util/native/platform_check.dart';
 import 'package:locara_app/widget/dialogs/file_info_dialog.dart';
 import 'package:locara_app/widget/dialogs/history_clear_dialog.dart';
 import 'package:locara_app/widget/file_thumbnail.dart';
+import 'package:locara_app/widget/recovery_list.dart';
 import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/model/session_status.dart';
@@ -62,6 +64,8 @@ class ReceiveHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final entries = context.watch(receiveHistoryProvider);
+    final asyncTransfers = context.watch(recoveryContractProvider);
+    final hasRecoverable = (asyncTransfers.data ?? []).isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -115,10 +119,18 @@ class ReceiveHistoryPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+          const RecoveryList(),
           if (entries.isEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 100),
-              child: Center(child: Text(t.receiveHistoryPage.empty, style: Theme.of(context).textTheme.headlineMedium)),
+              padding: EdgeInsets.only(top: hasRecoverable ? 40 : 100),
+              child: Center(
+                child: Text(
+                  t.receiveHistoryPage.empty,
+                  style: hasRecoverable
+                      ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey)
+                      : Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
             )
           else
             ...entries.map((entry) {

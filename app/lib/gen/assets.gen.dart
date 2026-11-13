@@ -29,6 +29,15 @@ class $AssetsImgGen {
   /// File path: assets/img/logo-32.png
   AssetGenImage get logo32 => const AssetGenImage('assets/img/logo-32.png');
 
+  /// File path: assets/img/logo-512-monochrome.png
+  AssetGenImage get logo512Monochrome => const AssetGenImage('assets/img/logo-512-monochrome.png');
+
+  /// File path: assets/img/logo-512-padded-monochrome.png
+  AssetGenImage get logo512PaddedMonochrome => const AssetGenImage('assets/img/logo-512-padded-monochrome.png');
+
+  /// File path: assets/img/logo-512-padded.png
+  AssetGenImage get logo512Padded => const AssetGenImage('assets/img/logo-512-padded.png');
+
   /// File path: assets/img/logo-512-white.png
   AssetGenImage get logo512White => const AssetGenImage('assets/img/logo-512-white.png');
 
@@ -39,12 +48,22 @@ class $AssetsImgGen {
   String get logo => 'assets/img/logo.ico';
 
   /// List of all assets
-  List<dynamic> get values => [logo128, logo256, logo32Black, logo32White, logo32, logo512White, logo512, logo];
+  List<dynamic> get values => [
+    logo128,
+    logo256,
+    logo32Black,
+    logo32White,
+    logo32,
+    logo512Monochrome,
+    logo512PaddedMonochrome,
+    logo512Padded,
+    logo512White,
+    logo512,
+    logo,
+  ];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const String changelog = 'assets/CHANGELOG.md';
   static const $AssetsImgGen img = $AssetsImgGen();
 

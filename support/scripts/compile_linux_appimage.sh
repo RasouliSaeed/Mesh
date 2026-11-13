@@ -12,7 +12,7 @@
 
 cd ..
 rm -rf /tmp/build
-cp locara /tmp/build -r
+cp mesh /tmp/build -r
 pushd /tmp/build
 
 git submodule update --init
@@ -30,12 +30,12 @@ mkdir AppDir
 cp -r build/linux/x64/release/bundle/* AppDir
 cp support/build/appimage/AppImageBuilder_x86_64.yml AppImageBuilder.yml
 appimage-builder
-sudo chmod +x locara-*-x86_64.AppImage
+sudo chmod +x mesh-*-x86_64.AppImage
 
 rm -rf AppDir
 rm -rf appimage-build
 
 popd
-cd locara
-cp /tmp/build/locara-*-x86_64.AppImage .
+cd mesh
+cp /tmp/build/mesh-*-x86_64.AppImage .
 

@@ -123,4 +123,3 @@ class _MockRustLibApi implements RustLibApi {
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnsupportedError('Not mocked: ${invocation.memberName}');
 }
-

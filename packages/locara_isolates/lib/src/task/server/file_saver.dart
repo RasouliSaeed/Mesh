@@ -15,8 +15,11 @@ final _logger = Logger('FileSaver');
 /// The actual writing is done by the Rust server which receives either a
 /// plain file [path] or a writable [fileDescriptor] (Android SAF).
 class FileSaveTarget {
-  /// The path to write the file to. `null` when [fileDescriptor] is used.
+  /// The path to write the file to (may have .locara.part). `null` when [fileDescriptor] is used.
   final String? path;
+
+  /// The final path to rename the file to after completion. `null` when SAF is used.
+  final String? finalPath;
 
   /// A writable file descriptor (Android SAF). `null` when [path] is used.
   final int? fileDescriptor;
@@ -27,6 +30,7 @@ class FileSaveTarget {
 
   FileSaveTarget({
     required this.path,
+    this.finalPath,
     required this.fileDescriptor,
     required this.displayPath,
   });
@@ -80,6 +84,7 @@ Future<FileSaveTarget> prepareFileSaveTarget({
       );
       return FileSaveTarget(
         path: null,
+        finalPath: null,
         fileDescriptor: createdFile.fileDescriptor,
         displayPath: createdFile.uri,
       );
@@ -88,6 +93,7 @@ Future<FileSaveTarget> prepareFileSaveTarget({
 
   return FileSaveTarget(
     path: destinationPath,
+    finalPath: destinationPath,
     fileDescriptor: null,
     displayPath: destinationPath,
   );
@@ -270,4 +276,3 @@ SdCardPath? getSdCardPath(String path) {
   }
   return SdCardPath(match.group(1)!, match.group(2)!);
 }
-

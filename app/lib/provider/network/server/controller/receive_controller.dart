@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,11 @@ import 'package:locara_app/util/native/tray_helper.dart';
 import 'package:locara_app/widget/dialogs/open_file_dialog.dart';
 import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device.dart';
+import 'package:locara_isolates/model/dto/file_dto.dart';
 import 'package:locara_isolates/model/file_status.dart';
 import 'package:locara_isolates/model/session_status.dart';
 import 'package:locara_isolates/rust/api/server.dart' show SessionEndReasonV2;
+import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:locara_isolates/util/rust.dart';
 import 'package:locara_isolates/util/transfer_notification.dart';
 import 'package:logging/logging.dart';
@@ -47,6 +50,10 @@ final _logger = Logger('ReceiveController');
 /// the events handled here.
 class ReceiveController {
   final ServerUtils server;
+
+  String? _pendingV3SessionId;
+
+  String? get pendingV3SessionId => _pendingV3SessionId;
 
   ReceiveController(this.server);
 
@@ -484,6 +491,341 @@ class ReceiveController {
     _cancelBySender(server);
   }
 
+  /// A sender requests to upload a file via V3 protocol.
+  Future<void> onPrepareUploadV3(HttpServerPrepareUploadV3Event event) async {
+    if (server.getStateOrNull()?.session != null) {
+      closeSession();
+    }
+
+    final settings = server.ref.read(settingsProvider);
+    final destinationDir = settings.destination ?? await getDefaultDestinationDirectory();
+    final cleanDestDir = destinationDir.replaceAll('\\', '/');
+
+    // Reject Android SAF destinations because V3 engine requires direct POSIX filesystem access.
+    final isSaf = cleanDestDir.startsWith('content://') || RegExp(r'^/storage/([A-Fa-f0-9]{4}-[A-Fa-f0-9]{4})/(.*)$').hasMatch(cleanDestDir);
+    if (isSaf) {
+      _logger.warning('V3 PrepareUpload: rejected because destination uses Android SAF/SD card ($cleanDestDir)');
+      server.ref
+          .redux(parentIsolateProvider)
+          .dispatch(
+            IsolateHttpServerPrepareUploadV3DecisionAction(
+              sessionId: event.sessionId,
+              accept: false,
+            ),
+          );
+      return;
+    }
+
+    final cacheDir = await getCacheDirectory();
+    final senderFingerprint = event.certFingerprint;
+    final favorite = senderFingerprint != null
+        ? server.ref.read(favoritesProvider).firstWhereOrNull((e) => e.fingerprint == senderFingerprint)
+        : null;
+    final senderAlias = favorite?.alias ?? 'V3 Sender';
+
+    final sender = Device(
+      signalingId: null,
+      ip: event.ip,
+      version: '3.0',
+      port: -1,
+      https: senderFingerprint != null,
+      fingerprint: senderFingerprint ?? '',
+      alias: senderAlias,
+      deviceModel: null,
+      deviceType: DeviceType.desktop,
+      download: false,
+      channels: [
+        HttpChannel(host: event.ip, port: -1, https: senderFingerprint != null),
+      ],
+    );
+
+    final fileDto = FileDto(
+      id: event.sessionId,
+      fileName: event.fileName,
+      size: event.fileSize,
+      fileType: event.fileName.guessFileType(),
+      hash: null,
+      preview: null,
+      metadata: null,
+    );
+
+    _pendingV3SessionId = event.sessionId;
+
+    _logger.info('V3 PrepareUpload: session=${event.sessionId}, file=${event.fileName}, size=${event.fileSize}, destinationDir=$cleanDestDir');
+
+    server.setState(
+      (oldState) => oldState?.copyWith(
+        session: ReceiveSessionState(
+          sessionId: event.sessionId,
+          status: SessionStatus.waiting,
+          sender: sender,
+          senderAlias: senderAlias,
+          files: {
+            event.sessionId: ReceivingFile(
+              file: fileDto,
+              token: null,
+              desiredName: null,
+              path: null,
+              savedToGallery: false,
+              errorMessage: null,
+            ),
+          },
+          startTime: null,
+          endTime: null,
+          destinationDirectory: cleanDestDir,
+          cacheDirectory: cacheDir,
+          saveToGallery: checkPlatformWithGallery() && settings.saveToGallery && !event.fileName.contains('/'),
+          createdDirectories: {},
+        ),
+      ),
+    );
+
+    server.ref
+        .notifier(fileTransferProvider)
+        .setStatuses(
+          sessionId: event.sessionId,
+          statuses: {event.sessionId: FileStatus.queue},
+        );
+
+    bool quickSave = settings.quickSave;
+    if (settings.quickSaveFromFavorites && senderFingerprint != null) {
+      final isFavorite = server.ref.read(favoritesProvider).any((e) => e.fingerprint == senderFingerprint);
+      if (isFavorite) {
+        quickSave = true;
+      }
+    }
+
+    if (quickSave) {
+      // ignore: use_build_context_synchronously, unawaited_futures
+      Routerino.context.pushImmediately(
+        () => ProgressPage(
+          showAppBar: false,
+          closeSessionOnClose: true,
+          sessionId: event.sessionId,
+        ),
+      );
+
+      await acceptFileRequest({event.sessionId: event.fileName});
+      return;
+    }
+
+    if (checkPlatformHasTray() && (await windowManager.isMinimized() || !(await windowManager.isVisible()) || !(await windowManager.isFocused()))) {
+      await showFromTray();
+    }
+
+    final receiveProvider = ViewProvider((ref) {
+      final session = ref.watch(serverProvider)?.session;
+      return ReceivePageVm(
+        status: session?.status,
+        sender: session?.sender ?? Device.empty,
+        showSenderInfo: true,
+        files: session?.files.values.map((f) => f.file).toList() ?? [],
+        message: null,
+        onAccept: () async {
+          final sessionId = ref.read(serverProvider)?.session?.sessionId;
+          if (sessionId == null) {
+            return;
+          }
+
+          final selectedFiles = ref.read(selectedReceivingFilesProvider);
+
+          unawaited(
+            Routerino.context.pushAndRemoveUntilImmediately(
+              removeUntil: ReceivePage,
+              builder: () => ProgressPage(
+                showAppBar: false,
+                closeSessionOnClose: true,
+                sessionId: sessionId,
+              ),
+            ),
+          );
+
+          await ref.notifier(serverProvider).acceptFileRequest(selectedFiles);
+        },
+        onDecline: () {
+          ref.notifier(serverProvider).declineFileRequest();
+        },
+        onClose: () {
+          ref.notifier(serverProvider).closeSession();
+        },
+      );
+    });
+
+    server.ref.notifier(selectedReceivingFilesProvider).setFiles([fileDto]);
+
+    // ignore: use_build_context_synchronously, unawaited_futures
+    Routerino.context.push(() => ReceivePage(receiveProvider));
+  }
+
+  /// Progress event for an active V3 transfer.
+  void onTransferProgressV3(HttpServerTransferProgressV3Event event) {
+    _logger.fine('V3 TransferProgress: session=${event.sessionId}, progress=${event.progress}');
+    final receiveState = server.getStateOrNull()?.session;
+    if (receiveState == null || receiveState.sessionId != event.sessionId) {
+      return;
+    }
+
+    if (receiveState.startTime == null || receiveState.status != SessionStatus.sending) {
+      server.setState(
+        (oldState) => oldState?.copyWith(
+          session: receiveState.copyWith(
+            startTime: receiveState.startTime ?? DateTime.now().millisecondsSinceEpoch,
+            status: SessionStatus.sending,
+          ),
+        ),
+      );
+    }
+
+    server.ref
+        .notifier(fileTransferProvider)
+        .setProgress(
+          sessionId: event.sessionId,
+          fileId: event.sessionId,
+          progress: event.progress,
+        );
+  }
+
+  /// A V3 transfer finished and was committed to destination.
+  Future<void> onTransferFinishedV3(HttpServerTransferFinishedV3Event event) async {
+    _logger.info('V3 TransferFinished: session=${event.sessionId}, file=${event.fileName}, dest=${event.destinationPath}');
+    TransferNotification.stop(event.sessionId);
+
+    final fileType = event.fileName.guessFileType();
+
+    server.ref
+        .notifier(fileTransferProvider)
+        .setStatus(
+          sessionId: event.sessionId,
+          fileId: event.sessionId,
+          status: FileStatus.finished,
+        );
+
+    server.ref
+        .notifier(fileTransferProvider)
+        .setProgress(
+          sessionId: event.sessionId,
+          fileId: event.sessionId,
+          progress: 1,
+        );
+
+    final receiveState = server.getStateOrNull()?.session;
+    final senderAlias = receiveState?.senderAlias ?? 'V3 Sender';
+    if (receiveState != null && receiveState.sessionId == event.sessionId) {
+      server.setState(
+        (oldState) => oldState?.copyWith(
+          session: oldState.session!
+              .fileFinished(
+                fileId: event.sessionId,
+                path: event.destinationPath,
+                savedToGallery: event.savedToGallery,
+                errorMessage: null,
+              )
+              .copyWith(
+                status: SessionStatus.finished,
+                endTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+        ),
+      );
+    }
+
+    // Track it in receiveHistoryProvider
+    await server.ref
+        .redux(receiveHistoryProvider)
+        .dispatchAsync(
+          AddHistoryEntryAction(
+            entryId: event.sessionId,
+            fileName: event.fileName,
+            fileType: fileType,
+            path: event.destinationPath,
+            savedToGallery: event.savedToGallery,
+            isMessage: false,
+            fileSize: event.fileSize,
+            senderAlias: senderAlias,
+            timestamp: DateTime.now().toUtc(),
+          ),
+        );
+
+    final settings = server.ref.read(settingsProvider);
+    final session = server.getStateOrNull()?.session;
+    bool quickSave = settings.quickSave;
+    if (settings.quickSaveFromFavorites && session != null) {
+      final isFavorite = server.ref.read(favoritesProvider).any((e) => e.fingerprint == session.sender.fingerprint);
+      if (isFavorite) {
+        quickSave = true;
+      }
+    }
+
+    if (quickSave) {
+      Future.delayed(Duration.zero, () {
+        closeSession();
+        _logger.info('Closing session');
+
+        // ignore: use_build_context_synchronously, discarded_futures
+        Routerino.context.pushRootImmediately(() => const HomePage(initialTab: HomeTab.receive, appStart: false));
+
+        if (event.destinationPath.isNotEmpty) {
+          // ignore: discarded_futures
+          OpenFileDialog.open(
+            Routerino.context, // ignore: use_build_context_synchronously
+            filePath: event.destinationPath,
+            fileType: fileType,
+            openGallery: event.savedToGallery,
+          );
+        }
+      });
+    }
+  }
+
+  /// A V3 transfer failed.
+  void onTransferFailedV3(HttpServerTransferFailedV3Event event) {
+    _logger.warning('V3 TransferFailed: session=${event.sessionId}, file=${event.fileName}, error=${event.error}');
+    TransferNotification.stop(event.sessionId);
+
+    server.ref
+        .notifier(fileTransferProvider)
+        .setStatus(
+          sessionId: event.sessionId,
+          fileId: event.sessionId,
+          status: FileStatus.failed,
+        );
+
+    final receiveState = server.getStateOrNull()?.session;
+    if (receiveState != null && receiveState.sessionId == event.sessionId) {
+      server.setState(
+        (oldState) => oldState?.copyWith(
+          session: oldState.session!
+              .fileFinished(
+                fileId: event.sessionId,
+                path: null,
+                savedToGallery: false,
+                errorMessage: event.error,
+              )
+              .copyWith(
+                status: SessionStatus.finishedWithErrors,
+                endTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+        ),
+      );
+    }
+  }
+
+  /// A V3 transfer was cancelled.
+  void onTransferCancelledV3(HttpServerTransferCancelledV3Event event) {
+    _logger.info('V3 TransferCancelled: session=${event.sessionId}');
+    TransferNotification.stop(event.sessionId);
+
+    if (_pendingV3SessionId == event.sessionId) {
+      _pendingV3SessionId = null;
+    }
+
+    final receiveSession = server.getStateOrNull()?.session;
+    if (receiveSession == null || receiveSession.sessionId != event.sessionId) {
+      return;
+    }
+
+    _cancelBySender(server);
+  }
+
   /// A remote device cancels a transfer this application is currently
   /// *sending* to it.
   void onCancelReceived(HttpServerCancelReceivedEvent event) {
@@ -538,6 +880,80 @@ class ReceiveController {
   Future<void> acceptFileRequest(Map<String, String> fileNameMap) async {
     final session = server.getStateOrNull()?.session;
     if (session == null || session.status != SessionStatus.waiting) {
+      return;
+    }
+
+    if (_pendingV3SessionId == session.sessionId) {
+      if (fileNameMap.isEmpty) {
+        _pendingV3SessionId = null;
+        server.ref
+            .redux(parentIsolateProvider)
+            .dispatch(
+              IsolateHttpServerPrepareUploadV3DecisionAction(
+                sessionId: session.sessionId,
+                accept: false,
+              ),
+            );
+        closeSession();
+        return;
+      }
+
+      final desiredFileName = fileNameMap[session.sessionId] ?? fileNameMap.values.first;
+      final cleanDestDir = session.destinationDirectory.replaceAll('\\', '/');
+      var destinationPath = '$cleanDestDir/$desiredFileName';
+      int counter = 1;
+      while (File(destinationPath).existsSync()) {
+        destinationPath = '$cleanDestDir/${desiredFileName.withCount(counter)}';
+        counter++;
+      }
+
+      server.setState(
+        (oldState) {
+          final receiveState = oldState!.session!;
+          return oldState.copyWith(
+            session: receiveState.copyWith(
+              status: SessionStatus.sending,
+              files: {
+                session.sessionId: receiveState.files[session.sessionId]!.copyWith(
+                  desiredName: desiredFileName,
+                ),
+              },
+            ),
+          );
+        },
+      );
+
+      server.ref
+          .notifier(fileTransferProvider)
+          .setStatuses(
+            sessionId: session.sessionId,
+            statuses: {
+              session.sessionId: FileStatus.queue,
+            },
+          );
+
+      final androidSdkInt = server.ref.read(deviceInfoProvider).androidSdkInt;
+      if (checkPlatform([TargetPlatform.android]) && androidSdkInt != null && androidSdkInt < 33) {
+        try {
+          final result = await Permission.storage.request();
+          _logger.info('storage permission: $result');
+        } catch (e) {
+          _logger.warning('Could not request storage permission', e);
+        }
+      }
+
+      TransferNotification.start(sessionId: session.sessionId, receiving: true);
+
+      _pendingV3SessionId = null;
+      server.ref
+          .redux(parentIsolateProvider)
+          .dispatch(
+            IsolateHttpServerPrepareUploadV3DecisionAction(
+              sessionId: session.sessionId,
+              accept: true,
+              destinationPath: destinationPath,
+            ),
+          );
       return;
     }
 
@@ -633,7 +1049,20 @@ class ReceiveController {
       return;
     }
 
-    server.ref.redux(parentIsolateProvider).dispatch(IsolateHttpServerPrepareUploadDecisionAction(config: null));
+    if (_pendingV3SessionId == session.sessionId) {
+      final v3SessionId = _pendingV3SessionId!;
+      _pendingV3SessionId = null;
+      server.ref
+          .redux(parentIsolateProvider)
+          .dispatch(
+            IsolateHttpServerPrepareUploadV3DecisionAction(
+              sessionId: v3SessionId,
+              accept: false,
+            ),
+          );
+    } else {
+      server.ref.redux(parentIsolateProvider).dispatch(IsolateHttpServerPrepareUploadDecisionAction(config: null));
+    }
     closeSession();
   }
 
@@ -693,6 +1122,19 @@ class ReceiveController {
   }
 
   void closeSession() {
+    if (_pendingV3SessionId != null) {
+      final v3SessionId = _pendingV3SessionId!;
+      _pendingV3SessionId = null;
+      server.ref
+          .redux(parentIsolateProvider)
+          .dispatch(
+            IsolateHttpServerPrepareUploadV3DecisionAction(
+              sessionId: v3SessionId,
+              accept: false,
+            ),
+          );
+    }
+
     final sessionId = server.getStateOrNull()?.session?.sessionId;
     if (sessionId == null) {
       return;

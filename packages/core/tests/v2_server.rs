@@ -98,8 +98,9 @@ async fn start_test_server_with_verification(
                             Some(dir) => {
                                 let path = dir.join(&file_id);
                                 let (result_tx, result_rx) = oneshot::channel();
-                                let _ = target_tx.send(FileUploadTarget::Path {
-                                    path: path.clone(),
+                                let handle = locara::model::storage_adapter::DesktopStorageHandle::new(path.clone()).await.unwrap();
+                                let _ = target_tx.send(FileUploadTarget::Storage {
+                                    handle: Box::new(handle),
                                     result_tx,
                                     progress_tx: None,
                                 });
@@ -118,6 +119,7 @@ async fn start_test_server_with_verification(
                     ServerEventV2::PrepareUploadAborted { .. } => {}
                     ServerEventV2::CancelReceived { .. } => {}
                     ServerEventV2::ListenerFailed { .. } => {}
+                    _ => {}
                 }
             }
         }

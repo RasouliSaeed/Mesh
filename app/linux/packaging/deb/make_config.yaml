@@ -1,8 +1,8 @@
-display_name: Locara
-package_name: locara
+display_name: Mesh
+package_name: mesh
 maintainer:
   name: SaeedR
-  email: info@locara.app
+  email: info@mesh.app
 co_authors:
   - name: TheGB0077
     email: gb.lima.dev@gmail.com
@@ -22,7 +22,7 @@ dependencies:
   - xdg-user-dirs
 
 postinstall_scripts:
-  - echo "Installed locara successfully"
+  - echo "Installed mesh successfully"
 postuninstall_scripts:
   - echo "Sorry to see you go :("
 

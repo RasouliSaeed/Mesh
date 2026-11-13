@@ -5,20 +5,20 @@ part 'purchase_state.mapper.dart';
 
 enum PurchaseItem {
   donate5(
-    androidId: 'Locara_android_donate_5',
-    iosId: 'Locara_ios_donate_5',
+    androidId: 'mesh_android_donate_5',
+    iosId: 'mesh_ios_donate_5',
   ),
   donate10(
-    androidId: 'Locara_android_donate_10',
-    iosId: 'Locara_ios_donate_10',
+    androidId: 'mesh_android_donate_10',
+    iosId: 'mesh_ios_donate_10',
   ),
   donate20(
-    androidId: 'Locara_android_donate_20',
-    iosId: 'Locara_ios_donate_20',
+    androidId: 'mesh_android_donate_20',
+    iosId: 'mesh_ios_donate_20',
   ),
   donate50(
-    androidId: 'Locara_android_donate_50',
-    iosId: 'Locara_ios_donate_50',
+    androidId: 'mesh_android_donate_50',
+    iosId: 'mesh_ios_donate_50',
   );
 
   const PurchaseItem({

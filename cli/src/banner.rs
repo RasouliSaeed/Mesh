@@ -17,7 +17,7 @@ pub fn render(storage: &Repository, server: &ServerHandle) -> String {
         .enumerate()
         .map(|(i, line)| {
             let right = match i {
-                1 => "  locara CLI",
+                1 => "  Mesh CLI",
                 2 => concat!("  v", env!("CARGO_PKG_VERSION")),
                 _ => "",
             };

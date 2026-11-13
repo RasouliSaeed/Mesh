@@ -143,4 +143,3 @@ class _PublishSyncStateAction extends ReduxAction<IsolateController, ParentIsola
     );
   }
 }
-

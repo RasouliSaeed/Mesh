@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "SaeedR" "\0"
-            VALUE "FileDescription", "Locara" "\0"
+            VALUE "FileDescription", "Mesh" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Locara_app" "\0"
+            VALUE "InternalName", "Mesh_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022-2026 SaeedR" "\0"
-            VALUE "OriginalFilename", "Locara_app.exe" "\0"
-            VALUE "ProductName", "Locara" "\0"
+            VALUE "OriginalFilename", "Mesh_app.exe" "\0"
+            VALUE "ProductName", "Mesh" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

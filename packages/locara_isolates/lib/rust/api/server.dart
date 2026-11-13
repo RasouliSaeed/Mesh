@@ -118,6 +118,12 @@ abstract class RsHttpServer implements RustOpaqueInterface {
   /// Passing `None` declines the request.
   Future<void> respondPrepareUpload({List<String>? acceptedFileIds});
 
+  /// Answers the pending [RsServerEvent::PrepareUploadV3] event.
+  ///
+  /// Passing [accept] = true accepts the request with optional [destination_path].
+  /// Passing [accept] = false declines the request.
+  Future<void> respondPrepareUploadV3({required String sessionId, required bool accept, String? destinationPath});
+
   /// Stops the server.
   /// Returns after the listeners are closed, so the port can be bound again.
   Future<void> stop();
@@ -262,6 +268,46 @@ sealed class RsServerEvent with _$RsServerEvent {
     /// Description of the failure.
     required String error,
   }) = RsServerEvent_ListenerFailed;
+
+  /// A sender requests to upload a file via V3 protocol.
+  const factory RsServerEvent.prepareUploadV3({
+    required String sessionId,
+    required String ip,
+    required String fileName,
+    required BigInt fileSize,
+    required BigInt totalChunks,
+    required BigInt chunkSize,
+    String? certFingerprint,
+  }) = RsServerEvent_PrepareUploadV3;
+
+  /// Progress update for an active V3 transfer.
+  const factory RsServerEvent.transferProgressV3({
+    required String sessionId,
+    required BigInt bytesReceived,
+    required BigInt totalBytes,
+    required double progress,
+  }) = RsServerEvent_TransferProgressV3;
+
+  /// An active V3 transfer completed and was committed to destination.
+  const factory RsServerEvent.transferFinishedV3({
+    required String sessionId,
+    required String fileName,
+    required BigInt fileSize,
+    required String destinationPath,
+    required bool savedToGallery,
+  }) = RsServerEvent_TransferFinishedV3;
+
+  /// An active V3 transfer failed.
+  const factory RsServerEvent.transferFailedV3({
+    required String sessionId,
+    required String fileName,
+    required String error,
+  }) = RsServerEvent_TransferFailedV3;
+
+  /// An active V3 transfer was cancelled.
+  const factory RsServerEvent.transferCancelledV3({
+    required String sessionId,
+  }) = RsServerEvent_TransferCancelledV3;
 }
 
 enum SessionEndReasonV2 {
@@ -424,5 +470,3 @@ class WebParams {
       identical(this, other) ||
       other is WebParams && runtimeType == other.runtimeType && mode == other.mode && i18N == other.i18N && pages == other.pages;
 }
-
-

@@ -6,6 +6,9 @@
 # Rust workspace build output
 /target/
 
+# Flutter build and test output
+/build/
+
 # Linux AppImage
 /app/AppDir
 /app/appimage-build
@@ -22,3 +25,9 @@
 
 # Generated at build time by makepri (see support/scripts/compile_windows_msix_helper.ps1)
 /support/build/msix/content/resources.pri
+
+# Agent frameworks & logs
+.agents/
+*.log
+.gradle/
+.kotlin/

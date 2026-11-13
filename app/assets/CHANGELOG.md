@@ -46,7 +46,7 @@ Android+iOS only hotfix update.
 - feat(android, ios, macos): respect system-wide animation preferences on first app startup (@nitheesh-daram)
 - feat(android): run file transfer in background
 - feat(android): add quick settings tile for instant app launch (@Voltra)
-- feat(windows): add locara to share sheet (@chenxdust)
+- feat(windows): add mesh to share sheet (@chenxdust)
 - feat(macos): implement button to quickly open firewall settings from troubleshoot page (@ShlomoCode)
 - feat(macos): add Command+Comma shortcut to open settings (@ShlomoCode)
 - feat(macos): use user-friendly ComputerName instead of the technical hostname (@ShlomoCode)
@@ -59,7 +59,7 @@ Android+iOS only hotfix update.
 - fix: text message content size calculation (@ew-sirenko)
 - fix: save DNG files to image gallery (@ShlomoCode)
 - fix(ios, android): prevent transfer error by saving unsupported media formats to folder instead of gallery (@ShlomoCode)
-- fix(android): share to locara sometimes doesn't work
+- fix(android): share to mesh sometimes doesn't work
 - fix(android): preserve location metadata when sharing media (@ShlomoCode)
 - fix(macos): prevent Dock icon from briefly appearing during autostart when "Start hidden" is enabled (@ShlomoCode)
 - fix(macos): Dock icon drag-and-drop and Share Extension working again (@ShlomoCode)
@@ -78,7 +78,7 @@ Android+iOS only hotfix update.
 
 ## 1.16.2 (2024-11-06)
 
-- fix(ios): share from other apps to locara doesn't work in iOS 18 (@SaeedR)
+- fix(ios): share from other apps to mesh doesn't work in iOS 18 (@SaeedR)
 
 ## 1.16.1 (2024-11-05)
 
@@ -96,11 +96,11 @@ Android+iOS only hotfix update.
 - feat: add alias-regeneration button and alias update dialog (@Nolle10)
 - feat(macos): drag-and-drop files and text into menu bar icon (@ShlomoCode)
 - feat(macos): drag-and-drop text into the app icon (@ShlomoCode)
-- feat(macos): include locara as a share target in the share menu (@ShlomoCode)
+- feat(macos): include mesh as a share target in the share menu (@ShlomoCode)
 - feat(macos): starts hidden in menu bar instead of being minimized when autostart is enabled (@ShlomoCode)
 - feat(macos): show error and success state in the app icon (@ShlomoCode, @SaeedR)
 - feat(macos): also have autostart option in sandboxed version (App Store) (@ShlomoCode)
-- feat(macos): locara installed via dmg installer is sandboxed (@SaeedR)
+- feat(macos): mesh installed via dmg installer is sandboxed (@SaeedR)
 - feat(android): enable clipboard button (@Seidko)
 - feat(ios): enable clipboard button (@AnessZurba)
 - fix(macos): reopen app from launchpad after minimizing to menu bar should make window visible (@ShlomoCode)
@@ -115,7 +115,7 @@ Android+iOS only hotfix update.
 - feat(mobile): adjust button width in send tab to indicate that it's scrollable (@SaeedR)
 - feat(windows): title bar color should match the system theme (@FutoTan)
 - fix: memory leak when sending files (regression in 1.15.0, 1.15.2 only fixed receiving files) (@SaeedR)
-- fix(windows): locara window is invisible at app start (@SaeedR)
+- fix(windows): mesh window is invisible at app start (@SaeedR)
 - i18n: distinguish between "Exit" and "Quit" depending on the platform (@sergd88)
 - i18n: add Hindi (@rishi-singh26)
 
@@ -265,11 +265,11 @@ Android+iOS only hotfix update.
 ## 1.9.0 (2023-04-23)
 
 - feat: directory share
-- feat: share via browser link (for non-locara users)
+- feat: share via browser link (for non-mesh users)
 - feat: add "delete from history" button when file could not be opened (by @TheGB0077)
 - feat: close message request when copied / opened link
 - feat: slightly improve transfer speed
-- feat: implement locara protocol v2 with v1 fallback
+- feat: implement mesh protocol v2 with v1 fallback
 - feat: scan (sync) button automatically scans all network interfaces when count < 3
 - feat(android, ios): add "Save to gallery" setting button in file receive options
 - feat(desktop): move troubleshoot out of navigation into send page

@@ -73,7 +73,7 @@ jobs:
           workspaces: ${{ env.APK_BUILD_DIR }}
 
       - name: Check rust-toolchain.toml
-        working-directory: ${{ env.APK_BUILD_DIR }}/packages/locara_isolates
+        working-directory: ${{ env.APK_BUILD_DIR }}/packages/mesh_isolates
         run: rustup show
 
       - name: Dependencies

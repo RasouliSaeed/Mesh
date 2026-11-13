@@ -246,6 +246,7 @@ impl App {
                     &format!("Server stopped, no longer receiving: {error}"),
                 );
             }
+            _ => {}
         }
     }
 
@@ -297,10 +298,19 @@ impl App {
             }
         });
 
-        let _ = target_tx.send(FileUploadTarget::Path {
-            path,
-            result_tx,
-            progress_tx: Some(progress_tx),
+        tokio::spawn(async move {
+            match locara::model::storage_adapter::DesktopStorageHandle::new(path).await {
+                Ok(handle) => {
+                    let _ = target_tx.send(FileUploadTarget::Storage {
+                        handle: Box::new(handle),
+                        result_tx,
+                        progress_tx: Some(progress_tx),
+                    });
+                }
+                Err(e) => {
+                    let _ = result_tx.send(Err(format!("Storage setup failed: {}", e)));
+                }
+            }
         });
     }
 

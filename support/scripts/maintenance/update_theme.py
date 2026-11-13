@@ -9,7 +9,7 @@ new_impl = '''ColorScheme _determineColorScheme(ColorMode mode, Color customColo
   
   final isDark = brightness == Brightness.dark;
   
-  // Premium Locara Palette
+  // Premium Mesh Palette
   final colorScheme = ColorScheme(
     brightness: brightness,
     primary: isDark ? const Color(0xFF1769FF) : const Color(0xFF3685FF),

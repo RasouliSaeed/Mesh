@@ -128,6 +128,54 @@ pub enum ServerEventV2 {
         /// Description of the failure.
         error: String,
     },
+
+    /// A sender requests a V3 chunked upload session via manifest.
+    PrepareUploadV3 {
+        session_id: String,
+        file_name: String,
+        file_size: u64,
+        chunk_size: u64,
+        total_chunks: u64,
+        ip: PeerIp,
+        cert_fingerprint: Option<String>,
+        decision_tx: oneshot::Sender<PrepareUploadDecisionV3>,
+    },
+
+    /// A V3 transfer progress event (throttled).
+    TransferProgressV3 {
+        session_id: String,
+        bytes_received: u64,
+        total_bytes: u64,
+        progress: f64,
+    },
+
+    /// A V3 file was received, verified, and committed.
+    TransferFinishedV3 {
+        session_id: String,
+        file_name: String,
+        file_size: u64,
+        destination_path: String,
+        saved_to_gallery: bool,
+    },
+
+    /// A V3 transfer failed.
+    TransferFailedV3 {
+        session_id: String,
+        file_name: String,
+        error: String,
+    },
+
+    /// A V3 transfer was cancelled.
+    TransferCancelledV3 {
+        session_id: String,
+    },
+}
+
+/// The application's decision for a V3 prepare-upload (manifest) request.
+#[derive(Debug, Clone)]
+pub struct PrepareUploadDecisionV3 {
+    pub accept: bool,
+    pub destination_path: Option<std::path::PathBuf>,
 }
 
 /// The application's decision for a prepare-upload request.
@@ -431,8 +479,10 @@ pub(crate) async fn upload(
         return Err(AppError::Status(StatusCode::INTERNAL_SERVER_ERROR));
     };
 
+    use crate::http::server::transport_adapter::HttpIncomingAdapter;
+    let stream = Box::pin(HttpIncomingAdapter::new(req.into_body()));
     let result = common::save::save_req_to_target(
-        req,
+        stream,
         target,
         file_size,
         expected_sha256.as_deref(),

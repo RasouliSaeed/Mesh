@@ -1,7 +1,9 @@
 enum ColorMode {
   system, // dynamic colors
-  locara,
+  mesh,
   oled,
   yaru,
-  custom, // user-defined seed color
+  custom; // user-defined seed color
+
+  static const ColorMode locara = ColorMode.mesh;
 }

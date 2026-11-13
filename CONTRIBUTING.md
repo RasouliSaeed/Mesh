@@ -1,8 +1,8 @@
-# Contributing to locara
+# Contributing to mesh
 
-locara is an open-source project, and we welcome contributions from anyone who is interested in helping improve the app. Whether you're a developer, a translator, or a documentation writer, there are many ways to get involved.
+mesh is an open-source project, and we welcome contributions from anyone who is interested in helping improve the app. Whether you're a developer, a translator, or a documentation writer, there are many ways to get involved.
 
-locara disallows AI generated contributions unless:
+mesh disallows AI generated contributions unless:
 
 - they are bug fixes or
 - very small or
@@ -10,7 +10,7 @@ locara disallows AI generated contributions unless:
 
 ## Getting Started
 
-If you're interested in contributing code to locara, you'll need to follow these steps:
+If you're interested in contributing code to mesh, you'll need to follow these steps:
 
 ## Run
 
@@ -29,8 +29,8 @@ You can help in translating this app to other languages!
 
 1. Fork this repository
 2. Choose one
-   - Add missing translations in existing languages: Only update `_missing_translations_<locale>.json` in [assets/i18n](https://github.com/locara/locara/tree/main/app/assets/i18n)
-   - Fix existing translations: Update `strings_<locale>.i18n.json` in [assets/i18n](https://github.com/locara/locara/tree/main/app/assets/i18n)
+   - Add missing translations in existing languages: Only update `_missing_translations_<locale>.json` in [assets/i18n](https://github.com/mesh/mesh/tree/main/app/assets/i18n)
+   - Fix existing translations: Update `strings_<locale>.i18n.json` in [assets/i18n](https://github.com/mesh/mesh/tree/main/app/assets/i18n)
    - Add new languages: Create a new file, see also: [locale codes](https://saimana.com/list-of-country-locale-code/).
 3. Optional: Re-run this app
    1. Run `cd app` to enter the app directory.
@@ -41,11 +41,11 @@ You can help in translating this app to other languages!
 
 **_Take note:_ Fields decorated with `@` are not meant to be translated, they are not used in the app in any way, being merely informative text about the file or to give context to the translator.**
 
-Thanks to all [translators](https://github.com/locara/locara/tree/main/app/lib/pages/about/translators.dart)!
+Thanks to all [translators](https://github.com/mesh/mesh/tree/main/app/lib/pages/about/translators.dart)!
 
 ## Contributing Guidelines
 
-Before you submit a pull request to locara, please ensure that you have followed these guidelines:
+Before you submit a pull request to mesh, please ensure that you have followed these guidelines:
 
 - Code should be well-documented and formatted according to the [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style).
 - All changes should be covered by tests.
@@ -54,11 +54,11 @@ Before you submit a pull request to locara, please ensure that you have followed
 
 ## Bug Reports and Feature Requests
 
-If you encounter a bug in locara or have a feature request, please submit an issue to the [issue tracker](https://github.com/locara/locara/issues). Please be sure to provide a clear description of the problem or feature request, along with any relevant context or steps to reproduce the issue.
+If you encounter a bug in mesh or have a feature request, please submit an issue to the [issue tracker](https://github.com/mesh/mesh/issues). Please be sure to provide a clear description of the problem or feature request, along with any relevant context or steps to reproduce the issue.
 
 ## Security Issues
 
-If you discover a security issue in locara, please do not submit an issue to the public issue tracker. Instead, please email us directly at [support@locara.org](mailto:support@locara.org) so that we can address the issue as quickly and effectively as possible.
+If you discover a security issue in mesh, please do not submit an issue to the public issue tracker. Instead, please email us directly at [support@mesh.org](mailto:support@mesh.org) so that we can address the issue as quickly and effectively as possible.
 
 ## Distribution
 
@@ -76,24 +76,24 @@ Git based distribution:
 | [F-Droid][]    | [F-Droid Repo][]    | [@linsui][], [@SaeedR][], [F-Droid CI][]         |
 | [Snap][]       | [Snap Repo][]       | [@thatLeaflet][]                                   |
 
-[winget]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/locara/locara
-[winget repo]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/locara/locara
-[scoop]: https://scoop.sh/#/apps?s=0&d=1&o=true&q=locara&id=fb88113be361ca32c0dcac423cb4afdeda0b0c66
-[scoop repo]: https://github.com/ScoopInstaller/Extras/blob/master/bucket/locara.json
-[chocolatey]: https://community.chocolatey.org/packages/locara
-[chocolatey repo]: https://github.com/brogers5/chocolatey-package-locara/tree/main
-[homebrew]: https://formulae.brew.sh/cask/locara
-[homebrew repo]: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/l/locara.rb
-[flathub]: https://flathub.org/apps/details/org.locara.locara_app
-[flathub repo]: https://github.com/flathub/org.locara.locara_app
-[aur]: https://aur.archlinux.org/packages/locara-bin
-[aur repo]: https://aur.archlinux.org/locara-bin.git
-[nixpkgs]: https://search.nixos.org/packages?show=locara
-[nixpkgs repo]: https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/locara/default.nix
-[f-droid]: https://f-droid.org/packages/org.locara.locara_app
-[f-droid repo]: https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/org.locara.locara_app.yml
-[snap]: https://snapcraft.io/locara
-[snap repo]: https://github.com/locara/snap
+[winget]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/mesh/mesh
+[winget repo]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/mesh/mesh
+[scoop]: https://scoop.sh/#/apps?s=0&d=1&o=true&q=mesh&id=fb88113be361ca32c0dcac423cb4afdeda0b0c66
+[scoop repo]: https://github.com/ScoopInstaller/Extras/blob/master/bucket/mesh.json
+[chocolatey]: https://community.chocolatey.org/packages/mesh
+[chocolatey repo]: https://github.com/brogers5/chocolatey-package-mesh/tree/main
+[homebrew]: https://formulae.brew.sh/cask/mesh
+[homebrew repo]: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/l/mesh.rb
+[flathub]: https://flathub.org/apps/details/org.mesh.mesh_app
+[flathub repo]: https://github.com/flathub/org.mesh.mesh_app
+[aur]: https://aur.archlinux.org/packages/mesh-bin
+[aur repo]: https://aur.archlinux.org/mesh-bin.git
+[nixpkgs]: https://search.nixos.org/packages?show=mesh
+[nixpkgs repo]: https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/mesh/default.nix
+[f-droid]: https://f-droid.org/packages/org.mesh.mesh_app
+[f-droid repo]: https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/org.mesh.mesh_app.yml
+[snap]: https://snapcraft.io/mesh
+[snap repo]: https://github.com/mesh/snap
 
 Manual distribution:
 
@@ -103,8 +103,8 @@ Manual distribution:
 | [Play Store][] | [@SaeedR](https://github.com/SaeedR) |
 | [Amazon][]     | [@SaeedR](https://github.com/SaeedR) |
 
-[app store]: https://apps.apple.com/us/app/locara/id1661733229
-[play store]: https://play.google.com/store/apps/details?id=org.locara.locara_app
+[app store]: https://apps.apple.com/us/app/mesh/id1661733229
+[play store]: https://play.google.com/store/apps/details?id=org.mesh.mesh_app
 [amazon]: https://www.amazon.com/dp/B0BW6MP732
 
 Binary distribution:
@@ -133,7 +133,7 @@ Binary distribution:
 
 TODO:
 
-You can help in publishing locara on more platforms. Please create an issue to notify us!
+You can help in publishing mesh on more platforms. Please create an issue to notify us!
 
 - Traditional Linux distributions (Debian, Fedora, etc.)
 - (Your idea here)
@@ -201,7 +201,7 @@ flutter doctor
 
 Next, follow the instructions to set up the GitHub runner.
 
-Start the "Release Draft" workflow from the "Actions" tab: https://github.com/locara/locara/actions/workflows/release.yml
+Start the "Release Draft" workflow from the "Actions" tab: https://github.com/mesh/mesh/actions/workflows/release.yml
 
 Finally, compile binaries not yet supported by the pipeline.
 

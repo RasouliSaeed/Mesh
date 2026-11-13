@@ -1,28 +1,28 @@
 VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' app/pubspec.yaml)
-ARM_NAME="locara-CLI-$VERSION-macos-arm-64"
-X64_NAME="locara-CLI-$VERSION-macos-x86-64"
+ARM_NAME="mesh-CLI-$VERSION-macos-arm-64"
+X64_NAME="mesh-CLI-$VERSION-macos-x86-64"
 
 rustup target add aarch64-apple-darwin x86_64-apple-darwin
 
 echo
 echo "Compiling the CLI..."
 echo
-cargo build --release --package locara-cli --target aarch64-apple-darwin
-cargo build --release --package locara-cli --target x86_64-apple-darwin
+cargo build --release --package mesh-cli --target aarch64-apple-darwin
+cargo build --release --package mesh-cli --target x86_64-apple-darwin
 
 # stage per-arch directories so the archived binary keeps its plain name
 rm -rf "$ARM_NAME" "$X64_NAME" "$ARM_NAME.zip" "$X64_NAME.zip" "$ARM_NAME.tar.gz" "$X64_NAME.tar.gz"
 mkdir "$ARM_NAME" "$X64_NAME"
-cp target/aarch64-apple-darwin/release/locara-cli "$ARM_NAME/locara-cli"
-cp target/x86_64-apple-darwin/release/locara-cli "$X64_NAME/locara-cli"
+cp target/aarch64-apple-darwin/release/mesh-cli "$ARM_NAME/mesh-cli"
+cp target/x86_64-apple-darwin/release/mesh-cli "$X64_NAME/mesh-cli"
 
 # sign the binaries
 echo
 echo "Signing the CLI..."
 echo
 SIGN_ID="Developer ID Application: SaeedR (3W7H4PYMCV)"
-codesign --force --verbose --options runtime --sign "$SIGN_ID" "$ARM_NAME/locara-cli"
-codesign --force --verbose --options runtime --sign "$SIGN_ID" "$X64_NAME/locara-cli"
+codesign --force --verbose --options runtime --sign "$SIGN_ID" "$ARM_NAME/mesh-cli"
+codesign --force --verbose --options runtime --sign "$SIGN_ID" "$X64_NAME/mesh-cli"
 
 # send to apple for notarization (the zip is only the submission transport)
 DEV_EMAIL=example@example.com
@@ -32,8 +32,8 @@ TEAM_ID=3W7H4PYMCV
 echo
 echo "Sending to apple for notarization..."
 echo
-zip -j "$ARM_NAME.zip" "$ARM_NAME/locara-cli"
-zip -j "$X64_NAME.zip" "$X64_NAME/locara-cli"
+zip -j "$ARM_NAME.zip" "$ARM_NAME/mesh-cli"
+zip -j "$X64_NAME.zip" "$X64_NAME/mesh-cli"
 xcrun notarytool submit "$ARM_NAME.zip" --wait --apple-id $DEV_EMAIL --password "$APP_PASSWORD" --team-id "$TEAM_ID"
 xcrun notarytool submit "$X64_NAME.zip" --wait --apple-id $DEV_EMAIL --password "$APP_PASSWORD" --team-id "$TEAM_ID"
 
@@ -44,7 +44,7 @@ rm -f "$ARM_NAME.zip" "$X64_NAME.zip"
 echo
 echo "Creating tar.gz archives..."
 echo
-tar -czvf "$ARM_NAME.tar.gz" -C "$ARM_NAME" locara-cli
-tar -czvf "$X64_NAME.tar.gz" -C "$X64_NAME" locara-cli
+tar -czvf "$ARM_NAME.tar.gz" -C "$ARM_NAME" mesh-cli
+tar -czvf "$X64_NAME.tar.gz" -C "$X64_NAME" mesh-cli
 rm -rf "$ARM_NAME" "$X64_NAME"
 

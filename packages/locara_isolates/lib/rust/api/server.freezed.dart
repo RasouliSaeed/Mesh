@@ -55,7 +55,7 @@ extension RsServerEventPatterns on RsServerEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RsServerEvent_Register value)?  register,TResult Function( RsServerEvent_PrepareUpload value)?  prepareUpload,TResult Function( RsServerEvent_FileUpload value)?  fileUpload,TResult Function( RsServerEvent_SessionEnd value)?  sessionEnd,TResult Function( RsServerEvent_PrepareUploadAborted value)?  prepareUploadAborted,TResult Function( RsServerEvent_CancelReceived value)?  cancelReceived,TResult Function( RsServerEvent_WebPrepareDownload value)?  webPrepareDownload,TResult Function( RsServerEvent_WebFileDownload value)?  webFileDownload,TResult Function( RsServerEvent_Show value)?  show_,TResult Function( RsServerEvent_ListenerFailed value)?  listenerFailed,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RsServerEvent_Register value)?  register,TResult Function( RsServerEvent_PrepareUpload value)?  prepareUpload,TResult Function( RsServerEvent_FileUpload value)?  fileUpload,TResult Function( RsServerEvent_SessionEnd value)?  sessionEnd,TResult Function( RsServerEvent_PrepareUploadAborted value)?  prepareUploadAborted,TResult Function( RsServerEvent_CancelReceived value)?  cancelReceived,TResult Function( RsServerEvent_WebPrepareDownload value)?  webPrepareDownload,TResult Function( RsServerEvent_WebFileDownload value)?  webFileDownload,TResult Function( RsServerEvent_Show value)?  show_,TResult Function( RsServerEvent_ListenerFailed value)?  listenerFailed,TResult Function( RsServerEvent_PrepareUploadV3 value)?  prepareUploadV3,TResult Function( RsServerEvent_TransferProgressV3 value)?  transferProgressV3,TResult Function( RsServerEvent_TransferFinishedV3 value)?  transferFinishedV3,TResult Function( RsServerEvent_TransferFailedV3 value)?  transferFailedV3,TResult Function( RsServerEvent_TransferCancelledV3 value)?  transferCancelledV3,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RsServerEvent_Register() when register != null:
@@ -68,7 +68,12 @@ return cancelReceived(_that);case RsServerEvent_WebPrepareDownload() when webPre
 return webPrepareDownload(_that);case RsServerEvent_WebFileDownload() when webFileDownload != null:
 return webFileDownload(_that);case RsServerEvent_Show() when show_ != null:
 return show_(_that);case RsServerEvent_ListenerFailed() when listenerFailed != null:
-return listenerFailed(_that);case _:
+return listenerFailed(_that);case RsServerEvent_PrepareUploadV3() when prepareUploadV3 != null:
+return prepareUploadV3(_that);case RsServerEvent_TransferProgressV3() when transferProgressV3 != null:
+return transferProgressV3(_that);case RsServerEvent_TransferFinishedV3() when transferFinishedV3 != null:
+return transferFinishedV3(_that);case RsServerEvent_TransferFailedV3() when transferFailedV3 != null:
+return transferFailedV3(_that);case RsServerEvent_TransferCancelledV3() when transferCancelledV3 != null:
+return transferCancelledV3(_that);case _:
   return orElse();
 
 }
@@ -86,7 +91,7 @@ return listenerFailed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RsServerEvent_Register value)  register,required TResult Function( RsServerEvent_PrepareUpload value)  prepareUpload,required TResult Function( RsServerEvent_FileUpload value)  fileUpload,required TResult Function( RsServerEvent_SessionEnd value)  sessionEnd,required TResult Function( RsServerEvent_PrepareUploadAborted value)  prepareUploadAborted,required TResult Function( RsServerEvent_CancelReceived value)  cancelReceived,required TResult Function( RsServerEvent_WebPrepareDownload value)  webPrepareDownload,required TResult Function( RsServerEvent_WebFileDownload value)  webFileDownload,required TResult Function( RsServerEvent_Show value)  show_,required TResult Function( RsServerEvent_ListenerFailed value)  listenerFailed,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RsServerEvent_Register value)  register,required TResult Function( RsServerEvent_PrepareUpload value)  prepareUpload,required TResult Function( RsServerEvent_FileUpload value)  fileUpload,required TResult Function( RsServerEvent_SessionEnd value)  sessionEnd,required TResult Function( RsServerEvent_PrepareUploadAborted value)  prepareUploadAborted,required TResult Function( RsServerEvent_CancelReceived value)  cancelReceived,required TResult Function( RsServerEvent_WebPrepareDownload value)  webPrepareDownload,required TResult Function( RsServerEvent_WebFileDownload value)  webFileDownload,required TResult Function( RsServerEvent_Show value)  show_,required TResult Function( RsServerEvent_ListenerFailed value)  listenerFailed,required TResult Function( RsServerEvent_PrepareUploadV3 value)  prepareUploadV3,required TResult Function( RsServerEvent_TransferProgressV3 value)  transferProgressV3,required TResult Function( RsServerEvent_TransferFinishedV3 value)  transferFinishedV3,required TResult Function( RsServerEvent_TransferFailedV3 value)  transferFailedV3,required TResult Function( RsServerEvent_TransferCancelledV3 value)  transferCancelledV3,}){
 final _that = this;
 switch (_that) {
 case RsServerEvent_Register():
@@ -99,7 +104,12 @@ return cancelReceived(_that);case RsServerEvent_WebPrepareDownload():
 return webPrepareDownload(_that);case RsServerEvent_WebFileDownload():
 return webFileDownload(_that);case RsServerEvent_Show():
 return show_(_that);case RsServerEvent_ListenerFailed():
-return listenerFailed(_that);}
+return listenerFailed(_that);case RsServerEvent_PrepareUploadV3():
+return prepareUploadV3(_that);case RsServerEvent_TransferProgressV3():
+return transferProgressV3(_that);case RsServerEvent_TransferFinishedV3():
+return transferFinishedV3(_that);case RsServerEvent_TransferFailedV3():
+return transferFailedV3(_that);case RsServerEvent_TransferCancelledV3():
+return transferCancelledV3(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -113,7 +123,7 @@ return listenerFailed(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RsServerEvent_Register value)?  register,TResult? Function( RsServerEvent_PrepareUpload value)?  prepareUpload,TResult? Function( RsServerEvent_FileUpload value)?  fileUpload,TResult? Function( RsServerEvent_SessionEnd value)?  sessionEnd,TResult? Function( RsServerEvent_PrepareUploadAborted value)?  prepareUploadAborted,TResult? Function( RsServerEvent_CancelReceived value)?  cancelReceived,TResult? Function( RsServerEvent_WebPrepareDownload value)?  webPrepareDownload,TResult? Function( RsServerEvent_WebFileDownload value)?  webFileDownload,TResult? Function( RsServerEvent_Show value)?  show_,TResult? Function( RsServerEvent_ListenerFailed value)?  listenerFailed,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RsServerEvent_Register value)?  register,TResult? Function( RsServerEvent_PrepareUpload value)?  prepareUpload,TResult? Function( RsServerEvent_FileUpload value)?  fileUpload,TResult? Function( RsServerEvent_SessionEnd value)?  sessionEnd,TResult? Function( RsServerEvent_PrepareUploadAborted value)?  prepareUploadAborted,TResult? Function( RsServerEvent_CancelReceived value)?  cancelReceived,TResult? Function( RsServerEvent_WebPrepareDownload value)?  webPrepareDownload,TResult? Function( RsServerEvent_WebFileDownload value)?  webFileDownload,TResult? Function( RsServerEvent_Show value)?  show_,TResult? Function( RsServerEvent_ListenerFailed value)?  listenerFailed,TResult? Function( RsServerEvent_PrepareUploadV3 value)?  prepareUploadV3,TResult? Function( RsServerEvent_TransferProgressV3 value)?  transferProgressV3,TResult? Function( RsServerEvent_TransferFinishedV3 value)?  transferFinishedV3,TResult? Function( RsServerEvent_TransferFailedV3 value)?  transferFailedV3,TResult? Function( RsServerEvent_TransferCancelledV3 value)?  transferCancelledV3,}){
 final _that = this;
 switch (_that) {
 case RsServerEvent_Register() when register != null:
@@ -126,7 +136,12 @@ return cancelReceived(_that);case RsServerEvent_WebPrepareDownload() when webPre
 return webPrepareDownload(_that);case RsServerEvent_WebFileDownload() when webFileDownload != null:
 return webFileDownload(_that);case RsServerEvent_Show() when show_ != null:
 return show_(_that);case RsServerEvent_ListenerFailed() when listenerFailed != null:
-return listenerFailed(_that);case _:
+return listenerFailed(_that);case RsServerEvent_PrepareUploadV3() when prepareUploadV3 != null:
+return prepareUploadV3(_that);case RsServerEvent_TransferProgressV3() when transferProgressV3 != null:
+return transferProgressV3(_that);case RsServerEvent_TransferFinishedV3() when transferFinishedV3 != null:
+return transferFinishedV3(_that);case RsServerEvent_TransferFailedV3() when transferFailedV3 != null:
+return transferFailedV3(_that);case RsServerEvent_TransferCancelledV3() when transferCancelledV3 != null:
+return transferCancelledV3(_that);case _:
   return null;
 
 }
@@ -143,7 +158,7 @@ return listenerFailed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String ip,  RegisterDtoV2 info)?  register,TResult Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)?  prepareUpload,TResult Function( String sessionId,  String fileId,  FileDto file)?  fileUpload,TResult Function( String sessionId,  SessionEndReasonV2 reason)?  sessionEnd,TResult Function( String sessionId)?  prepareUploadAborted,TResult Function( String ip,  String sessionId)?  cancelReceived,TResult Function( String ip,  String sessionId,  String? userAgent)?  webPrepareDownload,TResult Function( String sessionId,  String fileId,  FileDto file)?  webFileDownload,TResult Function( List<String> args)?  show_,TResult Function( String error)?  listenerFailed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String ip,  RegisterDtoV2 info)?  register,TResult Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)?  prepareUpload,TResult Function( String sessionId,  String fileId,  FileDto file)?  fileUpload,TResult Function( String sessionId,  SessionEndReasonV2 reason)?  sessionEnd,TResult Function( String sessionId)?  prepareUploadAborted,TResult Function( String ip,  String sessionId)?  cancelReceived,TResult Function( String ip,  String sessionId,  String? userAgent)?  webPrepareDownload,TResult Function( String sessionId,  String fileId,  FileDto file)?  webFileDownload,TResult Function( List<String> args)?  show_,TResult Function( String error)?  listenerFailed,TResult Function( String sessionId,  String ip,  String fileName,  BigInt fileSize,  BigInt totalChunks,  BigInt chunkSize,  String? certFingerprint)?  prepareUploadV3,TResult Function( String sessionId,  BigInt bytesReceived,  BigInt totalBytes,  double progress)?  transferProgressV3,TResult Function( String sessionId,  String fileName,  BigInt fileSize,  String destinationPath,  bool savedToGallery)?  transferFinishedV3,TResult Function( String sessionId,  String fileName,  String error)?  transferFailedV3,TResult Function( String sessionId)?  transferCancelledV3,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RsServerEvent_Register() when register != null:
 return register(_that.ip,_that.info);case RsServerEvent_PrepareUpload() when prepareUpload != null:
@@ -155,7 +170,12 @@ return cancelReceived(_that.ip,_that.sessionId);case RsServerEvent_WebPrepareDow
 return webPrepareDownload(_that.ip,_that.sessionId,_that.userAgent);case RsServerEvent_WebFileDownload() when webFileDownload != null:
 return webFileDownload(_that.sessionId,_that.fileId,_that.file);case RsServerEvent_Show() when show_ != null:
 return show_(_that.args);case RsServerEvent_ListenerFailed() when listenerFailed != null:
-return listenerFailed(_that.error);case _:
+return listenerFailed(_that.error);case RsServerEvent_PrepareUploadV3() when prepareUploadV3 != null:
+return prepareUploadV3(_that.sessionId,_that.ip,_that.fileName,_that.fileSize,_that.totalChunks,_that.chunkSize,_that.certFingerprint);case RsServerEvent_TransferProgressV3() when transferProgressV3 != null:
+return transferProgressV3(_that.sessionId,_that.bytesReceived,_that.totalBytes,_that.progress);case RsServerEvent_TransferFinishedV3() when transferFinishedV3 != null:
+return transferFinishedV3(_that.sessionId,_that.fileName,_that.fileSize,_that.destinationPath,_that.savedToGallery);case RsServerEvent_TransferFailedV3() when transferFailedV3 != null:
+return transferFailedV3(_that.sessionId,_that.fileName,_that.error);case RsServerEvent_TransferCancelledV3() when transferCancelledV3 != null:
+return transferCancelledV3(_that.sessionId);case _:
   return orElse();
 
 }
@@ -173,7 +193,7 @@ return listenerFailed(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String ip,  RegisterDtoV2 info)  register,required TResult Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)  prepareUpload,required TResult Function( String sessionId,  String fileId,  FileDto file)  fileUpload,required TResult Function( String sessionId,  SessionEndReasonV2 reason)  sessionEnd,required TResult Function( String sessionId)  prepareUploadAborted,required TResult Function( String ip,  String sessionId)  cancelReceived,required TResult Function( String ip,  String sessionId,  String? userAgent)  webPrepareDownload,required TResult Function( String sessionId,  String fileId,  FileDto file)  webFileDownload,required TResult Function( List<String> args)  show_,required TResult Function( String error)  listenerFailed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String ip,  RegisterDtoV2 info)  register,required TResult Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)  prepareUpload,required TResult Function( String sessionId,  String fileId,  FileDto file)  fileUpload,required TResult Function( String sessionId,  SessionEndReasonV2 reason)  sessionEnd,required TResult Function( String sessionId)  prepareUploadAborted,required TResult Function( String ip,  String sessionId)  cancelReceived,required TResult Function( String ip,  String sessionId,  String? userAgent)  webPrepareDownload,required TResult Function( String sessionId,  String fileId,  FileDto file)  webFileDownload,required TResult Function( List<String> args)  show_,required TResult Function( String error)  listenerFailed,required TResult Function( String sessionId,  String ip,  String fileName,  BigInt fileSize,  BigInt totalChunks,  BigInt chunkSize,  String? certFingerprint)  prepareUploadV3,required TResult Function( String sessionId,  BigInt bytesReceived,  BigInt totalBytes,  double progress)  transferProgressV3,required TResult Function( String sessionId,  String fileName,  BigInt fileSize,  String destinationPath,  bool savedToGallery)  transferFinishedV3,required TResult Function( String sessionId,  String fileName,  String error)  transferFailedV3,required TResult Function( String sessionId)  transferCancelledV3,}) {final _that = this;
 switch (_that) {
 case RsServerEvent_Register():
 return register(_that.ip,_that.info);case RsServerEvent_PrepareUpload():
@@ -185,7 +205,12 @@ return cancelReceived(_that.ip,_that.sessionId);case RsServerEvent_WebPrepareDow
 return webPrepareDownload(_that.ip,_that.sessionId,_that.userAgent);case RsServerEvent_WebFileDownload():
 return webFileDownload(_that.sessionId,_that.fileId,_that.file);case RsServerEvent_Show():
 return show_(_that.args);case RsServerEvent_ListenerFailed():
-return listenerFailed(_that.error);}
+return listenerFailed(_that.error);case RsServerEvent_PrepareUploadV3():
+return prepareUploadV3(_that.sessionId,_that.ip,_that.fileName,_that.fileSize,_that.totalChunks,_that.chunkSize,_that.certFingerprint);case RsServerEvent_TransferProgressV3():
+return transferProgressV3(_that.sessionId,_that.bytesReceived,_that.totalBytes,_that.progress);case RsServerEvent_TransferFinishedV3():
+return transferFinishedV3(_that.sessionId,_that.fileName,_that.fileSize,_that.destinationPath,_that.savedToGallery);case RsServerEvent_TransferFailedV3():
+return transferFailedV3(_that.sessionId,_that.fileName,_that.error);case RsServerEvent_TransferCancelledV3():
+return transferCancelledV3(_that.sessionId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -199,7 +224,7 @@ return listenerFailed(_that.error);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String ip,  RegisterDtoV2 info)?  register,TResult? Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)?  prepareUpload,TResult? Function( String sessionId,  String fileId,  FileDto file)?  fileUpload,TResult? Function( String sessionId,  SessionEndReasonV2 reason)?  sessionEnd,TResult? Function( String sessionId)?  prepareUploadAborted,TResult? Function( String ip,  String sessionId)?  cancelReceived,TResult? Function( String ip,  String sessionId,  String? userAgent)?  webPrepareDownload,TResult? Function( String sessionId,  String fileId,  FileDto file)?  webFileDownload,TResult? Function( List<String> args)?  show_,TResult? Function( String error)?  listenerFailed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String ip,  RegisterDtoV2 info)?  register,TResult? Function( String sessionId,  String ip,  RegisterDtoV2 info,  String? certFingerprint,  Map<String, FileDto> files)?  prepareUpload,TResult? Function( String sessionId,  String fileId,  FileDto file)?  fileUpload,TResult? Function( String sessionId,  SessionEndReasonV2 reason)?  sessionEnd,TResult? Function( String sessionId)?  prepareUploadAborted,TResult? Function( String ip,  String sessionId)?  cancelReceived,TResult? Function( String ip,  String sessionId,  String? userAgent)?  webPrepareDownload,TResult? Function( String sessionId,  String fileId,  FileDto file)?  webFileDownload,TResult? Function( List<String> args)?  show_,TResult? Function( String error)?  listenerFailed,TResult? Function( String sessionId,  String ip,  String fileName,  BigInt fileSize,  BigInt totalChunks,  BigInt chunkSize,  String? certFingerprint)?  prepareUploadV3,TResult? Function( String sessionId,  BigInt bytesReceived,  BigInt totalBytes,  double progress)?  transferProgressV3,TResult? Function( String sessionId,  String fileName,  BigInt fileSize,  String destinationPath,  bool savedToGallery)?  transferFinishedV3,TResult? Function( String sessionId,  String fileName,  String error)?  transferFailedV3,TResult? Function( String sessionId)?  transferCancelledV3,}) {final _that = this;
 switch (_that) {
 case RsServerEvent_Register() when register != null:
 return register(_that.ip,_that.info);case RsServerEvent_PrepareUpload() when prepareUpload != null:
@@ -211,7 +236,12 @@ return cancelReceived(_that.ip,_that.sessionId);case RsServerEvent_WebPrepareDow
 return webPrepareDownload(_that.ip,_that.sessionId,_that.userAgent);case RsServerEvent_WebFileDownload() when webFileDownload != null:
 return webFileDownload(_that.sessionId,_that.fileId,_that.file);case RsServerEvent_Show() when show_ != null:
 return show_(_that.args);case RsServerEvent_ListenerFailed() when listenerFailed != null:
-return listenerFailed(_that.error);case _:
+return listenerFailed(_that.error);case RsServerEvent_PrepareUploadV3() when prepareUploadV3 != null:
+return prepareUploadV3(_that.sessionId,_that.ip,_that.fileName,_that.fileSize,_that.totalChunks,_that.chunkSize,_that.certFingerprint);case RsServerEvent_TransferProgressV3() when transferProgressV3 != null:
+return transferProgressV3(_that.sessionId,_that.bytesReceived,_that.totalBytes,_that.progress);case RsServerEvent_TransferFinishedV3() when transferFinishedV3 != null:
+return transferFinishedV3(_that.sessionId,_that.fileName,_that.fileSize,_that.destinationPath,_that.savedToGallery);case RsServerEvent_TransferFailedV3() when transferFailedV3 != null:
+return transferFailedV3(_that.sessionId,_that.fileName,_that.error);case RsServerEvent_TransferCancelledV3() when transferCancelledV3 != null:
+return transferCancelledV3(_that.sessionId);case _:
   return null;
 
 }
@@ -918,6 +948,366 @@ class _$RsServerEvent_ListenerFailedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
   return _then(RsServerEvent_ListenerFailed(
 error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RsServerEvent_PrepareUploadV3 extends RsServerEvent {
+  const RsServerEvent_PrepareUploadV3({required this.sessionId, required this.ip, required this.fileName, required this.fileSize, required this.totalChunks, required this.chunkSize, this.certFingerprint}): super._();
+  
+
+ final  String sessionId;
+ final  String ip;
+ final  String fileName;
+ final  BigInt fileSize;
+ final  BigInt totalChunks;
+ final  BigInt chunkSize;
+ final  String? certFingerprint;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RsServerEvent_PrepareUploadV3CopyWith<RsServerEvent_PrepareUploadV3> get copyWith => _$RsServerEvent_PrepareUploadV3CopyWithImpl<RsServerEvent_PrepareUploadV3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsServerEvent_PrepareUploadV3&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.ip, ip) || other.ip == ip)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.totalChunks, totalChunks) || other.totalChunks == totalChunks)&&(identical(other.chunkSize, chunkSize) || other.chunkSize == chunkSize)&&(identical(other.certFingerprint, certFingerprint) || other.certFingerprint == certFingerprint));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sessionId,ip,fileName,fileSize,totalChunks,chunkSize,certFingerprint);
+
+@override
+String toString() {
+  return 'RsServerEvent.prepareUploadV3(sessionId: $sessionId, ip: $ip, fileName: $fileName, fileSize: $fileSize, totalChunks: $totalChunks, chunkSize: $chunkSize, certFingerprint: $certFingerprint)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RsServerEvent_PrepareUploadV3CopyWith<$Res> implements $RsServerEventCopyWith<$Res> {
+  factory $RsServerEvent_PrepareUploadV3CopyWith(RsServerEvent_PrepareUploadV3 value, $Res Function(RsServerEvent_PrepareUploadV3) _then) = _$RsServerEvent_PrepareUploadV3CopyWithImpl;
+@useResult
+$Res call({
+ String sessionId, String ip, String fileName, BigInt fileSize, BigInt totalChunks, BigInt chunkSize, String? certFingerprint
+});
+
+
+
+
+}
+/// @nodoc
+class _$RsServerEvent_PrepareUploadV3CopyWithImpl<$Res>
+    implements $RsServerEvent_PrepareUploadV3CopyWith<$Res> {
+  _$RsServerEvent_PrepareUploadV3CopyWithImpl(this._self, this._then);
+
+  final RsServerEvent_PrepareUploadV3 _self;
+  final $Res Function(RsServerEvent_PrepareUploadV3) _then;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? ip = null,Object? fileName = null,Object? fileSize = null,Object? totalChunks = null,Object? chunkSize = null,Object? certFingerprint = freezed,}) {
+  return _then(RsServerEvent_PrepareUploadV3(
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,ip: null == ip ? _self.ip : ip // ignore: cast_nullable_to_non_nullable
+as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as BigInt,totalChunks: null == totalChunks ? _self.totalChunks : totalChunks // ignore: cast_nullable_to_non_nullable
+as BigInt,chunkSize: null == chunkSize ? _self.chunkSize : chunkSize // ignore: cast_nullable_to_non_nullable
+as BigInt,certFingerprint: freezed == certFingerprint ? _self.certFingerprint : certFingerprint // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RsServerEvent_TransferProgressV3 extends RsServerEvent {
+  const RsServerEvent_TransferProgressV3({required this.sessionId, required this.bytesReceived, required this.totalBytes, required this.progress}): super._();
+  
+
+ final  String sessionId;
+ final  BigInt bytesReceived;
+ final  BigInt totalBytes;
+ final  double progress;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RsServerEvent_TransferProgressV3CopyWith<RsServerEvent_TransferProgressV3> get copyWith => _$RsServerEvent_TransferProgressV3CopyWithImpl<RsServerEvent_TransferProgressV3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsServerEvent_TransferProgressV3&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.bytesReceived, bytesReceived) || other.bytesReceived == bytesReceived)&&(identical(other.totalBytes, totalBytes) || other.totalBytes == totalBytes)&&(identical(other.progress, progress) || other.progress == progress));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sessionId,bytesReceived,totalBytes,progress);
+
+@override
+String toString() {
+  return 'RsServerEvent.transferProgressV3(sessionId: $sessionId, bytesReceived: $bytesReceived, totalBytes: $totalBytes, progress: $progress)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RsServerEvent_TransferProgressV3CopyWith<$Res> implements $RsServerEventCopyWith<$Res> {
+  factory $RsServerEvent_TransferProgressV3CopyWith(RsServerEvent_TransferProgressV3 value, $Res Function(RsServerEvent_TransferProgressV3) _then) = _$RsServerEvent_TransferProgressV3CopyWithImpl;
+@useResult
+$Res call({
+ String sessionId, BigInt bytesReceived, BigInt totalBytes, double progress
+});
+
+
+
+
+}
+/// @nodoc
+class _$RsServerEvent_TransferProgressV3CopyWithImpl<$Res>
+    implements $RsServerEvent_TransferProgressV3CopyWith<$Res> {
+  _$RsServerEvent_TransferProgressV3CopyWithImpl(this._self, this._then);
+
+  final RsServerEvent_TransferProgressV3 _self;
+  final $Res Function(RsServerEvent_TransferProgressV3) _then;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? bytesReceived = null,Object? totalBytes = null,Object? progress = null,}) {
+  return _then(RsServerEvent_TransferProgressV3(
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,bytesReceived: null == bytesReceived ? _self.bytesReceived : bytesReceived // ignore: cast_nullable_to_non_nullable
+as BigInt,totalBytes: null == totalBytes ? _self.totalBytes : totalBytes // ignore: cast_nullable_to_non_nullable
+as BigInt,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RsServerEvent_TransferFinishedV3 extends RsServerEvent {
+  const RsServerEvent_TransferFinishedV3({required this.sessionId, required this.fileName, required this.fileSize, required this.destinationPath, required this.savedToGallery}): super._();
+  
+
+ final  String sessionId;
+ final  String fileName;
+ final  BigInt fileSize;
+ final  String destinationPath;
+ final  bool savedToGallery;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RsServerEvent_TransferFinishedV3CopyWith<RsServerEvent_TransferFinishedV3> get copyWith => _$RsServerEvent_TransferFinishedV3CopyWithImpl<RsServerEvent_TransferFinishedV3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsServerEvent_TransferFinishedV3&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.destinationPath, destinationPath) || other.destinationPath == destinationPath)&&(identical(other.savedToGallery, savedToGallery) || other.savedToGallery == savedToGallery));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sessionId,fileName,fileSize,destinationPath,savedToGallery);
+
+@override
+String toString() {
+  return 'RsServerEvent.transferFinishedV3(sessionId: $sessionId, fileName: $fileName, fileSize: $fileSize, destinationPath: $destinationPath, savedToGallery: $savedToGallery)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RsServerEvent_TransferFinishedV3CopyWith<$Res> implements $RsServerEventCopyWith<$Res> {
+  factory $RsServerEvent_TransferFinishedV3CopyWith(RsServerEvent_TransferFinishedV3 value, $Res Function(RsServerEvent_TransferFinishedV3) _then) = _$RsServerEvent_TransferFinishedV3CopyWithImpl;
+@useResult
+$Res call({
+ String sessionId, String fileName, BigInt fileSize, String destinationPath, bool savedToGallery
+});
+
+
+
+
+}
+/// @nodoc
+class _$RsServerEvent_TransferFinishedV3CopyWithImpl<$Res>
+    implements $RsServerEvent_TransferFinishedV3CopyWith<$Res> {
+  _$RsServerEvent_TransferFinishedV3CopyWithImpl(this._self, this._then);
+
+  final RsServerEvent_TransferFinishedV3 _self;
+  final $Res Function(RsServerEvent_TransferFinishedV3) _then;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? fileName = null,Object? fileSize = null,Object? destinationPath = null,Object? savedToGallery = null,}) {
+  return _then(RsServerEvent_TransferFinishedV3(
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as BigInt,destinationPath: null == destinationPath ? _self.destinationPath : destinationPath // ignore: cast_nullable_to_non_nullable
+as String,savedToGallery: null == savedToGallery ? _self.savedToGallery : savedToGallery // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RsServerEvent_TransferFailedV3 extends RsServerEvent {
+  const RsServerEvent_TransferFailedV3({required this.sessionId, required this.fileName, required this.error}): super._();
+  
+
+ final  String sessionId;
+ final  String fileName;
+ final  String error;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RsServerEvent_TransferFailedV3CopyWith<RsServerEvent_TransferFailedV3> get copyWith => _$RsServerEvent_TransferFailedV3CopyWithImpl<RsServerEvent_TransferFailedV3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsServerEvent_TransferFailedV3&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.error, error) || other.error == error));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sessionId,fileName,error);
+
+@override
+String toString() {
+  return 'RsServerEvent.transferFailedV3(sessionId: $sessionId, fileName: $fileName, error: $error)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RsServerEvent_TransferFailedV3CopyWith<$Res> implements $RsServerEventCopyWith<$Res> {
+  factory $RsServerEvent_TransferFailedV3CopyWith(RsServerEvent_TransferFailedV3 value, $Res Function(RsServerEvent_TransferFailedV3) _then) = _$RsServerEvent_TransferFailedV3CopyWithImpl;
+@useResult
+$Res call({
+ String sessionId, String fileName, String error
+});
+
+
+
+
+}
+/// @nodoc
+class _$RsServerEvent_TransferFailedV3CopyWithImpl<$Res>
+    implements $RsServerEvent_TransferFailedV3CopyWith<$Res> {
+  _$RsServerEvent_TransferFailedV3CopyWithImpl(this._self, this._then);
+
+  final RsServerEvent_TransferFailedV3 _self;
+  final $Res Function(RsServerEvent_TransferFailedV3) _then;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? fileName = null,Object? error = null,}) {
+  return _then(RsServerEvent_TransferFailedV3(
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RsServerEvent_TransferCancelledV3 extends RsServerEvent {
+  const RsServerEvent_TransferCancelledV3({required this.sessionId}): super._();
+  
+
+ final  String sessionId;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RsServerEvent_TransferCancelledV3CopyWith<RsServerEvent_TransferCancelledV3> get copyWith => _$RsServerEvent_TransferCancelledV3CopyWithImpl<RsServerEvent_TransferCancelledV3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsServerEvent_TransferCancelledV3&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sessionId);
+
+@override
+String toString() {
+  return 'RsServerEvent.transferCancelledV3(sessionId: $sessionId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RsServerEvent_TransferCancelledV3CopyWith<$Res> implements $RsServerEventCopyWith<$Res> {
+  factory $RsServerEvent_TransferCancelledV3CopyWith(RsServerEvent_TransferCancelledV3 value, $Res Function(RsServerEvent_TransferCancelledV3) _then) = _$RsServerEvent_TransferCancelledV3CopyWithImpl;
+@useResult
+$Res call({
+ String sessionId
+});
+
+
+
+
+}
+/// @nodoc
+class _$RsServerEvent_TransferCancelledV3CopyWithImpl<$Res>
+    implements $RsServerEvent_TransferCancelledV3CopyWith<$Res> {
+  _$RsServerEvent_TransferCancelledV3CopyWithImpl(this._self, this._then);
+
+  final RsServerEvent_TransferCancelledV3 _self;
+  final $Res Function(RsServerEvent_TransferCancelledV3) _then;
+
+/// Create a copy of RsServerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sessionId = null,}) {
+  return _then(RsServerEvent_TransferCancelledV3(
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

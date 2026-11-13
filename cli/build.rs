@@ -3,11 +3,11 @@ fn main() {
     // Code signing expects ProductName/ProductVersion on all signed binaries.
     if std::env::var_os("CARGO_CFG_WINDOWS").is_some() {
         let mut res = winresource::WindowsResource::new();
-        res.set("ProductName", "locara");
-        res.set("FileDescription", "locara CLI");
+        res.set("ProductName", "Mesh");
+        res.set("FileDescription", "Mesh CLI");
         res.set("CompanyName", "SaeedR");
-        res.set("OriginalFilename", "locara-cli.exe");
-        res.set("InternalName", "locara-cli");
+        res.set("OriginalFilename", "mesh-cli.exe");
+        res.set("InternalName", "mesh-cli");
         res.set("LegalCopyright", "Copyright (C) 2022-2026 SaeedR");
         // FileVersion/ProductVersion are derived from CARGO_PKG_VERSION automatically.
         res.compile().expect("failed to compile Windows resources");

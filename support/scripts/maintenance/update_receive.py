@@ -4,20 +4,20 @@ with open('app/lib/pages/tabs/receive_tab.dart', 'r', encoding='utf-8') as f:
     content = f.read()
 
 new_content = '''import 'package:flutter/material.dart';
-import 'package:locara_app/gen/strings.g.dart';
-import 'package:locara_app/model/state/server/server_state.dart';
-import 'package:locara_app/pages/home_page.dart';
-import 'package:locara_app/pages/home_page_controller.dart';
-import 'package:locara_app/pages/receive_history_page.dart';
-import 'package:locara_app/pages/web_share_page.dart';
-import 'package:locara_app/provider/animation_provider.dart';
-import 'package:locara_app/provider/network/server/server_provider.dart';
-import 'package:locara_app/provider/network/local_ip_provider.dart';
-import 'package:locara_app/provider/settings_provider.dart';
-import 'package:locara_app/widget/animations/initial_fade_transition.dart';
-import 'package:locara_app/widget/custom_icon_button.dart';
-import 'package:locara_app/widget/locara_logo.dart';
-import 'package:locara_isolates/util/sleep.dart';
+import 'package:mesh_app/gen/strings.g.dart';
+import 'package:mesh_app/model/state/server/server_state.dart';
+import 'package:mesh_app/pages/home_page.dart';
+import 'package:mesh_app/pages/home_page_controller.dart';
+import 'package:mesh_app/pages/receive_history_page.dart';
+import 'package:mesh_app/pages/web_share_page.dart';
+import 'package:mesh_app/provider/animation_provider.dart';
+import 'package:mesh_app/provider/network/server/server_provider.dart';
+import 'package:mesh_app/provider/network/local_ip_provider.dart';
+import 'package:mesh_app/provider/settings_provider.dart';
+import 'package:mesh_app/widget/animations/initial_fade_transition.dart';
+import 'package:mesh_app/widget/custom_icon_button.dart';
+import 'package:mesh_app/widget/mesh_logo.dart';
+import 'package:mesh_isolates/util/sleep.dart';
 import 'package:refena_flutter/addons.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
@@ -123,7 +123,7 @@ class _ReceiveTabState extends State<ReceiveTab> with SingleTickerProviderStateM
                         ],
                       ),
                       child: Center(
-                        child: const LocaraLogo(withText: false),
+                        child: const MeshLogo(withText: false),
                       ),
                     ),
                   ],

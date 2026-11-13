@@ -55,7 +55,7 @@ jobs:
             exit 1
           }
 
-      # Required by the CMake install step (app/windows/CMakeLists.txt installs Locara_msix_helper.msix).
+      # Required by the CMake install step (app/windows/CMakeLists.txt installs Mesh_msix_helper.msix).
       # The checked-in manifest declares x64; patch it so the package identity matches the arm64 executable.
       - name: Build MSIX helper
         run: |
@@ -67,7 +67,7 @@ jobs:
           }
           $makepri = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\10.*\arm64\makepri.exe' | Select-Object -Last 1
           & $makepri.FullName new /pr support\build\msix\content /cf support\build\msix\priconfig.xml /mn support\build\msix\content\AppxManifest.xml /of support\build\msix\content\resources.pri /o
-          & "$($makepri.Directory.FullName)\makeappx.exe" pack /o /d support\build\msix\content /nv /p app\windows\Locara_msix_helper.msix
+          & "$($makepri.Directory.FullName)\makeappx.exe" pack /o /d support\build\msix\content /nv /p app\windows\Mesh_msix_helper.msix
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
@@ -98,19 +98,19 @@ jobs:
       - name: Remove MSIX helper from portable bundle
         working-directory: app
         run: |
-          Remove-Item build/windows/arm64/runner/Release/Locara_msix_helper.msix
+          Remove-Item build/windows/arm64/runner/Release/Mesh_msix_helper.msix
           Remove-Item build/windows/arm64/runner/Release/install_msix_helper.ps1
-          Remove-Item build/windows/arm64/runner/Release/Locara_app.exe.manifest
+          Remove-Item build/windows/arm64/runner/Release/Mesh_app.exe.manifest
 
       - name: Zip compiled files
         working-directory: app
-        run: Get-ChildItem -Path build/windows/arm64/runner/Release -Exclude *.pdb | Compress-Archive -DestinationPath "Locara-${{ needs.build.outputs.version }}-windows-arm-64.zip"
+        run: Get-ChildItem -Path build/windows/arm64/runner/Release -Exclude *.pdb | Compress-Archive -DestinationPath "Mesh-${{ needs.build.outputs.version }}-windows-arm-64.zip"
 
       - name: Upload signed zip
         uses: actions/upload-artifact@v4
         with:
           name: windows-zip-arm-64-result
-          path: app/Locara-${{ needs.build.outputs.version }}-windows-arm-64.zip
+          path: app/Mesh-${{ needs.build.outputs.version }}-windows-arm-64.zip
           if-no-files-found: error
 
 

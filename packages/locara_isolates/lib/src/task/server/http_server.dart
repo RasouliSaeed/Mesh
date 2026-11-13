@@ -53,6 +53,19 @@ class HttpServerService {
     await _requireServer().respondPrepareUpload(acceptedFileIds: acceptedFileIds);
   }
 
+  /// Answers a pending V3 prepare-upload request.
+  Future<void> respondPrepareUploadV3({
+    required String sessionId,
+    required bool accept,
+    String? destinationPath,
+  }) async {
+    await _requireServer().respondPrepareUploadV3(
+      sessionId: sessionId,
+      accept: accept,
+      destinationPath: destinationPath,
+    );
+  }
+
   /// Answers a pending file upload with the target the file should be saved to
   /// (either a [path] or a [fileDescriptor]).
   ///
@@ -138,4 +151,3 @@ class HttpServerService {
     return server;
   }
 }
-

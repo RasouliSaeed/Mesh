@@ -1,10 +1,10 @@
 [package]
-name = "locara-cli"
+name = "mesh-cli"
 version = "1.8.0"
 edition = "2024"
 
 [[bin]]
-name = "locara-cli"
+name = "mesh-cli"
 path = "src/main.rs"
 
 [dependencies]

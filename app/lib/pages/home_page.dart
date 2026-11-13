@@ -5,16 +5,23 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:locara_app/config/init.dart';
 import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/pages/cyber/mesh_desktop_home_view.dart';
+import 'package:locara_app/pages/cyber/mesh_mobile_home_view.dart';
 import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/tabs/receive_tab.dart';
 import 'package:locara_app/pages/tabs/send_tab.dart';
 import 'package:locara_app/pages/tabs/settings_tab.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/receive_history_provider.dart';
 import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
+import 'package:locara_app/theme/mesh_cyber_theme.dart';
+import 'package:locara_app/theme/mesh_design_tokens.dart';
 import 'package:locara_app/util/native/cross_file_converters.dart';
 import 'package:locara_app/widget/responsive_builder.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 
 enum HomeTab {
+  home(Icons.home_rounded),
   receive(Icons.wifi),
   send(Icons.send),
   settings(Icons.settings);
@@ -25,6 +32,8 @@ enum HomeTab {
 
   String get label {
     switch (this) {
+      case HomeTab.home:
+        return 'خانه';
       case HomeTab.receive:
         return t.receiveTab.title;
       case HomeTab.send:
@@ -69,6 +78,8 @@ class _HomePageState extends State<HomePage> with Refena {
   Widget build(BuildContext context) {
     Translations.of(context); // rebuild on locale change
     final vm = context.watch(homePageControllerProvider);
+    final nearbyDevices = context.watch(nearbyDevicesProvider).devices.values.toList();
+    final history = context.watch(receiveHistoryProvider);
 
     return DropTarget(
       onDragEntered: (_) {
@@ -104,172 +115,186 @@ class _HomePageState extends State<HomePage> with Refena {
       },
       child: ResponsiveBuilder(
         builder: (sizingInformation) {
-          return Container(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Padding(
-                padding: sizingInformation.isMobile ? EdgeInsets.zero : const EdgeInsets.all(24.0),
-                child: Row(
+          if (sizingInformation.isDesktop) {
+            // Desktop Experience (Windows, macOS, Linux) matching Image 2
+            return Stack(
+              children: [
+                LocaraDesktopHomeView(
+                  historyCount: history.length,
+                ),
+                if (_dragAndDropIndicator) _buildDropIndicator(),
+              ],
+            );
+          }
+
+          // Mobile Experience (Android, iOS) matching Image 1
+          return Scaffold(
+            backgroundColor: LocaraDesignTokens.deepNavy,
+            extendBody: true,
+            body: Stack(
+              children: [
+                PageView(
+                  controller: vm.controller,
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    if (!sizingInformation.isMobile)
-                      Container(
-                        margin: const EdgeInsets.only(right: 24.0),
-                        width: sizingInformation.isDesktop ? 260 : 80,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: NavigationRail(
-                            selectedIndex: vm.currentTab.index,
-                            onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
-                            extended: sizingInformation.isDesktop,
-                            backgroundColor: Colors.transparent,
-                            indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                            unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                            selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-                            unselectedLabelTextStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
-                            selectedLabelTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
-                            leading: sizingInformation.isDesktop
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 32.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.rocket_launch, color: Theme.of(context).colorScheme.primary, size: 28),
-                                        const SizedBox(width: 12),
-                                        Text(
-                                          t.appName,
-                                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: -0.5),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox(height: 32),
-                            destinations: HomeTab.values.map((tab) {
-                              return NavigationRailDestination(
-                                icon: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Icon(tab.icon),
-                                ),
-                                label: Text(tab.label),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    Expanded(
-                      child: Container(
-                        decoration: sizingInformation.isMobile
-                            ? null
-                            : BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                        child: ClipRRect(
-                          borderRadius: sizingInformation.isMobile ? BorderRadius.zero : BorderRadius.circular(24),
-                          child: SafeArea(
-                            left: sizingInformation.isMobile,
-                            child: Stack(
-                              children: [
-                                PageView(
-                                  controller: vm.controller,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  children: const [
-                                    ReceiveTab(),
-                                    SendTab(),
-                                    SettingsTab(),
-                                  ],
-                                ),
-                                if (_dragAndDropIndicator)
-                                  Container(
-                                    width: double.infinity,
-                                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.file_download, size: 128, color: Theme.of(context).colorScheme.primary),
-                                        const SizedBox(height: 30),
-                                        Text(
-                                          t.sendTab.placeItems,
-                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    // Tab 0: Home (Cyber Mobile Dashboard)
+                    LocaraMobileHomeView(
+                      nearbyDevices: nearbyDevices,
+                      historyCount: history.length,
+                      onSendFile: () => vm.changeTab(HomeTab.send),
+                      onReceiveFile: () => vm.changeTab(HomeTab.receive),
+                      onOpenSettings: () => vm.changeTab(HomeTab.settings),
+                      onOpenHistory: () => vm.changeTab(HomeTab.receive),
+                      onSeeAllDevices: () => vm.changeTab(HomeTab.send),
+                      onSelectDevice: (device) {
+                        vm.changeTab(HomeTab.send);
+                      },
+                    ),
+                    // Tab 1: Receive (Transfers & Recovery)
+                    const SafeArea(child: ReceiveTab()),
+                    // Tab 2: Send (File Picker & Discovery)
+                    const SafeArea(child: SendTab()),
+                    // Tab 3: Settings
+                    const SafeArea(child: SettingsTab()),
+                  ],
+                ),
+                if (_dragAndDropIndicator) _buildDropIndicator(),
+              ],
+            ),
+            bottomNavigationBar: _buildMobileBottomBar(vm),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDropIndicator() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.black.withValues(alpha: 0.85),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.file_download_rounded, size: 96, color: LocaraDesignTokens.cyan),
+          const SizedBox(height: 24),
+          Text(
+            t.sendTab.placeItems,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMobileBottomBar(HomePageVm vm) {
+    final currentTab = vm.currentTab;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
+      child: Container(
+        height: 68,
+        decoration: LocaraCyberTheme.glassCardDecoration(
+          borderRadius: 28,
+          borderColor: LocaraCyberColors.cardBorderSubtle,
+          fillColor: const Color(0xFF09142A).withValues(alpha: 0.85),
+          withGlow: true,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // 1. Settings (تنظیمات)
+                _buildMobileNavItem(
+                  icon: Icons.settings_outlined,
+                  label: 'تنظیمات',
+                  isActive: currentTab == HomeTab.settings,
+                  onTap: () => vm.changeTab(HomeTab.settings),
+                ),
+
+                // 2. Home (خانه) with top cyan highlight pill
+                _buildMobileNavItem(
+                  icon: Icons.home_rounded,
+                  label: 'خانه',
+                  isActive: currentTab == HomeTab.home,
+                  withTopPill: true,
+                  onTap: () => vm.changeTab(HomeTab.home),
+                ),
+
+                // 3. History (تاریخچه)
+                _buildMobileNavItem(
+                  icon: Icons.access_time_rounded,
+                  label: 'تاریخچه',
+                  isActive: currentTab == HomeTab.receive,
+                  onTap: () => vm.changeTab(HomeTab.receive),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileNavItem({
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+    bool withTopPill = false,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        width: 80,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Glowing Top Pill for active tab
+            if (withTopPill && isActive)
+              Container(
+                width: 32,
+                height: 3,
+                margin: const EdgeInsets.only(bottom: 6),
+                decoration: BoxDecoration(
+                  color: LocaraCyberColors.auroraCyan,
+                  borderRadius: BorderRadius.circular(2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: LocaraCyberColors.auroraCyan,
+                      blurRadius: 8,
+                      spreadRadius: 1,
                     ),
                   ],
                 ),
-              ),
-              extendBody: true,
-              bottomNavigationBar: sizingInformation.isMobile
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-                                width: 1,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: NavigationBar(
-                              backgroundColor: Colors.transparent,
-                              indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                              elevation: 0,
-                              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-                              selectedIndex: vm.currentTab.index,
-                              onDestinationSelected: (index) => vm.changeTab(HomeTab.values[index]),
-                              destinations: HomeTab.values.map((tab) {
-                                return NavigationDestination(
-                                  icon: Icon(tab.icon, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                                  selectedIcon: Icon(tab.icon, color: Theme.of(context).colorScheme.primary),
-                                  label: tab.label,
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : null,
+              )
+            else
+              const SizedBox(height: 9),
+
+            Icon(
+              icon,
+              color: isActive ? LocaraCyberColors.auroraCyan : LocaraCyberColors.textMuted,
+              size: 24,
             ),
-          );
-        },
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : LocaraCyberColors.textMuted,
+                fontSize: 11,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

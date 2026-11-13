@@ -39,6 +39,10 @@ class ChatNotifier extends Notifier<ChatState> {
       ),
     ], sender ?? state.currentTarget);
   }
+
+  void setTarget(Device? target) {
+    state = ChatState(state.messages, target);
+  }
 }
 
 final chatProvider = NotifierProvider<ChatNotifier, ChatState>((ref) {

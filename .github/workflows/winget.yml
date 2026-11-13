@@ -7,17 +7,17 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish Locara
+      - name: Publish Mesh
         uses: vedantmgoyal9/winget-releaser@main
         with:
-          identifier: Locara.Locara
-          installers-regex: 'Locara-(?!CLI-).*\.exe$'
+          identifier: Mesh.Mesh
+          installers-regex: 'Mesh-(?!CLI-).*\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
-      - name: Publish Locara CLI
+      - name: Publish Mesh CLI
         uses: vedantmgoyal9/winget-releaser@main
         with:
-          identifier: Locara.Locara.CLI
-          installers-regex: 'Locara-CLI-.*\.exe$'
+          identifier: Mesh.Mesh.CLI
+          installers-regex: 'Mesh-CLI-.*\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
 
 

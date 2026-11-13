@@ -2,7 +2,7 @@
 # - brew install create-dmg
 
 VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' app/pubspec.yaml)
-DMG="locara-$VERSION.dmg"
+DMG="mesh-$VERSION.dmg"
 
 cd app
 fvm flutter clean
@@ -14,7 +14,7 @@ echo
 echo "Signing the app..."
 echo
 SIGN_ID="Developer ID Application: SaeedR (3W7H4PYMCV)"
-codesign --deep --force --verbose --options runtime --preserve-metadata=entitlements --sign "$SIGN_ID" build/macos/Build/Products/Release/locara.app
+codesign --deep --force --verbose --options runtime --preserve-metadata=entitlements --sign "$SIGN_ID" build/macos/Build/Products/Release/mesh.app
 
 # create dmg
 # brew install create-dmg
@@ -23,13 +23,13 @@ echo "Creating dmg..."
 echo
 rm -f "$DMG"
 create-dmg \
-  --volname "locara" \
+  --volname "mesh" \
   --window-size 500 300 \
   --background "../support/build/dmg/background.png" \
-  --icon locara.app 130 110 \
+  --icon mesh.app 130 110 \
   --app-drop-link 360 110 \
   "$DMG" \
-  build/macos/Build/Products/Release/locara.app
+  build/macos/Build/Products/Release/mesh.app
 
 # sign the dmg
 echo

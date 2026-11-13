@@ -9,7 +9,8 @@ class LocaraLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logo = Assets.img.logo512.image(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final logo = (isDark ? Assets.img.logo512White : Assets.img.logo512).image(
       width: 200,
       height: 200,
     );
@@ -31,3 +32,6 @@ class LocaraLogo extends StatelessWidget {
     }
   }
 }
+
+/// Mesh logo widget alias for backward compatibility and rebranding
+typedef MeshLogo = LocaraLogo;

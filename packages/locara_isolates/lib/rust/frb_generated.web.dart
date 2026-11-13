@@ -18,6 +18,7 @@ import 'package:locara_isolates/rust/api/http.dart';
 import 'package:locara_isolates/rust/api/logging.dart';
 import 'package:locara_isolates/rust/api/metadata.dart';
 import 'package:locara_isolates/rust/api/model.dart';
+import 'package:locara_isolates/rust/api/resume.dart';
 import 'package:locara_isolates/rust/api/server.dart';
 import 'package:locara_isolates/rust/api/stream.dart';
 import 'package:locara_isolates/rust/api/webrtc.dart';
@@ -206,6 +207,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<RsStoredDevice> dco_decode_StreamSink_rs_stored_device_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<RsTransferEventV3> dco_decode_StreamSink_rs_transfer_event_v_3_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<RsUploadEvent> dco_decode_StreamSink_rs_upload_event_Sse(dynamic raw);
 
   @protected
@@ -275,6 +279,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RsHttpClientError dco_decode_box_autoadd_rs_http_client_error(dynamic raw);
+
+  @protected
+  RsTransferConfigV3 dco_decode_box_autoadd_rs_transfer_config_v_3(dynamic raw);
+
+  @protected
+  RsTransferErrorV3 dco_decode_box_autoadd_rs_transfer_error_v_3(dynamic raw);
+
+  @protected
+  RsTransferResultV3 dco_decode_box_autoadd_rs_transfer_result_v_3(dynamic raw);
 
   @protected
   RTCSendFileResponse dco_decode_box_autoadd_rtc_send_file_response(dynamic raw);
@@ -350,6 +363,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<RsDeviceLog> dco_decode_list_rs_device_log(dynamic raw);
+
+  @protected
+  List<RsRecoverableSession> dco_decode_list_rs_recoverable_session(dynamic raw);
 
   @protected
   LsHttpClientVersion dco_decode_ls_http_client_version(dynamic raw);
@@ -449,10 +465,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError dco_decode_rs_http_client_error(dynamic raw);
 
   @protected
+  RsRecoverableSession dco_decode_rs_recoverable_session(dynamic raw);
+
+  @protected
   RsServerEvent dco_decode_rs_server_event(dynamic raw);
 
   @protected
+  RsSourceFileInfoV3 dco_decode_rs_source_file_info_v_3(dynamic raw);
+
+  @protected
   RsStoredDevice dco_decode_rs_stored_device(dynamic raw);
+
+  @protected
+  RsTransferConfigV3 dco_decode_rs_transfer_config_v_3(dynamic raw);
+
+  @protected
+  RsTransferErrorV3 dco_decode_rs_transfer_error_v_3(dynamic raw);
+
+  @protected
+  RsTransferEventV3 dco_decode_rs_transfer_event_v_3(dynamic raw);
+
+  @protected
+  RsTransferResultV3 dco_decode_rs_transfer_result_v_3(dynamic raw);
 
   @protected
   RsUploadEvent dco_decode_rs_upload_event(dynamic raw);
@@ -670,6 +704,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<RsStoredDevice> sse_decode_StreamSink_rs_stored_device_Sse(SseDeserializer deserializer);
 
   @protected
+  RustStreamSink<RsTransferEventV3> sse_decode_StreamSink_rs_transfer_event_v_3_Sse(SseDeserializer deserializer);
+
+  @protected
   RustStreamSink<RsUploadEvent> sse_decode_StreamSink_rs_upload_event_Sse(SseDeserializer deserializer);
 
   @protected
@@ -739,6 +776,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RsHttpClientError sse_decode_box_autoadd_rs_http_client_error(SseDeserializer deserializer);
+
+  @protected
+  RsTransferConfigV3 sse_decode_box_autoadd_rs_transfer_config_v_3(SseDeserializer deserializer);
+
+  @protected
+  RsTransferErrorV3 sse_decode_box_autoadd_rs_transfer_error_v_3(SseDeserializer deserializer);
+
+  @protected
+  RsTransferResultV3 sse_decode_box_autoadd_rs_transfer_result_v_3(SseDeserializer deserializer);
 
   @protected
   RTCSendFileResponse sse_decode_box_autoadd_rtc_send_file_response(SseDeserializer deserializer);
@@ -814,6 +860,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<RsDeviceLog> sse_decode_list_rs_device_log(SseDeserializer deserializer);
+
+  @protected
+  List<RsRecoverableSession> sse_decode_list_rs_recoverable_session(SseDeserializer deserializer);
 
   @protected
   LsHttpClientVersion sse_decode_ls_http_client_version(SseDeserializer deserializer);
@@ -915,10 +964,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError sse_decode_rs_http_client_error(SseDeserializer deserializer);
 
   @protected
+  RsRecoverableSession sse_decode_rs_recoverable_session(SseDeserializer deserializer);
+
+  @protected
   RsServerEvent sse_decode_rs_server_event(SseDeserializer deserializer);
 
   @protected
+  RsSourceFileInfoV3 sse_decode_rs_source_file_info_v_3(SseDeserializer deserializer);
+
+  @protected
   RsStoredDevice sse_decode_rs_stored_device(SseDeserializer deserializer);
+
+  @protected
+  RsTransferConfigV3 sse_decode_rs_transfer_config_v_3(SseDeserializer deserializer);
+
+  @protected
+  RsTransferErrorV3 sse_decode_rs_transfer_error_v_3(SseDeserializer deserializer);
+
+  @protected
+  RsTransferEventV3 sse_decode_rs_transfer_event_v_3(SseDeserializer deserializer);
+
+  @protected
+  RsTransferResultV3 sse_decode_rs_transfer_result_v_3(SseDeserializer deserializer);
 
   @protected
   RsUploadEvent sse_decode_rs_upload_event(SseDeserializer deserializer);
@@ -1180,6 +1247,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_StreamSink_rs_stored_device_Sse(RustStreamSink<RsStoredDevice> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_StreamSink_rs_transfer_event_v_3_Sse(RustStreamSink<RsTransferEventV3> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_StreamSink_rs_upload_event_Sse(RustStreamSink<RsUploadEvent> self, SseSerializer serializer);
 
   @protected
@@ -1250,6 +1320,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_rs_http_client_error(RsHttpClientError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_rs_transfer_config_v_3(RsTransferConfigV3 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_rs_transfer_error_v_3(RsTransferErrorV3 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_rs_transfer_result_v_3(RsTransferResultV3 self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_rtc_send_file_response(RTCSendFileResponse self, SseSerializer serializer);
@@ -1325,6 +1404,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_rs_device_log(List<RsDeviceLog> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_rs_recoverable_session(List<RsRecoverableSession> self, SseSerializer serializer);
 
   @protected
   void sse_encode_ls_http_client_version(LsHttpClientVersion self, SseSerializer serializer);
@@ -1427,10 +1509,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_rs_http_client_error(RsHttpClientError self, SseSerializer serializer);
 
   @protected
+  void sse_encode_rs_recoverable_session(RsRecoverableSession self, SseSerializer serializer);
+
+  @protected
   void sse_encode_rs_server_event(RsServerEvent self, SseSerializer serializer);
 
   @protected
+  void sse_encode_rs_source_file_info_v_3(RsSourceFileInfoV3 self, SseSerializer serializer);
+
+  @protected
   void sse_encode_rs_stored_device(RsStoredDevice self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_transfer_config_v_3(RsTransferConfigV3 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_transfer_error_v_3(RsTransferErrorV3 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_transfer_event_v_3(RsTransferEventV3 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_transfer_result_v_3(RsTransferResultV3 self, SseSerializer serializer);
 
   @protected
   void sse_encode_rs_upload_event(RsUploadEvent self, SseSerializer serializer);
@@ -1612,4 +1712,3 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRsHttpServer(int ptr);
 }
-

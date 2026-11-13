@@ -88,6 +88,9 @@ pub struct AppState {
     /// State of the v2 protocol endpoints. `None` disables the v2 routes.
     v2: Option<Arc<V2State>>,
 
+    /// State of the v3 protocol endpoints. `None` disables the v3 routes.
+    pub v3: Option<Arc<crate::http::server::common::v3_session::V3State>>,
+
     /// Limits the connections being served, shared by the IPv4 and IPv6 listeners.
     connection_limiter: Arc<ConnectionLimiter>,
 }
@@ -99,6 +102,7 @@ impl AppState {
         v2_config: Option<ServerConfigV2>,
         web_config: WebConfig,
     ) -> Self {
+        let event_tx = v2_config.as_ref().map(|c| c.event_tx.clone());
         let v2 = v2_config.map(|config| {
             Arc::new(V2State {
                 pin: config.pin,
@@ -122,6 +126,9 @@ impl AppState {
                 NonZeroUsize::new(200).unwrap(),
             ))),
             v2,
+            v3: Some(Arc::new(
+                crate::http::server::common::v3_session::V3State::new_with_event_tx(event_tx),
+            )),
             connection_limiter: ConnectionLimiter::new(MAX_CONNECTIONS, MAX_CONNECTIONS_PER_IP),
         }
     }
@@ -131,6 +138,7 @@ impl AppState {
 /// (as opposed to the event channels which are driven by incoming requests).
 pub struct ServerHandle {
     v2: Option<Arc<V2State>>,
+    pub v3: Option<Arc<common::v3_session::V3State>>,
 
     /// The port the listeners are bound to.
     port: u16,
@@ -247,6 +255,30 @@ pub async fn start_with_port(
     let cancel = CancellationToken::new();
     let connections = TaskTracker::new();
 
+    if let Some(v3) = &state.v3 {
+        let store = v3.store.clone();
+        let cancel_janitor = cancel.clone();
+        connections.spawn(async move {
+            let mut interval = tokio::time::interval(std::time::Duration::from_secs(
+                crate::http::server::common::v3_session::JANITOR_INTERVAL_SECS,
+            ));
+            interval.tick().await;
+            loop {
+                tokio::select! {
+                    _ = cancel_janitor.cancelled() => break,
+                    _ = interval.tick() => {
+                        let reaped = store.reap_expired(
+                            crate::http::server::common::v3_session::SESSION_INACTIVITY_TIMEOUT_SECS,
+                        ).await;
+                        if !reaped.is_empty() {
+                            tracing::info!("V3 session janitor reaped {} expired session(s)", reaped.len());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     let task = tokio::spawn({
         let state = state.clone();
         let cancel = cancel.clone();
@@ -292,6 +324,7 @@ pub async fn start_with_port(
 
     Ok(ServerHandle {
         v2: state.v2.clone(),
+        v3: state.v3.clone(),
         port: bound_port,
         ipv6_bound,
         task: Mutex::new(Some(task)),
@@ -682,6 +715,13 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
                 .await?
                 .into_response())
         }
+        (&Method::POST, "/api/locara/v3/manifest") => {
+            Ok(v3::manifest(req.into_body(), state, client_info)
+                .await?
+                .into_response())
+        }
+        (&Method::POST, "/api/locara/v3/chunk") => v3::chunk(req, state, client_info).await,
+        (&Method::POST, "/api/locara/v3/commit") => v3::commit(req, state, client_info).await,
         _ => {
             let mut res = Response::new(response::empty_body());
             *res.status_mut() = StatusCode::NOT_FOUND;
@@ -689,3 +729,4 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
         }
     }
 }
+pub mod transport_adapter;

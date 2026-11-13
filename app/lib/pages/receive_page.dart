@@ -16,6 +16,7 @@ import 'package:locara_app/util/favorites.dart';
 import 'package:locara_app/util/native/platform_check.dart';
 import 'package:locara_app/util/native/taskbar_helper.dart';
 import 'package:locara_app/util/ui/snackbar.dart';
+import 'package:locara_app/widget/design/mesh_sas_badge.dart';
 import 'package:locara_app/widget/device_bage.dart';
 import 'package:locara_app/widget/responsive_list_view.dart';
 import 'package:locara_isolates/model/device.dart';
@@ -162,6 +163,14 @@ class _ReceivePageState extends State<ReceivePage> with Refena {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
+                                              if (vm.sender.https && vm.sender.fingerprint.isNotEmpty)
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.only(end: 8),
+                                                  child: LocaraSasBadge(
+                                                    device: vm.sender,
+                                                    compact: false,
+                                                  ),
+                                                ),
                                               TextButton.icon(
                                                 onPressed: !vm.sender.https
                                                     ? null

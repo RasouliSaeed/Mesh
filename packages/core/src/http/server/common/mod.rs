@@ -6,3 +6,4 @@ pub mod query;
 pub mod response;
 pub mod save;
 pub mod session;
+pub mod v3_session;

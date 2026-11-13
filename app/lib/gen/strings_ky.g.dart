@@ -40,7 +40,7 @@ class TranslationsKy extends Translations with BaseTranslations<AppLocale, Trans
 
   // Translations
   @override
-  String get appName => 'Locara';
+  String get appName => 'Mesh';
   @override
   late final _Translations$general$ky general = _Translations$general$ky._(_root);
   @override
@@ -291,7 +291,7 @@ class _Translations$networkInterfacesPage$ky extends Translations$networkInterfa
   String get title => 'Тармак интерфейстери';
   @override
   String get info =>
-      'Демейки боюнча, Locara колдо бар бардык тармак интерфейстерин колдонот. Керексиз тармактарды бул жерден чыгарып салсаңыз болот. Өзгөртүүлөрдү колдонуу үчүн серверди кайра иштетүү керек.';
+      'Демейки боюнча, Mesh колдо бар бардык тармак интерфейстерин колдонот. Керексиз тармактарды бул жерден чыгарып салсаңыз болот. Өзгөртүүлөрдү колдонуу үчүн серверди кайра иштетүү керек.';
   @override
   String get preview => 'Алдын ала көрүү';
   @override
@@ -416,7 +416,7 @@ class _Translations$receiveOptionsPage$ky extends Translations$receiveOptionsPag
   @override
   String get destination => _root.settingsTab.receive.destination;
   @override
-  String get appDirectory => '(Locara папкасы)';
+  String get appDirectory => '(Mesh папкасы)';
   @override
   String get saveToGallery => _root.settingsTab.receive.saveToGallery;
   @override
@@ -495,7 +495,7 @@ class _Translations$webSharePage$ky extends Translations$webSharePage$en {
   @override
   String pinHint({required Object pin}) => 'PIN-код: "${pin}"';
   @override
-  String get encryptionHint => 'Locara өз алдынча кол коюлган сертификатты колдонот. Браузерде аны кабыл алышыңыз керек.';
+  String get encryptionHint => 'Mesh өз алдынча кол коюлган сертификатты колдонот. Браузерде аны кабыл алышыңыз керек.';
   @override
   String pendingRequests({required Object n}) => 'Күтүлүп жаткан сурамдар: ${n}';
 }
@@ -519,10 +519,10 @@ class _Translations$aboutPage$ky extends Translations$aboutPage$en {
 
   // Translations
   @override
-  String get title => 'Locara жөнүндө';
+  String get title => 'Mesh жөнүндө';
   @override
   List<String> get description => [
-    'Locara — бул интернетке туташпастан, жергиликтүү тармак аркылуу жакын жердеги түзмөктөр менен файлдарды жана билдирүүлөрдү коопсуз бөлүшүүгө мүмкүндүк берген акысыз, ачык булактуу тиркеме.',
+    'Mesh — бул интернетке туташпастан, жергиликтүү тармак аркылуу жакын жердеги түзмөктөр менен файлдарды жана билдирүүлөрдү коопсуз бөлүшүүгө мүмкүндүк берген акысыз, ачык булактуу тиркеме.',
     'Бул тиркеме Android, iOS, macOS, Windows жана Linux үчүн жеткиликтүү. Жүктөп алуунун бардык варианттарын расмий веб-сайттан таба аласыз.',
   ];
   @override
@@ -546,7 +546,7 @@ class _Translations$donationPage$ky extends Translations$donationPage$en {
   String get title => 'Кайрымдуулук кылуу';
   @override
   String get info =>
-      'Locara — бул жарнамасыз, акысыз жана ачык булактуу тиркеме. Эгер сизге жакса, ыктыярдуу тартуу менен анын өнүгүшүн колдой аласыз.';
+      'Mesh — бул жарнамасыз, акысыз жана ачык булактуу тиркеме. Эгер сизге жакса, ыктыярдуу тартуу менен анын өнүгүшүн колдой аласыз.';
   @override
   String donate({required Object amount}) => '${amount} тартуулоо';
   @override
@@ -745,7 +745,7 @@ class _Translations$tray$ky extends Translations$tray$en {
   @override
   String get open => _root.general.open;
   @override
-  String get close => 'Locara\'ден чыгуу';
+  String get close => 'Mesh\'ден чыгуу';
   @override
   String get closeWindows => 'Чыгуу';
 }
@@ -956,7 +956,7 @@ class _Translations$settingsTab$general$ky extends Translations$settingsTab$gene
   @override
   String get launchMinimized => 'Автоматтык ишке киргизүү: жашыруун баштоо';
   @override
-  String get showInContextMenu => 'Locara\'ди контексттик менюда көрсөтүү';
+  String get showInContextMenu => 'Mesh\'ди контексттик менюда көрсөтүү';
   @override
   String get animations => 'Анимациялар';
 }
@@ -1058,7 +1058,7 @@ class _Translations$settingsTab$other$ky extends Translations$settingsTab$other$
   @override
   String get title => 'Башка';
   @override
-  String get support => 'Locara\'ди колдоо';
+  String get support => 'Mesh\'ди колдоо';
   @override
   String get donate => 'Кайрымдуулук кылуу';
   @override
@@ -1409,7 +1409,7 @@ class _Translations$dialogs$localNetworkUnauthorized$ky extends Translations$dia
   @override
   String get title => _root.dialogs.noPermission.title;
   @override
-  String get description => 'Locara жергиликтүү тармакты сканерлөөгө уруксатсыз башка түзмөктөрдү таба албайт. Жөндөөлөрдөн бул уруксатты бериңиз.';
+  String get description => 'Mesh жергиликтүү тармакты сканерлөөгө уруксатсыз башка түзмөктөрдү таба албайт. Жөндөөлөрдөн бул уруксатты бериңиз.';
   @override
   String get gotoSettings => 'Жөндөөлөр';
 }
@@ -1552,7 +1552,7 @@ class _Translations$dialogs$sendModeHelp$ky extends Translations$dialogs$sendMod
   @override
   String get multiple => 'Файлдарды бир нече кабыл алуучуга жөнөтөт. Өткөрүү аяктагандан кийин тандоо тазаланбайт.';
   @override
-  String get link => 'Locara орнотулбаган кабыл алуучулар шилтемени браузерде ачып, тандалган файлдарды жүктөй алышат.';
+  String get link => 'Mesh орнотулбаган кабыл алуучулар шилтемени браузерде ачып, тандалган файлдарды жүктөй алышат.';
 }
 
 // Path: dialogs.zoom

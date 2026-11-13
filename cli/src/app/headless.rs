@@ -182,6 +182,7 @@ fn handle_server_event(
         ServerEventV2::FileUpload { .. }
         | ServerEventV2::SessionEnd { .. }
         | ServerEventV2::PrepareUploadAborted { .. } => {}
+        _ => {}
     }
 }
 

@@ -11,4 +11,3 @@ import 'package:locara_isolates/rust/frb_generated.dart';
 /// format with nanosecond precision, which Dart's `DateTime` cannot express.
 /// `None` when the file cannot be inspected or provides no timestamps.
 Future<FileMetadata?> readFileMetadata({required String path}) => RustLib.instance.api.crateApiMetadataReadFileMetadata(path: path);
-

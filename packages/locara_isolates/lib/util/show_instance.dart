@@ -88,4 +88,3 @@ SecurityContext _clientContext(StoredSecurityContext securityContext) {
     ..useCertificateChainBytes(utf8.encode(securityContext.certificate))
     ..usePrivateKeyBytes(utf8.encode(securityContext.privateKey));
 }
-

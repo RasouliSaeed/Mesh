@@ -17,7 +17,7 @@
 
 cd ..
 rm -rf /tmp/build
-cp locara /tmp/build -r
+cp mesh /tmp/build -r
 pushd /tmp/build
 
 git submodule update --init
@@ -28,5 +28,5 @@ dart run build_runner build -d
 flutter build apk
 
 popd
-cd locara
+cd mesh
 

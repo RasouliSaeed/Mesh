@@ -40,7 +40,7 @@ class TranslationsHe extends Translations with BaseTranslations<AppLocale, Trans
 
   // Translations
   @override
-  String get appName => 'Locara';
+  String get appName => 'Mesh';
   @override
   late final _Translations$general$he general = _Translations$general$he._(_root);
   @override
@@ -289,7 +289,7 @@ class _Translations$networkInterfacesPage$he extends Translations$networkInterfa
   String get title => 'ממשקי רשת';
   @override
   String get info =>
-      'כברירת מחדל, Locara משתמש בכל ממשקי הרשת הזמינים. באפשרותך להסיר רשתות שאינן רצויות כאן. עליך להפעיל מחדש את השרת כדי להחיל את השינויים.';
+      'כברירת מחדל, Mesh משתמש בכל ממשקי הרשת הזמינים. באפשרותך להסיר רשתות שאינן רצויות כאן. עליך להפעיל מחדש את השרת כדי להחיל את השינויים.';
   @override
   String get preview => 'תצוגה מקדימה';
   @override
@@ -414,7 +414,7 @@ class _Translations$receiveOptionsPage$he extends Translations$receiveOptionsPag
   @override
   String get destination => _root.settingsTab.receive.destination;
   @override
-  String get appDirectory => '(תיקיית Locara)';
+  String get appDirectory => '(תיקיית Mesh)';
   @override
   String get saveToGallery => _root.settingsTab.receive.saveToGallery;
   @override
@@ -493,7 +493,7 @@ class _Translations$webSharePage$he extends Translations$webSharePage$en {
   @override
   String pinHint({required Object pin}) => 'הסיסמה היא "${pin}"';
   @override
-  String get encryptionHint => 'Locara משתמש בתעודה עצמית. עליך לאשר אותה בדפדפן.';
+  String get encryptionHint => 'Mesh משתמש בתעודה עצמית. עליך לאשר אותה בדפדפן.';
   @override
   String pendingRequests({required Object n}) => 'בקשות בהמתנה: ${n}';
 }
@@ -517,10 +517,10 @@ class _Translations$aboutPage$he extends Translations$aboutPage$en {
 
   // Translations
   @override
-  String get title => 'אודות Locara';
+  String get title => 'אודות Mesh';
   @override
   List<String> get description => [
-    'Locara היא אפליקציית קוד פתוח חינמית המאפשרת לשתף קבצים והודעות בצורה מאובטחת עם מכשירים קרובים דרך הרשת המקומית מבלי להזדקק לחיבור לאינטרנט.',
+    'Mesh היא אפליקציית קוד פתוח חינמית המאפשרת לשתף קבצים והודעות בצורה מאובטחת עם מכשירים קרובים דרך הרשת המקומית מבלי להזדקק לחיבור לאינטרנט.',
     'אפליקציה זו זמינה באנדרואיד, iOS, macOS, Windows ו-Linux. אתה יכול למצוא את כל אפשרויות ההורדה בדף הבית הרשמי.',
   ];
   @override
@@ -543,7 +543,7 @@ class _Translations$donationPage$he extends Translations$donationPage$en {
   @override
   String get title => 'תרומה';
   @override
-  String get info => 'אפליקציית Locara היא חינמית, קוד פתוח וללא פרסומות. אם אתה אוהב את האפליקציה, אתה יכול לתמוך בפיתוח באמצעות תרומה.';
+  String get info => 'אפליקציית Mesh היא חינמית, קוד פתוח וללא פרסומות. אם אתה אוהב את האפליקציה, אתה יכול לתמוך בפיתוח באמצעות תרומה.';
   @override
   String donate({required Object amount}) => 'תרומת ${amount}';
   @override
@@ -659,7 +659,7 @@ class _Translations$tray$he extends Translations$tray$en {
   @override
   String get open => _root.general.open;
   @override
-  String get close => 'צא מ-Locara';
+  String get close => 'צא מ-Mesh';
   @override
   String get closeWindows => 'יציאה';
 }
@@ -869,7 +869,7 @@ class _Translations$settingsTab$general$he extends Translations$settingsTab$gene
   @override
   String get launchMinimized => 'הפעלה אוטומטית: התחל מוסתר';
   @override
-  String get showInContextMenu => 'הצג את Locara בתפריט ההקשר';
+  String get showInContextMenu => 'הצג את Mesh בתפריט ההקשר';
   @override
   String get animations => 'אנימציות';
 }
@@ -971,7 +971,7 @@ class _Translations$settingsTab$other$he extends Translations$settingsTab$other$
   @override
   String get title => 'אחר';
   @override
-  String get support => 'תמיכה ב-Locara';
+  String get support => 'תמיכה ב-Mesh';
   @override
   String get donate => 'תרומה';
   @override
@@ -1329,7 +1329,7 @@ class _Translations$dialogs$localNetworkUnauthorized$he extends Translations$dia
   @override
   String get title => _root.dialogs.noPermission.title;
   @override
-  String get description => 'ל־Locara אין אפשרות למצוא מכשירים אחרים ללא הרשאה לסריקת הרשת המקומית. אנא הענק את ההרשאה הזו בהגדרות.';
+  String get description => 'ל־Mesh אין אפשרות למצוא מכשירים אחרים ללא הרשאה לסריקת הרשת המקומית. אנא הענק את ההרשאה הזו בהגדרות.';
   @override
   String get gotoSettings => 'הגדרות';
 }
@@ -1471,7 +1471,7 @@ class _Translations$dialogs$sendModeHelp$he extends Translations$dialogs$sendMod
   @override
   String get multiple => 'שליחת קבצים למקבלים מרובים. בחירת הקבצים לא תתאפס.';
   @override
-  String get link => 'מקבלים ש-Locara לא מותקן אצלם יוכלו להוריד את הקבצים שנבחרו על ידי פתיחת הקישור בדפדפן שלהם.';
+  String get link => 'מקבלים ש-Mesh לא מותקן אצלם יוכלו להוריד את הקבצים שנבחרו על ידי פתיחת הקישור בדפדפן שלהם.';
 }
 
 // Path: dialogs.zoom

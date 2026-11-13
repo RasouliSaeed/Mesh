@@ -56,14 +56,14 @@ class _ErrorAppState extends State<_ErrorApp> {
     _controller.text = 'Error: ${widget.error}\n\n${widget.stackTrace}';
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final info = await PackageInfo.fromPlatform();
-      _controller.text = 'Locara ${info.version} (${info.buildNumber})\n\nError: ${widget.error}\n\n${widget.stackTrace}';
+      _controller.text = 'Mesh ${info.version} (${info.buildNumber})\n\nError: ${widget.error}\n\n${widget.stackTrace}';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Locara: Error',
+      title: 'Mesh: Error',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: TextFormField(

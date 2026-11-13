@@ -1,50 +1,121 @@
-# Locara ??
+<div align="center">
+  <img src="logos/mesh_logo.png" width="160" height="160" alt="Mesh Logo" />
+  <h1>Mesh</h1>
+  <p><strong>Nearby. Instant. Private.</strong></p>
+  <p>An ultra-fast, encrypted, and cross-platform peer-to-peer file sharing and shared clipboard application for local networks.</p>
 
-Locara (formerly a fork of locara) is a free, open-source, and highly secure app that allows you to share files and messages with nearby devices over your local network without needing an internet connection.
+  <p>
+    <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.41-02569B?logo=flutter&logoColor=white" alt="Flutter" /></a>
+    <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/Rust-1.80+-000000?logo=rust&logoColor=white" alt="Rust" /></a>
+    <img src="https://img.shields.io/badge/Security-mTLS%20%7C%20TLS%201.3-success" alt="Security" />
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License" />
+    <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Linux%20%7C%20Web-blueviolet" alt="Platforms" />
+  </p>
 
-This project has been completely overhauled with a new **Glassmorphism UI**, **True Cyan OLED Dark Mode**, and enhanced security limitations to ensure the best performance and safety.
+  <p>
+    <a href="#-key-features">Key Features</a> •
+    <a href="#-architecture">Architecture</a> •
+    <a href="#-getting-started">Getting Started</a> •
+    <a href="#-security-model">Security Model</a> •
+    <a href="MESH-README-FA.md">راهنمای فارسی</a>
+  </p>
+</div>
 
-## ? Features
+---
 
-- **Radical UI Redesign:** Features a sleek floating navigation bar, 20px rounded glassmorphic cards, and dynamic gradient backgrounds.
-- **Secure File Transfer:** Uses a secure communication protocol via REST API and HTTPS encryption. TLS/SSL certificates are generated on the fly.
-- **No Internet Required:** Works entirely over your local Wi-Fi or LAN.
-- **Cross-Platform:** Available for Android, iOS, macOS, Windows, and Linux.
+## ⚡ Overview
 
-## Screenshots
+**Mesh** is an open-source, peer-to-peer file transfer and shared clipboard utility designed to replace proprietary protocols like AirDrop and Quick Share. It allows you to share files, folders, and text messages directly between any of your devices over your local Wi-Fi or LAN—without internet access, cloud servers, or file size limits.
 
-*(Coming Soon)*
+Built with a high-performance **Rust Core** networking engine and a reactive **Flutter** front-end, Mesh combines multi-gigabit throughput with a modern, glassmorphic **Cyber Dark** UI.
 
-## How It Works
+---
 
-Locara leverages a secure communication protocol allowing devices to communicate via a REST API. All data is transmitted securely over HTTPS, ensuring maximum security on your local network.
+## ✨ Key Features
 
-## Building (via GitHub Actions)
+- 🛡️ **Zero-Knowledge Local Security:** All communication is secured via on-the-fly TLS 1.3 / mTLS certificates with visual **Short Authentication String (SAS)** verification badges.
+- 🚀 **Dual-Engine Performance:** Critical socket I/O, hashing, and protocol serialization run on an optimized native **Rust Core**, while the interface runs at 120 FPS on **Flutter**.
+- 🔄 **Chunked & Resumable (V3 Protocol):** Automatic SHA-256 integrity verification, parallel chunked transfers, and seamless transfer resumption across network drops.
+- 📋 **Universal E2EE Shared Clipboard:** 1-tap synchronized clipboard sharing across all connected phones, tablets, and desktop workstations.
+- 🎨 **Cyber Dark Design System:** Premium dark aesthetic featuring Deep Navy, Electric Blue, and Aurora Cyan accents, circular 3D radar pulse discovery, and tactile glass cards.
+- 🌐 **100% Offline & Private:** Operates strictly on your local network (LAN / Wi-Fi). No telemetry, no external trackers, no accounts.
+- 💻 **True Cross-Platform Parity:**
+  - **Windows** (Native Win32 runner with system tray & SendTo integration)
+  - **Android** (Material / Cyber adaptive, background service, Quick Tile)
+  - **iOS & macOS** (AirDrop alternative with native share sheet & menu bar integration)
+  - **Linux & Web** (Responsive interface with desktop dropping)
 
-You do not need to install complex build tools on your machine. Locara is configured to build automatically via GitHub Actions:
+---
 
-1. Push the code to your GitHub repository.
-2. Go to the **Actions** tab.
-3. Select your desired platform workflow (e.g., Build Android APK, Build Windows exe, Build macOS).
-4. Click **Run workflow** to generate the installation files.
+## 🏗️ Architecture
 
-## Local Development
+Mesh separates UI responsibilities from core networking to guarantee zero UI freezes:
 
-To compile Locara from the source code locally:
+```mermaid
+flowchart TD
+    subgraph UI ["Flutter Presentation Layer"]
+        A["Cyber Dark Design System"] --> B["Refena State Containers"]
+        B --> C["Mesh Isolates Bridge"]
+    end
 
-1. Install Flutter
-2. Install Rust
-3. Run cd app
-4. Run lutter pub get
-5. Run lutter run
+    subgraph Native ["Rust Native Engine"]
+        C <-->|"Dart FFI (C-ABI)"| D["Mesh Rust Core Engine"]
+        D <--> E["V3 Chunked Transfer Engine"]
+        D <--> F["mTLS & Ephemeral Cert Manager"]
+        D <--> G["Local Multicast & HTTP Discovery"]
+    end
 
-## Troubleshooting
+    subgraph Storage ["I/O Subsystem"]
+        E --> H["Resumable File Saver (Atomic Streaming)"]
+        F --> I["Secure Hardware Keystore"]
+    end
+```
 
-| Issue              | Solution                                                                                                                                |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Device not visible | Disable AP-Isolation on your router.                                                                                                    |
-| Device not visible | (Windows) Configure your network as "private".                                                                                          |
-| Device not visible | (macOS/iOS) Toggle the "Local Network" permission in OS Privacy settings.                                                               |
-| Device not visible | Temporarily disable your VPN if it blocks local network traffic.                                                                        |
+---
 
+## 🚀 Getting Started
 
+### Prerequisites
+
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (^3.41.0)
+- [Rust & Cargo](https://rustup.rs/) (1.80+)
+
+### Local Development
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/<your-username>/mesh.git
+   cd mesh
+   ```
+
+2. **Run tests across workspace:**
+   ```bash
+   # Test Rust Core
+   cargo test --workspace
+
+   # Test Flutter Application
+   cd app
+   flutter test
+   ```
+
+3. **Launch the application:**
+   ```bash
+   cd app
+   flutter run
+   ```
+
+---
+
+## 🔒 Security Model
+
+1. **Mutual TLS (mTLS):** Connections between peers are mutually authenticated and encrypted with on-the-fly generated certificates.
+2. **Visual SAS Fingerprints:** Peers can visually verify Short Authentication String (SAS) icons or hex fingerprints to eliminate Man-In-The-Middle (MITM) risks.
+3. **Directory Traversal Protection:** All incoming paths are sanitized to prevent escape attacks (`../`) outside the configured downloads directory.
+4. **Resumable Integrity:** File chunks are hashed and validated with SHA-256 before final commitment.
+
+---
+
+## 📄 License
+
+This project is licensed under the terms of the GNU General Public License v3.0 (GPLv3).
+See [LICENSE](LICENSE) for details.

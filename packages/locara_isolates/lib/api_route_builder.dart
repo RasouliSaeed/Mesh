@@ -40,5 +40,3 @@ enum ApiRoute {
     return '$protocol://$ip:$port$route';
   }
 }
-
-

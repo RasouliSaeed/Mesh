@@ -5,7 +5,10 @@ pub mod v2;
 pub mod v3;
 
 pub use v2::LsHttpClientV2;
-pub use v3::LsHttpClientV3;
+pub use v3::{
+    compute_streaming_sha256, is_transient_error, LsHttpClientV3, SourceFileInfo, TransferConfigV3,
+    TransferResultV3,
+};
 
 use crate::http::StatusCodeError;
 use crate::{crypto, http, model};
@@ -170,7 +173,15 @@ impl LsHttpClient {
             LsHttpClient::V3(client) => client.cancel(protocol, ip, port, session_id).await,
         }
     }
+
+    pub fn as_v3(&self) -> Option<&LsHttpClientV3> {
+        match self {
+            LsHttpClient::V3(client) => Some(client),
+            _ => None,
+        }
+    }
 }
+
 
 /// Builds a streaming request body from the file content, invoking `progress`
 /// with the cumulative number of bytes read as each chunk is sent.

@@ -322,5 +322,3 @@ class RsStoredDevice {
           download == other.download &&
           channels == other.channels;
 }
-
-

@@ -31,12 +31,12 @@ jobs:
         run: flutter build macos
       - name: Archive macOS app
         working-directory: app/build/macos/Build/Products/Release
-        run: zip -r Locara-macOS-unsigned.zip *.app
+        run: zip -r Mesh-macOS-unsigned.zip *.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-app-unsigned
-          path: app/build/macos/Build/Products/Release/Locara-macOS-unsigned.zip
+          path: app/build/macos/Build/Products/Release/Mesh-macOS-unsigned.zip
 
 
 

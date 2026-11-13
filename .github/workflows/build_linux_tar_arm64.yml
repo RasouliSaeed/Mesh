@@ -50,7 +50,7 @@ jobs:
           toolchain: stable
 
       - name: Check rust-toolchain.toml
-        working-directory: packages/locara_isolates
+        working-directory: packages/mesh_isolates
         run: rustup show
 
       - name: Dependencies

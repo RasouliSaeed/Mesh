@@ -18,4 +18,3 @@ abstract class Dart2RustStreamSink implements RustOpaqueInterface {
   /// Closes the stream, signaling the end of data to the Rust side.
   void close();
 }
-

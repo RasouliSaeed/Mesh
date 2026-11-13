@@ -105,4 +105,3 @@ class IsolateDisposeAction extends ReduxAction<IsolateController, ParentIsolateS
     return state;
   }
 }
-

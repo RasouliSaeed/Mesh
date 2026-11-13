@@ -158,4 +158,3 @@ class _Transfer {
 
   _Transfer({required this.receiving});
 }
-

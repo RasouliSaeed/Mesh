@@ -1,7 +1,7 @@
-display_name: Locara
+display_name: Mesh
 packager: SaeedR
-packagerEmail: info@locara.app
-url: https://locara.org
+packagerEmail: info@mesh.app
+url: https://mesh.org
 buildArch: x86_64
 license: MIT
 
@@ -17,7 +17,7 @@ keywords:
   - Files
 
 generic_name: An open source cross-platform alternative to AirDrop
-summary: ?????? ???? ???? ?? Locara
+summary: ?????? ???? ???? ?? Mesh
 group: Applications/Utilities
 
 categories:

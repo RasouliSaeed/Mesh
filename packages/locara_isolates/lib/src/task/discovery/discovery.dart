@@ -224,5 +224,3 @@ class DiscoveryService {
     await discovery.addDevice(device: device.toRsDiscoveredDevice(ip));
   }
 }
-
-

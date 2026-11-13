@@ -40,7 +40,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 
   // Translations
   @override
-  String get appName => 'Locara';
+  String get appName => 'Mesh';
   @override
   late final _Translations$general$ru general = _Translations$general$ru._(_root);
   @override
@@ -289,7 +289,7 @@ class _Translations$networkInterfacesPage$ru extends Translations$networkInterfa
   String get title => 'Сетевые интерфейсы';
   @override
   String get info =>
-      'По умолчанию, Locara использует все доступные сетевые интерфейсы. Вы можете исключить нежелательные сети здесь. Необходимо перезапустить сервер для применения изменений.';
+      'По умолчанию, Mesh использует все доступные сетевые интерфейсы. Вы можете исключить нежелательные сети здесь. Необходимо перезапустить сервер для применения изменений.';
   @override
   String get preview => 'Предосмотр';
   @override
@@ -414,7 +414,7 @@ class _Translations$receiveOptionsPage$ru extends Translations$receiveOptionsPag
   @override
   String get destination => _root.settingsTab.receive.destination;
   @override
-  String get appDirectory => '(Папка Locara)';
+  String get appDirectory => '(Папка Mesh)';
   @override
   String get saveToGallery => _root.settingsTab.receive.saveToGallery;
   @override
@@ -493,7 +493,7 @@ class _Translations$webSharePage$ru extends Translations$webSharePage$en {
   @override
   String pinHint({required Object pin}) => 'PIN-код: "${pin}"';
   @override
-  String get encryptionHint => 'Locara использует самоподписанный сертификат. Вам необходимо принять его в браузере.';
+  String get encryptionHint => 'Mesh использует самоподписанный сертификат. Вам необходимо принять его в браузере.';
   @override
   String pendingRequests({required Object n}) => 'Ожидающие запросы: ${n}';
 }
@@ -517,10 +517,10 @@ class _Translations$aboutPage$ru extends Translations$aboutPage$en {
 
   // Translations
   @override
-  String get title => 'О Locara';
+  String get title => 'О Mesh';
   @override
   List<String> get description => [
-    'Locara — это бесплатное приложение с открытым исходным кодом, которое позволяет вам безопасно обмениваться файлами и сообщениями с находящимися поблизости устройствами через локальную сеть, без необходимости подключения к Интернету.',
+    'Mesh — это бесплатное приложение с открытым исходным кодом, которое позволяет вам безопасно обмениваться файлами и сообщениями с находящимися поблизости устройствами через локальную сеть, без необходимости подключения к Интернету.',
     'Это приложение доступно для Android, iOS, macOS, Windows и Linux. Вы можете найти все варианты загрузки на официальной домашней странице.',
   ];
   @override
@@ -544,7 +544,7 @@ class _Translations$donationPage$ru extends Translations$donationPage$en {
   String get title => 'Пожертвовать';
   @override
   String get info =>
-      'Locara — это бесплатное приложение с открытым исходным кодом и без рекламы. Если оно вам нравится, вы можете поддержать его разработку пожертвованием.';
+      'Mesh — это бесплатное приложение с открытым исходным кодом и без рекламы. Если оно вам нравится, вы можете поддержать его разработку пожертвованием.';
   @override
   String donate({required Object amount}) => 'Пожертвовать ${amount}';
   @override
@@ -660,7 +660,7 @@ class _Translations$tray$ru extends Translations$tray$en {
   @override
   String get open => _root.general.open;
   @override
-  String get close => 'Выйти из Locara';
+  String get close => 'Выйти из Mesh';
   @override
   String get closeWindows => 'Выйти';
 }
@@ -871,7 +871,7 @@ class _Translations$settingsTab$general$ru extends Translations$settingsTab$gene
   @override
   String get launchMinimized => 'Скрытая автозагрузка';
   @override
-  String get showInContextMenu => 'Отображать Locara в контекстном меню';
+  String get showInContextMenu => 'Отображать Mesh в контекстном меню';
   @override
   String get animations => 'Анимации';
 }
@@ -973,7 +973,7 @@ class _Translations$settingsTab$other$ru extends Translations$settingsTab$other$
   @override
   String get title => 'Другое';
   @override
-  String get support => 'Поддержать Locara';
+  String get support => 'Поддержать Mesh';
   @override
   String get donate => 'Пожертвовать';
   @override
@@ -1330,7 +1330,7 @@ class _Translations$dialogs$localNetworkUnauthorized$ru extends Translations$dia
   String get title => _root.dialogs.noPermission.title;
   @override
   String get description =>
-      'Locara не может найти другие устройства без разрешения на сканирование локальной сети. Пожалуйста, предоставьте это разрешение в настройках.';
+      'Mesh не может найти другие устройства без разрешения на сканирование локальной сети. Пожалуйста, предоставьте это разрешение в настройках.';
   @override
   String get gotoSettings => 'Настройки';
 }
@@ -1473,7 +1473,7 @@ class _Translations$dialogs$sendModeHelp$ru extends Translations$dialogs$sendMod
   @override
   String get multiple => 'Отправляет файлы нескольким получателям. Выборка не будет очищена после завершения передачи файлов.';
   @override
-  String get link => 'Получатели, у которых не установлен Locara, могут загрузить выбранные файлы, открыв ссылку в своем браузере.';
+  String get link => 'Получатели, у которых не установлен Mesh, могут загрузить выбранные файлы, открыв ссылку в своем браузере.';
 }
 
 // Path: dialogs.zoom

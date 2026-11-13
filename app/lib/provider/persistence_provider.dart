@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_app/model/persistence/color_mode.dart';
+import 'package:locara_app/model/persistence/durable_send_entry.dart';
 import 'package:locara_app/model/persistence/favorite_device.dart';
 import 'package:locara_app/model/persistence/quick_save_mode.dart';
 import 'package:locara_app/model/persistence/receive_history_entry.dart';
@@ -34,12 +35,20 @@ final _logger = Logger('PersistenceService');
 
 String get _windowsFile {
   final appData = Platform.environment['APPDATA'];
-  return '$appData\\Locara\\settings.json';
+  final meshPath = '$appData\\Mesh\\settings.json';
+  if (File(meshPath).existsSync()) {
+    return meshPath;
+  }
+  final locaraPath = '$appData\\Locara\\settings.json';
+  if (File(locaraPath).existsSync()) {
+    return locaraPath;
+  }
+  return meshPath;
 }
 
 String get _windowsLegacyFile {
   final appData = Platform.environment['APPDATA'];
-  return '$appData\\org.Locara\\Locara_app\\shared_preferences.json';
+  return '$appData\\org.Mesh\\mesh_app\\shared_preferences.json';
 }
 
 // Version of the storage
@@ -54,6 +63,9 @@ const _stunServers = 'ls_stun_servers';
 
 // Received file history
 const _receiveHistory = 'ls_receive_history';
+
+// Durable send transfers
+const _durableSendTransfers = 'ls_durable_send_transfers';
 
 // Favorites
 const _favorites = 'ls_favorites';
@@ -209,7 +221,7 @@ class PersistenceService {
   static Future<void> _initColorSetting(SharedPreferences prefs, bool supportsDynamicColors) async {
     await prefs.setString(
       _colorKey,
-      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.locara.name,
+      checkPlatform([TargetPlatform.android]) && supportsDynamicColors ? ColorMode.system.name : ColorMode.mesh.name,
     );
   }
 
@@ -260,6 +272,16 @@ class PersistenceService {
   Future<void> setReceiveHistory(List<ReceiveHistoryEntry> entries) async {
     final historyRaw = entries.map((entry) => jsonEncode(entry.toJson())).toList();
     await _prefs.setStringList(_receiveHistory, historyRaw);
+  }
+
+  List<DurableSendEntry> getDurableSendTransfers() {
+    final raw = _prefs.getStringList(_durableSendTransfers) ?? [];
+    return raw.map((entry) => DurableSendEntry.fromJson(jsonDecode(entry))).toList();
+  }
+
+  Future<void> setDurableSendTransfers(List<DurableSendEntry> entries) async {
+    final raw = entries.map((entry) => jsonEncode(entry.toJson())).toList();
+    await _prefs.setStringList(_durableSendTransfers, raw);
   }
 
   List<FavoriteDevice> getFavorites() {

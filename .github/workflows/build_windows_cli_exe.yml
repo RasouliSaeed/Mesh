@@ -48,16 +48,16 @@ jobs:
         run: rustup toolchain install # version from rust-toolchain.toml
 
       - name: Compile CLI
-        run: cargo build --release --package locara-cli
+        run: cargo build --release --package mesh-cli
 
       - name: Rename CLI executable
-        run: Rename-Item -Path "target\release\locara-cli.exe" -NewName "Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
+        run: Rename-Item -Path "target\release\mesh-cli.exe" -NewName "Mesh-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe"
 
       - name: Upload signed CLI
         uses: actions/upload-artifact@v4
         with:
           name: windows-cli-exe-${{ matrix.suffix }}-result
-          path: target\release\Locara-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe
+          path: target\release\Mesh-CLI-${{ needs.build.outputs.version }}-windows-${{ matrix.suffix }}.exe
           if-no-files-found: error
 
 

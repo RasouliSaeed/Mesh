@@ -57,7 +57,7 @@ Future<bool> isContextMenuEnabled() async {
   }
 }
 
-const _windowsFileName = 'Locara';
+const _windowsFileName = 'Mesh';
 
 String _getWindowsFilePath(String appName) {
   final appData = Platform.environment['APPDATA'];

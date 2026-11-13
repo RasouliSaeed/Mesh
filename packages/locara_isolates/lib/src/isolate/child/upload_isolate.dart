@@ -1,12 +1,13 @@
 import 'package:flutter/services.dart';
-import 'package:locara_isolates/isolate.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:locara_isolates/rust/api/cancel.dart';
 import 'package:locara_isolates/rust/api/http.dart';
 import 'package:locara_isolates/src/isolate/child/http_provider.dart';
 import 'package:locara_isolates/src/isolate/child/main.dart';
+import 'package:locara_isolates/src/isolate/child/sync_provider.dart';
 import 'package:locara_isolates/src/isolate/dto/send_to_isolate_data.dart';
 import 'package:locara_isolates/src/task/upload/http_upload.dart';
+import 'package:locara_isolates/src/task/upload/http_upload_v3.dart';
 import 'package:locara_isolates/util/android_channel.dart';
 import 'package:locara_isolates/util/rust.dart';
 import 'package:pool/pool.dart';
@@ -57,6 +58,31 @@ class HttpUploadFilesTask implements BaseHttpUploadTask {
   });
 }
 
+class HttpUploadFileV3 {
+  final String transferId;
+  final String filePath;
+  final int fileSize;
+
+  HttpUploadFileV3({
+    required this.transferId,
+    required this.filePath,
+    required this.fileSize,
+  });
+}
+
+/// Uploads a list of files using the V3 chunked protocol.
+class HttpUploadFilesV3Task implements BaseHttpUploadTask {
+  final List<HttpUploadFileV3> files;
+  final Device device;
+  final RsTransferConfigV3? config;
+
+  HttpUploadFilesV3Task({
+    required this.files,
+    required this.device,
+    this.config,
+  });
+}
+
 class HttpUploadCancelTask implements BaseHttpUploadTask {
   final int taskId;
 
@@ -64,7 +90,7 @@ class HttpUploadCancelTask implements BaseHttpUploadTask {
 }
 
 /// A message sent from the upload isolate to the main isolate
-/// reporting the state of a single file of a [HttpUploadFilesTask].
+/// reporting the state of a single file of a [HttpUploadFilesTask] or [HttpUploadFilesV3Task].
 sealed class HttpUploadEvent {
   final String fileId;
 
@@ -79,16 +105,25 @@ class HttpUploadFileStartedEvent extends HttpUploadEvent {
 /// The upload progress of the file in the range [0, 1].
 class HttpUploadFileProgressEvent extends HttpUploadEvent {
   final double progress;
+  final int? bytesTransferred;
+  final int? totalBytes;
 
   HttpUploadFileProgressEvent({
     required super.fileId,
     required this.progress,
+    this.bytesTransferred,
+    this.totalBytes,
   });
 }
 
 /// The file has been uploaded successfully.
 class HttpUploadFileFinishedEvent extends HttpUploadEvent {
-  HttpUploadFileFinishedEvent({required super.fileId});
+  final RsTransferResultV3? result;
+
+  HttpUploadFileFinishedEvent({
+    required super.fileId,
+    this.result,
+  });
 }
 
 /// The upload of the file has failed. The next file is still uploaded.
@@ -123,112 +158,200 @@ Future<void> setupHttpUploadIsolate(
       );
     },
     handler: (ref, task) async {
-      final HttpUploadFilesTask uploadTask;
       switch (task.data) {
-        case HttpUploadFilesTask task:
-          uploadTask = task;
-          break;
-        case HttpUploadCancelTask task:
-          final cancelToken = ref.read(_cancelTokenProvider)[task.taskId];
-          cancelToken?.cancel();
-          ref.read(_cancelTokenProvider).remove(task.taskId);
+        case HttpUploadFilesTask uploadTask:
+          await _handleUploadV2(ref, task.id, uploadTask, sendToMain);
           return;
-      }
-
-      // One client for the whole task: pinned to the receiver, so no file
-      // content can be streamed to a different peer, and shared by all files
-      // of the task so the connection is reused.
-      final client = ref.read(httpProvider).pinnedTo(uploadTask.device.fingerprint);
-
-      final cancelToken = createCancellationToken();
-      ref.read(_cancelTokenProvider).putIfAbsent(task.id, () => cancelToken);
-      try {
-        await Pool(_concurrency).forEach<HttpUploadFile, void>(uploadTask.files, (file) async {
-          if (!ref.read(_cancelTokenProvider).containsKey(task.id)) {
-            // the task was canceled, do not upload the remaining files
-            return;
-          }
-
-          sendToMain(
-            IsolateTaskStreamResult.event(
-              id: task.id,
-              data: HttpUploadFileStartedEvent(fileId: file.fileId),
-            ),
-          );
-
-          try {
-            final filePath = file.filePath;
-            final isContentUri = filePath?.startsWith('content://') ?? false;
-
-            for (var attempt = 1; ; attempt++) {
-              // The file descriptor is consumed by the upload, so a fresh one
-              // is needed for every attempt.
-              final fileDescriptor = isContentUri ? await getFileDescriptorAndroid(uri: filePath!) : null;
-
-              try {
-                await ref
-                    .read(httpUploadProvider)
-                    .upload(
-                      client: client,
-                      stream: filePath == null && file.fileBytes != null ? Stream.value(file.fileBytes!) : null,
-                      path: !isContentUri ? filePath : null,
-                      fileDescriptor: fileDescriptor,
-                      contentLength: file.fileSize,
-                      target: uploadTask.device,
-                      remoteSessionId: uploadTask.remoteSessionId,
-                      fileId: file.fileId,
-                      token: file.remoteFileToken,
-                      onSendProgress: (progress) {
-                        sendToMain(
-                          IsolateTaskStreamResult.event(
-                            id: task.id,
-                            data: HttpUploadFileProgressEvent(
-                              fileId: file.fileId,
-                              progress: progress,
-                            ),
-                          ),
-                        );
-                      },
-                      cancelToken: cancelToken,
-                    );
-                break;
-              } on RsHttpClientError_StatusCode catch (e) {
-                if (e.status != 422 || attempt >= _maxUploadAttempts) {
-                  rethrow;
-                }
-                // The receiver discarded the file because its checksum did not
-                // match (e.g. the file changed while being read). Send it again.
-              }
-            }
-
-            sendToMain(
-              IsolateTaskStreamResult.event(
-                id: task.id,
-                data: HttpUploadFileFinishedEvent(fileId: file.fileId),
-              ),
-            );
-          } catch (e) {
-            sendToMain(
-              IsolateTaskStreamResult.event(
-                id: task.id,
-                data: HttpUploadFileFailedEvent(
-                  fileId: file.fileId,
-                  error: e.humanErrorMessage,
-                ),
-              ),
-            );
-          }
-        }).drain<void>();
-
-        sendToMain(
-          IsolateTaskStreamResult.done(
-            id: task.id,
-          ),
-        );
-      } finally {
-        ref.read(_cancelTokenProvider).remove(task.id);
+        case HttpUploadFilesV3Task uploadTask:
+          await _handleUploadV3(ref, task.id, uploadTask, sendToMain);
+          return;
+        case HttpUploadCancelTask cancelTask:
+          final cancelToken = ref.read(_cancelTokenProvider)[cancelTask.taskId];
+          cancelToken?.cancel();
+          ref.read(_cancelTokenProvider).remove(cancelTask.taskId);
+          return;
       }
     },
   );
 }
 
+Future<void> _handleUploadV2(
+  Ref ref,
+  int taskId,
+  HttpUploadFilesTask uploadTask,
+  void Function(IsolateTaskStreamResult<HttpUploadEvent>) sendToMain,
+) async {
+  // One client for the whole task: pinned to the receiver, so no file
+  // content can be streamed to a different peer, and shared by all files
+  // of the task so the connection is reused.
+  final client = ref.read(httpProvider).pinnedTo(uploadTask.device.fingerprint);
+
+  final cancelToken = createCancellationToken();
+  ref.read(_cancelTokenProvider).putIfAbsent(taskId, () => cancelToken);
+  try {
+    await Pool(_concurrency).forEach<HttpUploadFile, void>(uploadTask.files, (file) async {
+      if (!ref.read(_cancelTokenProvider).containsKey(taskId)) {
+        // the task was canceled, do not upload the remaining files
+        return;
+      }
+
+      sendToMain(
+        IsolateTaskStreamResult.event(
+          id: taskId,
+          data: HttpUploadFileStartedEvent(fileId: file.fileId),
+        ),
+      );
+
+      try {
+        final filePath = file.filePath;
+        final isContentUri = filePath?.startsWith('content://') ?? false;
+
+        for (var attempt = 1; ; attempt++) {
+          // The file descriptor is consumed by the upload, so a fresh one
+          // is needed for every attempt.
+          final fileDescriptor = isContentUri ? await getFileDescriptorAndroid(uri: filePath!) : null;
+
+          try {
+            await ref
+                .read(httpUploadProvider)
+                .upload(
+                  client: client,
+                  stream: filePath == null && file.fileBytes != null ? Stream.value(file.fileBytes!) : null,
+                  path: !isContentUri ? filePath : null,
+                  fileDescriptor: fileDescriptor,
+                  contentLength: file.fileSize,
+                  target: uploadTask.device,
+                  remoteSessionId: uploadTask.remoteSessionId,
+                  fileId: file.fileId,
+                  token: file.remoteFileToken,
+                  onSendProgress: (progress) {
+                    sendToMain(
+                      IsolateTaskStreamResult.event(
+                        id: taskId,
+                        data: HttpUploadFileProgressEvent(
+                          fileId: file.fileId,
+                          progress: progress,
+                        ),
+                      ),
+                    );
+                  },
+                  cancelToken: cancelToken,
+                );
+            break;
+          } on RsHttpClientError_StatusCode catch (e) {
+            if (e.status != 422 || attempt >= _maxUploadAttempts) {
+              rethrow;
+            }
+            // The receiver discarded the file because its checksum did not
+            // match (e.g. the file changed while being read). Send it again.
+          }
+        }
+
+        sendToMain(
+          IsolateTaskStreamResult.event(
+            id: taskId,
+            data: HttpUploadFileFinishedEvent(fileId: file.fileId),
+          ),
+        );
+      } catch (e) {
+        sendToMain(
+          IsolateTaskStreamResult.event(
+            id: taskId,
+            data: HttpUploadFileFailedEvent(
+              fileId: file.fileId,
+              error: e.humanErrorMessage,
+            ),
+          ),
+        );
+      }
+    }).drain<void>();
+
+    sendToMain(
+      IsolateTaskStreamResult.done(
+        id: taskId,
+      ),
+    );
+  } finally {
+    ref.read(_cancelTokenProvider).remove(taskId);
+  }
+}
+
+Future<void> _handleUploadV3(
+  Ref ref,
+  int taskId,
+  HttpUploadFilesV3Task uploadTask,
+  void Function(IsolateTaskStreamResult<HttpUploadEvent>) sendToMain,
+) async {
+  final client = ref.read(httpProvider).pinnedToV3(uploadTask.device.fingerprint);
+
+  final cancelToken = createCancellationToken();
+  ref.read(_cancelTokenProvider).putIfAbsent(taskId, () => cancelToken);
+  try {
+    await Pool(1).forEach<HttpUploadFileV3, void>(uploadTask.files, (file) async {
+      if (!ref.read(_cancelTokenProvider).containsKey(taskId)) {
+        return;
+      }
+
+      sendToMain(
+        IsolateTaskStreamResult.event(
+          id: taskId,
+          data: HttpUploadFileStartedEvent(fileId: file.transferId),
+        ),
+      );
+
+      try {
+        final result = await ref
+            .read(httpUploadV3Provider)
+            .transfer(
+              client: client,
+              target: uploadTask.device,
+              transferId: file.transferId,
+              filePath: file.filePath,
+              config: uploadTask.config,
+              onProgress: (bytesTransferred, totalBytes, progress) {
+                sendToMain(
+                  IsolateTaskStreamResult.event(
+                    id: taskId,
+                    data: HttpUploadFileProgressEvent(
+                      fileId: file.transferId,
+                      progress: progress,
+                      bytesTransferred: bytesTransferred,
+                      totalBytes: totalBytes,
+                    ),
+                  ),
+                );
+              },
+              cancelToken: cancelToken,
+            );
+
+        sendToMain(
+          IsolateTaskStreamResult.event(
+            id: taskId,
+            data: HttpUploadFileFinishedEvent(
+              fileId: file.transferId,
+              result: result,
+            ),
+          ),
+        );
+      } catch (e) {
+        sendToMain(
+          IsolateTaskStreamResult.event(
+            id: taskId,
+            data: HttpUploadFileFailedEvent(
+              fileId: file.transferId,
+              error: e.humanErrorMessage,
+            ),
+          ),
+        );
+      }
+    }).drain<void>();
+
+    sendToMain(
+      IsolateTaskStreamResult.done(
+        id: taskId,
+      ),
+    );
+  } finally {
+    ref.read(_cancelTokenProvider).remove(taskId);
+  }
+}

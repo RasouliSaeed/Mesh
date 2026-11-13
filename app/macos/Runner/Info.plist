@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-    <string>Locara</string>
+    <string>Mesh</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconFile</key>
@@ -148,12 +148,12 @@
             <key>NSMenuItem</key>
             <dict>
                 <key>default</key>
-                <string>Send to Locara</string>
+                <string>Send to Mesh</string>
             </dict>
             <key>NSMessage</key>
             <string>handleSendTextService</string>
             <key>NSPortName</key>
-            <string>Locara</string>
+            <string>Mesh</string>
             <key>NSSendTypes</key>
             <array>
                 <string>public.plain-text</string>

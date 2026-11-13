@@ -49,4 +49,3 @@ Future<String> calculateFileHash({
   // the Rust side failed, in which case the loop above has already thrown.
   throw StateError('Hashing ended without a result');
 }
-

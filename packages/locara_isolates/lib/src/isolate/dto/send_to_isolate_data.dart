@@ -9,4 +9,3 @@ class SendToIsolateData<T> {
     required this.data,
   });
 }
-

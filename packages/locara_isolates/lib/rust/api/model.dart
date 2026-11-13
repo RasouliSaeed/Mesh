@@ -186,4 +186,3 @@ class RegisterResponseDto {
           token == other.token &&
           hasWebInterface == other.hasWebInterface;
 }
-

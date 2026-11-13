@@ -3,6 +3,7 @@ use thiserror::Error;
 pub mod client;
 pub mod dto;
 pub mod dto_v2;
+pub mod dto_v3;
 pub mod server;
 pub mod state;
 

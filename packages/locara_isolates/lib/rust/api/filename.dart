@@ -13,4 +13,3 @@ String sanitizeFileName({required String name}) => RustLib.instance.api.crateApi
 /// Whether `name` is a legal file name on the current platform, i.e. whether
 /// [sanitize_file_name] would leave it untouched.
 bool isValidFileName({required String name}) => RustLib.instance.api.crateApiFilenameIsValidFileName(name: name);
-

@@ -1,10 +1,8 @@
 use crate::crypto;
 use bytes::Bytes;
-use http_body_util::BodyExt;
-use hyper::body::Incoming;
-use hyper::Request;
-use std::future::Future;
-use std::path::PathBuf;
+use futures_util::StreamExt;
+use crate::model::transport::BoxedTransportStream;
+
 use tokio::sync::{mpsc, oneshot};
 
 /// Channel capacity for file upload chunks (provides backpressure).
@@ -12,10 +10,10 @@ const UPLOAD_CHANNEL_CAPACITY: usize = 16;
 
 /// Size of the write buffer that coalesces incoming body chunks (typically one
 /// TLS record, ~16 KiB) into larger file writes.
+#[allow(dead_code)]
 const WRITE_BUFFER_SIZE: usize = 512 * 1024;
 
 /// Where the content of an uploaded file should go, decided by the application.
-#[derive(Debug)]
 pub enum FileUploadTarget {
     /// The application consumes the binary chunks itself.
     ///
@@ -41,9 +39,9 @@ pub enum FileUploadTarget {
     ///
     /// Timestamps provided in the sender's file metadata are applied to the
     /// written file, so the application does not need to set them itself.
-    Path {
-        /// The path to write the file to.
-        path: PathBuf,
+    Storage {
+        /// The abstract storage handle to write chunks into.
+        handle: Box<dyn crate::model::storage::StorageHandle>,
 
         /// Channel on which the server reports whether the file was saved
         /// successfully, including the checksum verification if one was given.
@@ -53,41 +51,29 @@ pub enum FileUploadTarget {
         /// written so far. Events are dropped when the channel is full.
         progress_tx: Option<mpsc::Sender<u64>>,
     },
+}
 
-    /// The server writes the file to this raw file descriptor (Android only)
-    /// and reports the result on `result_tx`.
-    ///
-    /// Timestamps provided in the sender's file metadata are applied through
-    /// the descriptor, which also covers SAF documents that have no path.
-    #[cfg(target_os = "android")]
-    Fd {
-        /// The raw file descriptor to write the file to.
-        /// Ownership is transferred; the descriptor is closed after writing.
-        fd: std::os::fd::RawFd,
-
-        /// Channel on which the server reports whether the file was saved
-        /// successfully, including the checksum verification if one was given.
-        result_tx: oneshot::Sender<Result<(), String>>,
-
-        /// Optional channel on which the server reports the number of bytes
-        /// written so far. Events are dropped when the channel is full.
-        progress_tx: Option<mpsc::Sender<u64>>,
-    },
+impl std::fmt::Debug for FileUploadTarget {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Stream { binary_tx, result_rx } => f
+                .debug_struct("Stream")
+                .field("binary_tx", binary_tx)
+                .field("result_rx", result_rx)
+                .finish(),
+            Self::Storage { handle: _, result_tx, progress_tx } => f
+                .debug_struct("Storage")
+                .field("handle", &"<StorageHandle>")
+                .field("result_tx", result_tx)
+                .field("progress_tx", progress_tx)
+                .finish(),
+        }
+    }
 }
 
 /// The sender-provided timestamps of an uploaded file, applied to the written
 /// file for [FileUploadTarget::Path] and [FileUploadTarget::Fd].
-#[derive(Debug, Clone, Copy, Default)]
-pub(crate) struct FileTimestamps {
-    pub modified: Option<std::time::SystemTime>,
-    pub accessed: Option<std::time::SystemTime>,
-}
-
-impl FileTimestamps {
-    fn is_empty(&self) -> bool {
-        self.modified.is_none() && self.accessed.is_none()
-    }
-}
+pub(crate) use crate::model::storage::FileTimestamps;
 
 /// Outcome of receiving an uploaded file.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -104,7 +90,7 @@ pub(crate) enum SaveResult {
 
 /// Forwards the body of `req` to `target`.
 pub(crate) async fn save_req_to_target(
-    req: Request<Incoming>,
+    mut stream: BoxedTransportStream,
     target: FileUploadTarget,
     file_size: u64,
     expected_sha256: Option<&str>,
@@ -121,38 +107,13 @@ pub(crate) async fn save_req_to_target(
             binary_tx,
             result_rx,
         } => (binary_tx, result_rx, None),
-        FileUploadTarget::Path {
-            path,
+        FileUploadTarget::Storage {
+            handle,
             result_tx,
             progress_tx,
         } => {
             let (binary_tx, result_rx) = spawn_file_writer(
-                async move {
-                    tokio::fs::File::create(&path)
-                        .await
-                        .map_err(|e| format!("Failed to create {}: {e}", path.display()))
-                },
-                file_size,
-                progress_tx,
-                timestamps,
-            );
-            (binary_tx, result_rx, Some(result_tx))
-        }
-        #[cfg(target_os = "android")]
-        FileUploadTarget::Fd {
-            fd,
-            result_tx,
-            progress_tx,
-        } => {
-            let (binary_tx, result_rx) = spawn_file_writer(
-                async move {
-                    use std::os::fd::FromRawFd;
-
-                    // SAFETY: the descriptor is owned by this transfer; wrapping it in
-                    // a File transfers that ownership so it is closed once writing finishes.
-                    let std_file = unsafe { std::fs::File::from_raw_fd(fd) };
-                    Ok(tokio::fs::File::from_std(std_file))
-                },
+                handle,
                 file_size,
                 progress_tx,
                 timestamps,
@@ -163,14 +124,10 @@ pub(crate) async fn save_req_to_target(
 
     // Forward the request body to the target, hashing it on the way if requested.
     let mut hasher = expected_sha256.map(|_| Sha256::new());
-    let mut body = req.into_body();
     let mut stream_error = false;
-    while let Some(frame) = body.frame().await {
-        match frame {
-            Ok(frame) => {
-                let Ok(data) = frame.into_data() else {
-                    continue; // ignore non-data frames (e.g. trailers)
-                };
+    while let Some(chunk_result) = stream.next().await {
+        match chunk_result {
+            Ok(data) => {
                 if data.is_empty() {
                     continue;
                 }
@@ -250,7 +207,7 @@ pub(crate) async fn save_req_to_target(
 ///
 /// Returns the sender for the binary chunks and a receiver for the final result.
 fn spawn_file_writer(
-    open: impl Future<Output = Result<tokio::fs::File, String>> + Send + 'static,
+    handle: Box<dyn crate::model::storage::StorageHandle>,
     expected_size: u64,
     progress_tx: Option<mpsc::Sender<u64>>,
     timestamps: FileTimestamps,
@@ -260,7 +217,7 @@ fn spawn_file_writer(
 
     tokio::spawn(async move {
         let result =
-            write_file_from_receiver(open, expected_size, &mut binary_rx, progress_tx, timestamps)
+            write_file_from_receiver(handle, expected_size, &mut binary_rx, progress_tx, timestamps)
                 .await;
         // Unblock the request handler if it is still sending chunks.
         binary_rx.close();
@@ -282,73 +239,48 @@ fn spawn_file_writer(
 /// file. This happens on the still-open handle: an Android file descriptor has
 /// no path to address the file by afterwards.
 async fn write_file_from_receiver(
-    open: impl Future<Output = Result<tokio::fs::File, String>>,
+    mut handle: Box<dyn crate::model::storage::StorageHandle>,
     expected_size: u64,
     rx: &mut mpsc::Receiver<Bytes>,
     progress_tx: Option<mpsc::Sender<u64>>,
     timestamps: FileTimestamps,
 ) -> Result<(), String> {
-    use tokio::io::AsyncWriteExt;
-
-    let mut file = tokio::io::BufWriter::with_capacity(WRITE_BUFFER_SIZE, open.await?);
     let mut written: u64 = 0;
     while let Some(chunk) = rx.recv().await {
         written += chunk.len() as u64;
         if written > expected_size {
+            let _ = handle.abort().await;
             return Err(format!(
                 "Expected {expected_size} bytes, received at least {written}"
             ));
         }
-        file.write_all(&chunk)
-            .await
-            .map_err(|e| format!("Failed to write file: {e}"))?;
+        if let Err(e) = handle.write_data(&chunk).await {
+            let _ = handle.abort().await;
+            return Err(format!("Failed to write file: {e}"));
+        }
         if let Some(progress_tx) = &progress_tx {
-            // Progress is best-effort: drop the event when the consumer lags.
             let _ = progress_tx.try_send(written);
         }
     }
-    file.flush()
-        .await
-        .map_err(|e| format!("Failed to flush file: {e}"))?;
-    let file = file.into_inner();
+    
+    if let Err(e) = handle.flush().await {
+        let _ = handle.abort().await;
+        return Err(format!("Failed to flush file: {e}"));
+    }
 
     if written != expected_size {
+        let _ = handle.abort().await;
         return Err(format!(
             "Expected {expected_size} bytes, received {written}"
         ));
     }
 
-    // Drops content beyond the file that was just written, in case the target
-    // pointed at a longer, pre-existing file: opening truncates for paths and
-    // for descriptors opened with the SAF "wt" mode, but a document provider is
-    // free to ignore that mode. Retries of the same upload are covered by the
-    // exact size check above either way.
-    //
-    // Best-effort: a provider may back the descriptor by something that cannot
-    // be truncated (e.g. a pipe), which must not fail the completed transfer.
-    if let Err(e) = file.set_len(written).await {
+    if let Err(e) = handle.set_len(written).await {
         tracing::warn!("Could not truncate file to {written} bytes: {e}");
     }
 
-    // The timestamps are applied last because the writes and the truncation
-    // above update the modification time themselves.
-    //
-    // Best-effort: the provider backing an Android file descriptor may not
-    // support changing timestamps, which must not fail the completed transfer.
-    if !timestamps.is_empty() {
-        let mut times = std::fs::FileTimes::new();
-        if let Some(modified) = timestamps.modified {
-            times = times.set_modified(modified);
-        }
-        if let Some(accessed) = timestamps.accessed {
-            times = times.set_accessed(accessed);
-        }
-        let file = file.into_std().await;
-        // Also closes the file, off the async runtime like tokio::fs does.
-        let result = tokio::task::spawn_blocking(move || file.set_times(times)).await;
-        if let Ok(Err(e)) = result {
-            tracing::warn!("Could not set file timestamps: {e}");
-        }
+    if let Err(e) = handle.commit(timestamps).await {
+        return Err(format!("Failed to commit file: {e}"));
     }
 
     Ok(())

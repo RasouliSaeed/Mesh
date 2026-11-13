@@ -1,4 +1,4 @@
-# CLAUDE.md
+# CLAUDE.md - Mesh Development Guidelines
 
 Always use **`fvm flutter`** / **`fvm dart`**, never the bare `flutter` / `dart` binaries — this repo pins its
 Flutter version in `.fvmrc` and the system-wide toolchain will not match it.

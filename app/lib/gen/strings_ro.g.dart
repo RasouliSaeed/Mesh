@@ -40,7 +40,7 @@ class TranslationsRo extends Translations with BaseTranslations<AppLocale, Trans
 
   // Translations
   @override
-  String get appName => 'Locara';
+  String get appName => 'Mesh';
   @override
   late final _Translations$general$ro general = _Translations$general$ro._(_root);
   @override
@@ -291,7 +291,7 @@ class _Translations$networkInterfacesPage$ro extends Translations$networkInterfa
   String get title => 'Interfețe de rețea';
   @override
   String get info =>
-      'În mod implicit, Locara folosește toate interfețele de rețea disponibile. Poți exclude rețelele nedorite aici. Trebuie să repornești serverul pentru a aplica modificările.';
+      'În mod implicit, Mesh folosește toate interfețele de rețea disponibile. Poți exclude rețelele nedorite aici. Trebuie să repornești serverul pentru a aplica modificările.';
   @override
   String get preview => 'Previzualizare';
   @override
@@ -416,7 +416,7 @@ class _Translations$receiveOptionsPage$ro extends Translations$receiveOptionsPag
   @override
   String get destination => _root.settingsTab.receive.destination;
   @override
-  String get appDirectory => '(Dosarul Locara)';
+  String get appDirectory => '(Dosarul Mesh)';
   @override
   String get saveToGallery => _root.settingsTab.receive.saveToGallery;
   @override
@@ -495,7 +495,7 @@ class _Translations$webSharePage$ro extends Translations$webSharePage$en {
   @override
   String pinHint({required Object pin}) => 'PIN-ul este "${pin}"';
   @override
-  String get encryptionHint => 'Locara folosește un certificat auto-semnat. Trebuie să-l accepți în browserul tău.';
+  String get encryptionHint => 'Mesh folosește un certificat auto-semnat. Trebuie să-l accepți în browserul tău.';
   @override
   String pendingRequests({required Object n}) => 'Cereri în așteptare: ${n}';
 }
@@ -519,10 +519,10 @@ class _Translations$aboutPage$ro extends Translations$aboutPage$en {
 
   // Translations
   @override
-  String get title => 'Despre Locara';
+  String get title => 'Despre Mesh';
   @override
   List<String> get description => [
-    'Locara este o aplicație gratuită și open-source care îți permite să partajezi în siguranță fișiere și mesaje cu dispozitivele din apropiere prin rețeaua ta locală, fără a avea nevoie de o conexiune la internet.',
+    'Mesh este o aplicație gratuită și open-source care îți permite să partajezi în siguranță fișiere și mesaje cu dispozitivele din apropiere prin rețeaua ta locală, fără a avea nevoie de o conexiune la internet.',
     'Această aplicație este disponibilă pe Android, iOS, macOS, Windows și Linux. Poți găsi toate opțiunile de descărcare pe pagina oficială.',
   ];
   @override
@@ -545,7 +545,7 @@ class _Translations$donationPage$ro extends Translations$donationPage$en {
   @override
   String get title => 'Donează';
   @override
-  String get info => 'Locara este gratuit, open-source și fără reclame. Dacă îți place aplicația, poți susține dezvoltarea cu o donație.';
+  String get info => 'Mesh este gratuit, open-source și fără reclame. Dacă îți place aplicația, poți susține dezvoltarea cu o donație.';
   @override
   String donate({required Object amount}) => 'Donează ${amount}';
   @override
@@ -742,7 +742,7 @@ class _Translations$tray$ro extends Translations$tray$en {
   @override
   String get open => _root.general.open;
   @override
-  String get close => 'Închide Locara';
+  String get close => 'Închide Mesh';
   @override
   String get closeWindows => 'Ieșire';
 }
@@ -953,7 +953,7 @@ class _Translations$settingsTab$general$ro extends Translations$settingsTab$gene
   @override
   String get launchMinimized => 'Autopornire: Pornire ascunsă';
   @override
-  String get showInContextMenu => 'Afișează Locara în meniul contextual';
+  String get showInContextMenu => 'Afișează Mesh în meniul contextual';
   @override
   String get animations => 'Animații';
 }
@@ -1055,7 +1055,7 @@ class _Translations$settingsTab$other$ro extends Translations$settingsTab$other$
   @override
   String get title => 'Altele';
   @override
-  String get support => 'Susține Locara';
+  String get support => 'Susține Mesh';
   @override
   String get donate => 'Donează';
   @override
@@ -1411,7 +1411,7 @@ class _Translations$dialogs$localNetworkUnauthorized$ro extends Translations$dia
   @override
   String get title => _root.dialogs.noPermission.title;
   @override
-  String get description => 'Locara nu poate găsi alte dispozitive fără permisiunea de a scana rețeaua locală. Acordă această permisiune în setări.';
+  String get description => 'Mesh nu poate găsi alte dispozitive fără permisiunea de a scana rețeaua locală. Acordă această permisiune în setări.';
   @override
   String get gotoSettings => 'Setări';
 }
@@ -1553,7 +1553,7 @@ class _Translations$dialogs$sendModeHelp$ro extends Translations$dialogs$sendMod
   @override
   String get multiple => 'Trimite fișiere la mai mulți destinatari. Selecția nu va fi ștearsă după transferul de fișiere terminate.';
   @override
-  String get link => 'Destinatarii care nu au Locara instalat pot descărca fișierele selectate prin deschiderea linkului în browserul lor.';
+  String get link => 'Destinatarii care nu au Mesh instalat pot descărca fișierele selectate prin deschiderea linkului în browserul lor.';
 }
 
 // Path: dialogs.zoom

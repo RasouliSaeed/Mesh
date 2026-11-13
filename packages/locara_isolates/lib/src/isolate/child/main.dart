@@ -86,4 +86,3 @@ void _handleMessage<S>(String debugLabel, SendToIsolateData<S> message, Future<v
     }
   }
 }
-

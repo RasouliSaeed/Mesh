@@ -106,6 +106,19 @@ class HttpServerPrepareUploadDecisionTask implements BaseHttpServerTask {
   });
 }
 
+/// Answers a pending [HttpServerPrepareUploadV3Event].
+class HttpServerPrepareUploadV3DecisionTask implements BaseHttpServerTask {
+  final String sessionId;
+  final bool accept;
+  final String? destinationPath;
+
+  HttpServerPrepareUploadV3DecisionTask({
+    required this.sessionId,
+    required this.accept,
+    this.destinationPath,
+  });
+}
+
 /// Cancels the active upload session, e.g. because the user aborted the
 /// transfer on the receiving side. Uploads that are already in progress still
 /// run to completion, but new upload requests are rejected and a new session
@@ -348,6 +361,82 @@ class HttpServerListenerFailedEvent extends HttpServerEvent {
   });
 }
 
+/// A sender requests to upload a file via V3 protocol.
+/// Must be answered with a [HttpServerPrepareUploadV3DecisionTask].
+class HttpServerPrepareUploadV3Event extends HttpServerEvent {
+  final String sessionId;
+  final String ip;
+  final String fileName;
+  final int fileSize;
+  final int totalChunks;
+  final int chunkSize;
+  final String? certFingerprint;
+
+  HttpServerPrepareUploadV3Event({
+    required this.sessionId,
+    required this.ip,
+    required this.fileName,
+    required this.fileSize,
+    required this.totalChunks,
+    required this.chunkSize,
+    this.certFingerprint,
+  });
+}
+
+/// Progress event for an active V3 transfer.
+class HttpServerTransferProgressV3Event extends HttpServerEvent {
+  final String sessionId;
+  final int bytesReceived;
+  final int totalBytes;
+  final double progress;
+
+  HttpServerTransferProgressV3Event({
+    required this.sessionId,
+    required this.bytesReceived,
+    required this.totalBytes,
+    required this.progress,
+  });
+}
+
+/// A V3 transfer finished and was committed to destination.
+class HttpServerTransferFinishedV3Event extends HttpServerEvent {
+  final String sessionId;
+  final String fileName;
+  final int fileSize;
+  final String destinationPath;
+  final bool savedToGallery;
+
+  HttpServerTransferFinishedV3Event({
+    required this.sessionId,
+    required this.fileName,
+    required this.fileSize,
+    required this.destinationPath,
+    required this.savedToGallery,
+  });
+}
+
+/// A V3 transfer failed.
+class HttpServerTransferFailedV3Event extends HttpServerEvent {
+  final String sessionId;
+  final String fileName;
+  final String error;
+
+  HttpServerTransferFailedV3Event({
+    required this.sessionId,
+    required this.fileName,
+    required this.error,
+  });
+}
+
+/// A V3 transfer was cancelled.
+class HttpServerTransferCancelledV3Event extends HttpServerEvent {
+  final String sessionId;
+
+  HttpServerTransferCancelledV3Event({
+    required this.sessionId,
+  });
+}
+
 class _ReceiveSession {
   final HttpServerReceiveConfig config;
 
@@ -545,6 +634,70 @@ Future<void> setupHttpServerIsolate(
                 case RsServerEvent_ListenerFailed(:final error):
                   ref.read(_receiveSessionProvider).session = null;
                   emit(HttpServerListenerFailedEvent(error: error));
+                case RsServerEvent_PrepareUploadV3(
+                    :final sessionId,
+                    :final ip,
+                    :final fileName,
+                    :final fileSize,
+                    :final totalChunks,
+                    :final chunkSize,
+                    :final certFingerprint,
+                  ):
+                  emit(
+                    HttpServerPrepareUploadV3Event(
+                      sessionId: sessionId,
+                      ip: ip,
+                      fileName: fileName,
+                      fileSize: fileSize.toInt(),
+                      totalChunks: totalChunks.toInt(),
+                      chunkSize: chunkSize.toInt(),
+                      certFingerprint: certFingerprint,
+                    ),
+                  );
+                case RsServerEvent_TransferProgressV3(
+                    :final sessionId,
+                    :final bytesReceived,
+                    :final totalBytes,
+                    :final progress,
+                  ):
+                  emit(
+                    HttpServerTransferProgressV3Event(
+                      sessionId: sessionId,
+                      bytesReceived: bytesReceived.toInt(),
+                      totalBytes: totalBytes.toInt(),
+                      progress: progress,
+                    ),
+                  );
+                case RsServerEvent_TransferFinishedV3(
+                    :final sessionId,
+                    :final fileName,
+                    :final fileSize,
+                    :final destinationPath,
+                    :final savedToGallery,
+                  ):
+                  emit(
+                    HttpServerTransferFinishedV3Event(
+                      sessionId: sessionId,
+                      fileName: fileName,
+                      fileSize: fileSize.toInt(),
+                      destinationPath: destinationPath,
+                      savedToGallery: savedToGallery,
+                    ),
+                  );
+                case RsServerEvent_TransferFailedV3(
+                    :final sessionId,
+                    :final fileName,
+                    :final error,
+                  ):
+                  emit(
+                    HttpServerTransferFailedV3Event(
+                      sessionId: sessionId,
+                      fileName: fileName,
+                      error: error,
+                    ),
+                  );
+                case RsServerEvent_TransferCancelledV3(:final sessionId):
+                  emit(HttpServerTransferCancelledV3Event(sessionId: sessionId));
               }
             }
           } finally {
@@ -571,6 +724,15 @@ Future<void> setupHttpServerIsolate(
           // with 204 and creates no session.
           ref.read(_receiveSessionProvider).session = config == null || config.fileNameMap.isEmpty ? null : _ReceiveSession(config);
           await ref.read(httpServerProvider).respondPrepareUpload(acceptedFileIds: config?.fileNameMap.keys.toList());
+          return;
+        case HttpServerPrepareUploadV3DecisionTask decisionTask:
+          await ref
+              .read(httpServerProvider)
+              .respondPrepareUploadV3(
+                sessionId: decisionTask.sessionId,
+                accept: decisionTask.accept,
+                destinationPath: decisionTask.destinationPath,
+              );
           return;
         case HttpServerCancelSessionTask cancelTask:
           final holder = ref.read(_receiveSessionProvider);
@@ -734,4 +896,3 @@ Future<void> _handleFileUpload({
     emitFailed(e);
   }
 }
-

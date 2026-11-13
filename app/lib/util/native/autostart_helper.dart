@@ -107,7 +107,7 @@ Future<bool> isAutoStartHidden() async {
   }
 }
 
-const _windowsRegistryKeyValue = 'Locara';
+const _windowsRegistryKeyValue = 'Mesh';
 
 RegistryKey _getWindowsRegistryKey() {
   return Registry.openPath(

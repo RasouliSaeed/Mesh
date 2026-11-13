@@ -131,4 +131,3 @@ FileType decodeFromMime(String mime) {
     return FileType.other;
   }
 }
-

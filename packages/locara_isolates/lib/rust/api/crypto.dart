@@ -100,4 +100,3 @@ class SecurityContext {
           certificate == other.certificate &&
           certificateHash == other.certificateHash;
 }
-

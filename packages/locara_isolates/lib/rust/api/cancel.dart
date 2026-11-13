@@ -12,4 +12,3 @@ RsCancellationToken createCancellationToken() => RustLib.instance.api.crateApiCa
 abstract class RsCancellationToken implements RustOpaqueInterface {
   void cancel();
 }
-

@@ -312,4 +312,3 @@ class WsServerSdpMessage {
       identical(this, other) ||
       other is WsServerSdpMessage && runtimeType == other.runtimeType && peer == other.peer && sessionId == other.sessionId && sdp == other.sdp;
 }
-

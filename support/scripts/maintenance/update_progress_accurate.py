@@ -3,13 +3,21 @@ import re
 with open('app/lib/pages/progress_page.dart', 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Add imports for chat
-if 'import \'package:locara_app/provider/chat_provider.dart\';' not in content:
+# Make sure imports are there
+if 'import \'package:mesh_app/provider/chat_provider.dart\';' not in content:
     content = content.replace('import \'package:refena_flutter/refena_flutter.dart\';', 
-                              'import \'package:refena_flutter/refena_flutter.dart\';\nimport \'package:locara_app/provider/chat_provider.dart\';\nimport \'dart:convert\';\nimport \'package:locara_app/model/cross_file.dart\';\nimport \'package:locara_isolates/model/file_type.dart\';')
+                              'import \'package:refena_flutter/refena_flutter.dart\';\nimport \'package:mesh_app/provider/chat_provider.dart\';\nimport \'dart:convert\';\nimport \'package:mesh_app/model/cross_file.dart\';\nimport \'package:mesh_isolates/model/file_type.dart\';')
 
-# Now let's inject a chat UI into the Stack below the ListView
-chat_ui = '''
+# Find the start of the SafeArea footer
+start_idx = content.find('            SafeArea(\n              child: Align(\n                alignment: Alignment.bottomCenter')
+
+if start_idx != -1:
+    # Find the end of the Stack's children array
+    # The SafeArea is the last child of the Stack
+    end_idx = content.find('            ),\n          ],\n        ),', start_idx)
+    
+    if end_idx != -1:
+        chat_ui = '''
             // CHAT OVERLAY
             SafeArea(
               child: Align(
@@ -17,7 +25,7 @@ chat_ui = '''
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Chat Messages Area (Collapsible or just showing last 2)
+                    // Chat Messages Area
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Consumer(
@@ -25,16 +33,22 @@ chat_ui = '''
                           final chatState = ref.watch(chatProvider);
                           if (chatState.messages.isEmpty) return const SizedBox.shrink();
                           
-                          // Show only last 2 messages to save space
-                          final recentMessages = chatState.messages.reversed.take(2).toList().reversed.toList();
+                          final recentMessages = chatState.messages.reversed.take(3).toList().reversed.toList();
                           
                           return Container(
-                            constraints: const BoxConstraints(maxHeight: 120),
+                            constraints: const BoxConstraints(maxHeight: 150),
                             margin: const EdgeInsets.only(bottom: 10),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
+                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: ListView.builder(
                               shrinkWrap: true,
@@ -114,7 +128,6 @@ chat_ui = '''
                                 children: [
                                   Expanded(
                                     child: TextField(
-                                      controller: TextEditingController(), // Needs persistent controller ideally, but let's use a quick local one or just dispatch text on submit
                                       decoration: InputDecoration(
                                         hintText: 'Chat during transfer...',
                                         filled: true,
@@ -125,17 +138,35 @@ chat_ui = '''
                                           borderSide: BorderSide.none,
                                         ),
                                       ),
-                                      onSubmitted: (text) {
+                                      onSubmitted: (text) async {
                                         if (text.trim().isEmpty) return;
                                         
-                                        final receiveSession = ref.read(serverProvider)?.session;
-                                        final sendSession = ref.read(sendProvider)[widget.sessionId];
-                                        
-                                        // Try to find the target to send to
-                                        // (The chat feature logic goes here)
-                                        // For now, let's keep it UI focused
-                                        
-                                        ref.notifier(chatProvider).addMessage(text, isMine: true);
+                                        final target = ref.read(chatProvider).currentTarget;
+                                        if (target != null) {
+                                          final bytes = utf8.encode(text);
+                                          final file = CrossFile(
+                                            name: text,
+                                            fileType: FileType.text,
+                                            size: bytes.length,
+                                            thumbnail: null,
+                                            asset: null,
+                                            path: null,
+                                            bytes: bytes,
+                                            lastModified: null,
+                                            lastAccessed: null,
+                                          );
+
+                                          ref.notifier(chatProvider).addMessage(text, isMine: true);
+                                          await ref
+                                              .notifier(sendProvider)
+                                              .startSession(
+                                                target: target,
+                                                files: [file],
+                                                background: true,
+                                              );
+                                        } else {
+                                          ref.notifier(chatProvider).addMessage(text, isMine: true);
+                                        }
                                       },
                                     ),
                                   ),
@@ -149,13 +180,10 @@ chat_ui = '''
                   ],
                 ),
               ),
-            ),
 '''
-
-# We need to replace the old SafeArea child
-content = re.sub(r'            SafeArea\(\n              child: Align\(\n                alignment: Alignment\.bottomCenter,\n                child: Padding\(\n                  padding: const EdgeInsets\.only\(left: 10, right: 10, bottom: 10\),\n                  child: Card\(.*?padding: const EdgeInsets\.only\(left: 15, right: 15, bottom: 5, top: 10\).*?AnimatedCrossFade\(.*?\n                            \),\n                          \],\n                        \),\n                      \),\n                    \),\n                  \),\n                \),\n              \),', chat_ui, content, flags=re.DOTALL)
+        content = content[:start_idx] + chat_ui + content[end_idx:]
 
 with open('app/lib/pages/progress_page.dart', 'w', encoding='utf-8') as f:
     f.write(content)
 
-print('Updated progress_page.dart to include chat and premium UI')
+print('Updated progress_page.dart accurately')

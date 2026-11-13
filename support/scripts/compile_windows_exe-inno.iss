@@ -11,12 +11,12 @@
   #define ResultDir "D:\inno-result"
 #endif
 
-#define MyAppName "Locara"
+#define MyAppName "Mesh"
 #define MyAppVersion "1.8.0"
 #define MyAppPublisher "SaeedR"
-#define MyAppURL "https://Locara.org"
-#define MyAppExeName "locara_app.exe"
-#define MyAppMsixHelper "locara_msix_helper.msix"
+#define MyAppURL "https://Mesh.org"
+#define MyAppExeName "mesh_app.exe"
+#define MyAppMsixHelper "mesh_msix_helper.msix"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -35,7 +35,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir={#ResultDir}
-OutputBaseFilename=Locara
+OutputBaseFilename=Mesh
 SetupIconFile={#PayloadDir}\logo.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma
@@ -101,12 +101,12 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 #ifndef SkipMsixHelper
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Add-AppxPackage .\locara_msix_helper.msix -ExternalLocation $(Get-Location)"; WorkingDir: {app}; Flags: nowait runhidden
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Add-AppxPackage .\mesh_msix_helper.msix -ExternalLocation $(Get-Location)"; WorkingDir: {app}; Flags: nowait runhidden
 #endif
 
 [UninstallRun]
 #ifndef SkipMsixHelper
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Get-AppxPackage Locara.App | Remove-AppxPackage"; Flags: nowait runhidden
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -Command Get-AppxPackage Mesh.App | Remove-AppxPackage"; Flags: nowait runhidden
 #endif
 
 

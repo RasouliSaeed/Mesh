@@ -31,6 +31,18 @@ class HttpClientCollection {
       timeoutMs: timeoutMs,
     );
   }
+
+  /// A client that only talks to the peer holding the certificate with the
+  /// given [fingerprint] using V3 protocol.
+  RsHttpClient pinnedToV3(String fingerprint, {int? timeoutMs}) {
+    return createClient(
+      privateKey: _privateKey,
+      cert: _certificate,
+      version: LsHttpClientVersion.v3,
+      expectedFingerprint: fingerprint,
+      timeoutMs: timeoutMs,
+    );
+  }
 }
 
 final httpProvider = ViewProvider((ref) {
@@ -40,4 +52,3 @@ final httpProvider = ViewProvider((ref) {
     certificate: securityContext.certificate,
   );
 });
-

@@ -1,6 +1,8 @@
+﻿# CRITICAL RULE FOR ANTIGRAVITY
+You MUST absolutely read and strictly follow the 49-point master engineering rules defined in docs/MESH_MASTER_SPEC.md before making any changes to this repository. Do not skip this step under any circumstances.
 # AGENTS.md
 
-locara disallows AI generated contributions unless:
+mesh disallows AI generated contributions unless:
 
 - they are bug fixes or
 - very small or
@@ -14,25 +16,25 @@ This is a multi-language monorepo: a Flutter app on top of a Rust protocol imple
 
 | Path                           | What it is                                                                                                                                                  |
 |--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `app/`                         | The Flutter app (`locara_app`). UI, providers, persistence, platform channels.                                                                           |
-| `packages/locara_isolates/` | Dart isolate layer + `flutter_rust_bridge` (FRB) bindings. Owns `rust/` (the Flutter plugin crate `rust_lib_locara_app`) and `rust_builder/` (cargokit). |
-| `packages/core/`               | Rust crate `locara`: protocol, HTTP server/client, crypto, WebRTC. No Flutter dependency.                                                                |
+| `app/`                         | The Flutter app (`mesh_app`). UI, providers, persistence, platform channels.                                                                           |
+| `packages/mesh_isolates/` | Dart isolate layer + `flutter_rust_bridge` (FRB) bindings. Owns `rust/` (the Flutter plugin crate `rust_lib_mesh_app`) and `rust_builder/` (cargokit). |
+| `packages/core/`               | Rust crate `mesh`: protocol, HTTP server/client, crypto, WebRTC. No Flutter dependency.                                                                |
 | `packages/typed_isolates/`     | Small standalone package wrapping Dart `Isolate` with typed send/receive channels.                                                                          |
 | `server/`                      | Axum WebSocket signaling server for WebRTC (`/v1/ws`). Deployed separately, see `server/Dockerfile`.                                                        |
-| `cli/`                         | Rust CLI crate (`locara-cli`): interactive terminal client on top of `packages/core` (v2 HTTP + multicast).                                              |
+| `cli/`                         | Rust CLI crate (`mesh-cli`): interactive terminal client on top of `packages/core` (v2 HTTP + multicast).                                              |
 | `support/scripts/`             | Release/packaging scripts (per-platform builds, MSIX, Inno Setup, FOSS stripping).                                                                          |
 
-The four Rust crates (`packages/core`, `packages/locara_isolates/rust`, `server`, `cli`) form a single Cargo workspace rooted at the repository root: one shared `Cargo.lock` and `target/`, and `[profile.*]` settings live only in the root `Cargo.toml` (member profiles would be ignored). Cargokit still builds the plugin crate into its own target dir during Flutter builds.
+The four Rust crates (`packages/core`, `packages/mesh_isolates/rust`, `server`, `cli`) form a single Cargo workspace rooted at the repository root: one shared `Cargo.lock` and `target/`, and `[profile.*]` settings live only in the root `Cargo.toml` (member profiles would be ignored). Cargokit still builds the plugin crate into its own target dir during Flutter builds.
 
-The three Dart packages (`app`, `packages/locara_isolates`, `packages/typed_isolates`) form a pub workspace rooted at the repository root: one shared `pubspec.lock` and `.dart_tool/`, resolved by running `pub get` from any member. `rust_builder` and the vendored `cargokit/build_tool` are deliberately not members and still resolve standalone.
+The three Dart packages (`app`, `packages/mesh_isolates`, `packages/typed_isolates`) form a pub workspace rooted at the repository root: one shared `pubspec.lock` and `.dart_tool/`, resolved by running `pub get` from any member. `rust_builder` and the vendored `cargokit/build_tool` are deliberately not members and still resolve standalone.
 
-Dependency direction: `app` → `locara_isolates` → (`typed_isolates`, `rust_lib_locara_app` → `locara` core).
-The app depends on **only** `locara_isolates` — not on `flutter_rust_bridge`, `typed_isolates`, or the plugin crate directly.
+Dependency direction: `app` â†’ `mesh_isolates` â†’ (`typed_isolates`, `rust_lib_mesh_app` â†’ `mesh` core).
+The app depends on **only** `mesh_isolates` â€” not on `flutter_rust_bridge`, `typed_isolates`, or the plugin crate directly.
 
 ## Flutter version
 
 Pinned to the version in `.fvmrc` (also mirrored in `.github/workflows/ci.yml` and `app/pubspec.yaml`, plus the `support/submodules/flutter` git submodule). Use **`fvm flutter` / `fvm dart`** instead of the system-wide toolchain.
-Bumping the version means updating all four places — see the "Bump Flutter" section of `CONTRIBUTING.md`.
+Bumping the version means updating all four places â€” see the "Bump Flutter" section of `CONTRIBUTING.md`.
 
 ## Commands
 
@@ -55,17 +57,17 @@ fvm flutter test test/unit/util/security_helper_test.dart          # single file
 fvm flutter test --plain-name 'some test name'                     # single test
 ```
 
-Formatting is **150 columns** (`page_width: 150` in `analysis_options.yaml`, `trailing_commas: preserve`). Any tool that reformats generated Dart at 80 columns creates pure noise — reformat with `fvm dart format` afterwards.
+Formatting is **150 columns** (`page_width: 150` in `analysis_options.yaml`, `trailing_commas: preserve`). Any tool that reformats generated Dart at 80 columns creates pure noise â€” reformat with `fvm dart format` afterwards.
 
 Rust:
 
 ```bash
-cargo test --features full       # in packages/core — see "Core crate features" below
+cargo test --features full       # in packages/core â€” see "Core crate features" below
 cargo clippy --features full
-cargo check                      # in packages/locara_isolates/rust, server, cli
+cargo check                      # in packages/mesh_isolates/rust, server, cli
 ```
 
-FRB codegen — run from `packages/locara_isolates/`:
+FRB codegen â€” run from `packages/mesh_isolates/`:
 
 ```bash
 flutter_rust_bridge_codegen generate    # config in flutter_rust_bridge.yaml (dart_format_line_length: 150)
@@ -73,11 +75,11 @@ flutter_rust_bridge_codegen generate    # config in flutter_rust_bridge.yaml (da
 
 Codegen has a habit of rewriting `app/test/mocks.mocks.dart` at 80 columns; revert that file if it shows up in the diff.
 
-`packages/locara_isolates` has its own `build.yaml` and needs its own `build_runner` run when its models change (`pub get` is shared via the pub workspace). CI additionally runs `flutter pub get` in `packages/locara_isolates/rust_builder/cargokit/build_tool`.
+`packages/mesh_isolates` has its own `build.yaml` and needs its own `build_runner` run when its models change (`pub get` is shared via the pub workspace). CI additionally runs `flutter pub get` in `packages/mesh_isolates/rust_builder/cargokit/build_tool`.
 
 ## Core crate features
 
-`packages/core` gates almost everything behind Cargo features (`crypto`, `http`, `multicast`, `webrtc`, `webrtc-signaling`, `full`), and `default = []`. **Always build and test it with `--features full`.** A bare `cargo check`/`cargo build` fails because modules are declared unconditionally while their dependencies are optional — that is pre-existing and expected, not a regression.
+`packages/core` gates almost everything behind Cargo features (`crypto`, `http`, `multicast`, `webrtc`, `webrtc-signaling`, `full`), and `default = []`. **Always build and test it with `--features full`.** A bare `cargo check`/`cargo build` fails because modules are declared unconditionally while their dependencies are optional â€” that is pre-existing and expected, not a regression.
 
 ## Architecture
 
@@ -85,16 +87,16 @@ Codegen has a habit of rewriting `app/test/mocks.mocks.dart` at 80 columns; reve
 
 Refena (`refena_flutter`), not Riverpod. Providers live in `app/lib/provider/`; `NotifierProvider` for plain state, `ReduxProvider` + dispatched action classes for anything the isolate layer touches. `app/lib/config/init.dart` (`preInit`) is the bootstrap: it initialises logging, `RustLib.init()`, persistence, the isolate container, tray/window, and returns the `RefenaContainer` that `main.dart` mounts.
 
-Models are `dart_mappable` (`@MappableClass`, `.mapper.dart` parts) with renamed methods — `fromJson`/`toJson` are the **Map** converters and `deserialize`/`serialize` are the string ones (configured in both `build.yaml` files). Freezed is used for FRB-adjacent unions.
+Models are `dart_mappable` (`@MappableClass`, `.mapper.dart` parts) with renamed methods â€” `fromJson`/`toJson` are the **Map** converters and `deserialize`/`serialize` are the string ones (configured in both `build.yaml` files). Freezed is used for FRB-adjacent unions.
 
 ### Isolates
 
-The heavy networking never runs on the main isolate. `packages/locara_isolates/lib/src/isolate/`:
+The heavy networking never runs on the main isolate. `packages/mesh_isolates/lib/src/isolate/`:
 
-- `parent/parent_isolate_provider.dart` — `ParentIsolateState` holds one `IsolateConnector` per child (http scan discovery, multicast discovery, http upload, http server) plus a `SyncState` mirrored into every child. `IsolateSetupAction` spawns them.
-- `parent/actions.dart`, `parent/actions_sync.dart` — the only supported way for the app to talk to the children.
-- `child/*_isolate.dart` — child entry points; they translate typed task messages into calls on `lib/src/task/`.
-- `lib/src/task/` — pure helpers only; **isolate logic is prohibited there** (see its `README.md`).
+- `parent/parent_isolate_provider.dart` â€” `ParentIsolateState` holds one `IsolateConnector` per child (http scan discovery, multicast discovery, http upload, http server) plus a `SyncState` mirrored into every child. `IsolateSetupAction` spawns them.
+- `parent/actions.dart`, `parent/actions_sync.dart` â€” the only supported way for the app to talk to the children.
+- `child/*_isolate.dart` â€” child entry points; they translate typed task messages into calls on `lib/src/task/`.
+- `lib/src/task/` â€” pure helpers only; **isolate logic is prohibited there** (see its `README.md`).
 
 State that children need (alias, port, protocol, whether the server runs, whether web send is on) is pushed via `IsolateSyncServerStateAction`. Children read `syncState` at start, so sync **before** starting the server.
 
@@ -102,15 +104,15 @@ State that children need (alias, port, protocol, whether the server runs, whethe
 
 The HTTP server and client are Rust, not Dart. `packages/core/src/http/server/` implements protocol v2 (v1 endpoints are not served) plus the "web send" download flow (`server/web.rs`) and an internal `show` endpoint used to foreground an already-running instance.
 
-Integration is channel-based: `start_with_port` takes a `ServerConfigV2 { pin, event_tx, web_send }` and emits `ServerEventV2` events (`Register`, `PrepareUpload` with a `decision_tx` oneshot, `FileUpload` with a byte stream + `result_tx`, `PrepareDownload`, `SessionEnd`, `PrepareUploadAborted`, `CancelReceived`). Only **one upload session is active at a time**; cancellation safety comes from drop guards (`PendingSessionGuard`, `UploadGuard`, `PendingWebSessionGuard`). There is deliberately no `auto_accept` in core — the app auto-accepts by answering `decision_tx` immediately. New server→app interactions should extend `ServerEventV2` rather than adding side channels.
+Integration is channel-based: `start_with_port` takes a `ServerConfigV2 { pin, event_tx, web_send }` and emits `ServerEventV2` events (`Register`, `PrepareUpload` with a `decision_tx` oneshot, `FileUpload` with a byte stream + `result_tx`, `PrepareDownload`, `SessionEnd`, `PrepareUploadAborted`, `CancelReceived`). Only **one upload session is active at a time**; cancellation safety comes from drop guards (`PendingSessionGuard`, `UploadGuard`, `PendingWebSessionGuard`). There is deliberately no `auto_accept` in core â€” the app auto-accepts by answering `decision_tx` immediately. New serverâ†’app interactions should extend `ServerEventV2` rather than adding side channels.
 
-The FRB layer (`packages/locara_isolates/rust/src/api/server.rs`) exposes `start_server` + an opaque `RsHttpServer` whose `listen` merges the v2, web-send and internal channels into one `RsServerEvent` stream; responder oneshots stay on the Rust side. On the Dart side `child/server_isolate.dart` turns those into `HttpServerEvent`s, which `app/lib/provider/network/server/server_provider.dart` routes to `ReceiveController` / `SendController` — these are **event handlers, not route handlers**.
+The FRB layer (`packages/mesh_isolates/rust/src/api/server.rs`) exposes `start_server` + an opaque `RsHttpServer` whose `listen` merges the v2, web-send and internal channels into one `RsServerEvent` stream; responder oneshots stay on the Rust side. On the Dart side `child/server_isolate.dart` turns those into `HttpServerEvent`s, which `app/lib/provider/network/server/server_provider.dart` routes to `ReceiveController` / `SendController` â€” these are **event handlers, not route handlers**.
 
-Save targets are decided in Dart (`prepareFileSaveTarget`) and written by Rust: a path, or an Android SAF file descriptor obtained through the `org.locara.locara_app/locara` method channel. Gallery saves go through a cache file first.
+Save targets are decided in Dart (`prepareFileSaveTarget`) and written by Rust: a path, or an Android SAF file descriptor obtained through the `org.mesh.mesh_app/mesh` method channel. Gallery saves go through a cache file first.
 
 Server event `ip`s are `PeerIp` (IP + IPv6 scope): a link-local peer renders as `fe80::1%3`, which the HTTP client accepts back as a host, so event ips stay dialable.
 
-TLS uses per-device on-the-fly certificates with **mandatory client certificates** (optional while the web pages are served, so browsers can connect); the peer identity is the uppercase-hex SHA-256 of the client cert DER, and `Register` is simply not emitted when a payload's claimed fingerprint disagrees with the cert. Prefer `event.certFingerprint ?? event.info.fingerprint` — the payload fallback only exists for encryption-off mode.
+TLS uses per-device on-the-fly certificates with **mandatory client certificates** (optional while the web pages are served, so browsers can connect); the peer identity is the uppercase-hex SHA-256 of the client cert DER, and `Register` is simply not emitted when a payload's claimed fingerprint disagrees with the cert. Prefer `event.certFingerprint ?? event.info.fingerprint` â€” the payload fallback only exists for encryption-off mode.
 
 Both the receive pin and the web-send pin are fixed at server start, so changing either restarts the server.
 
@@ -118,12 +120,12 @@ Web assets for the browser download page are embedded from `packages/core/assets
 
 ### Multicast discovery (Rust)
 
-`packages/core/src/multicast/` (feature `multicast`, independent of `http`) implements UDP multicast discovery for protocol v2.2 — v1 messages are not parsed.
+`packages/core/src/multicast/` (feature `multicast`, independent of `http`) implements UDP multicast discovery for protocol v2.2 â€” v1 messages are not parsed.
 Integration mirrors the HTTP server: `multicast::start` takes a `MulticastConfig { group, group_v6, port, interface_filter, device, event_tx }` and emits `MulticastEvent::Discovered { ip, message }`; the returned `MulticastHandle` offers `announce` (the announcement burst) and `wait_stopped`.
 
 UDP is **announce-only**: responses go back over HTTP as a unicast register request to the announcing device.
 
-One socket is bound per interface IPv4 address (`SO_REUSEPORT`/`SO_REUSEADDR` + `IP_MULTICAST_IF`), because a single socket only sends on one interface. Multicast loopback stays on so that instances on one host see each other; own messages are dropped by fingerprint. IPv6 is a locara extension (group `ff12::fd3a:e420`, `DEFAULT_MULTICAST_GROUP_V6`), enabled by setting `group_v6`: one `IPV6_V6ONLY` socket per interface, joined by interface index. `Discovered` carries the source's scope ID (interface index), which link-local IPv6 sources need for the HTTP answer.
+One socket is bound per interface IPv4 address (`SO_REUSEPORT`/`SO_REUSEADDR` + `IP_MULTICAST_IF`), because a single socket only sends on one interface. Multicast loopback stays on so that instances on one host see each other; own messages are dropped by fingerprint. IPv6 is a mesh extension (group `ff12::fd3a:e420`, `DEFAULT_MULTICAST_GROUP_V6`), enabled by setting `group_v6`: one `IPV6_V6ONLY` socket per interface, joined by interface index. `Discovered` carries the source's scope ID (interface index), which link-local IPv6 sources need for the HTTP answer.
 
 ### i18n
 
@@ -135,4 +137,5 @@ Slang, source files in `app/assets/i18n/` (`<locale>.json` plus `_missing_transl
 
 ## Release notes
 
-`app/pubspec.yaml`'s version must match `#define MyAppVersion` in `support/scripts/compile_windows_exe-inno.iss` and the `version` in `cli/Cargo.toml` (the CLI prints it in its start banner) — CI fails on a mismatch. Platform build commands and release steps are documented in `README.md` ("Building") and `CONTRIBUTING.md` ("Release").
+`app/pubspec.yaml`'s version must match `#define MyAppVersion` in `support/scripts/compile_windows_exe-inno.iss` and the `version` in `cli/Cargo.toml` (the CLI prints it in its start banner) â€” CI fails on a mismatch. Platform build commands and release steps are documented in `README.md` ("Building") and `CONTRIBUTING.md` ("Release").
+

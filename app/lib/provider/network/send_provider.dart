@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:locara_app/model/cross_file.dart';
 import 'package:locara_app/model/send_mode.dart';
@@ -10,8 +11,10 @@ import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/progress_page.dart';
 import 'package:locara_app/pages/send_page.dart';
 import 'package:locara_app/provider/device_info_provider.dart';
+import 'package:locara_app/provider/durable_send_provider.dart';
 import 'package:locara_app/provider/file_transfer_provider.dart';
 import 'package:locara_app/provider/http_provider.dart';
+import 'package:locara_app/provider/network/nearby_devices_provider.dart';
 import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/widget/dialogs/pin_dialog.dart';
@@ -25,6 +28,7 @@ import 'package:locara_isolates/rust/api/cancel.dart' as rust_cancel;
 import 'package:locara_isolates/rust/api/http.dart' as rust_http;
 import 'package:locara_isolates/rust/api/model.dart' as rust_model;
 import 'package:locara_isolates/util/file_hash.dart';
+import 'package:locara_isolates/util/file_path_helper.dart';
 import 'package:locara_isolates/util/rust.dart';
 import 'package:locara_isolates/util/sleep.dart';
 import 'package:locara_isolates/util/transfer_notification.dart';
@@ -586,6 +590,19 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
     }
   }
 
+  /// Determines whether a transfer to [target] with [files] can use the V3 chunked protocol.
+  ///
+  /// Requires:
+  /// 1. The target device advertises protocol version 3.x.
+  /// 2. Every file has a resolved native filesystem path (not null and not an Android SAF `content://` URI).
+  static bool canUseV3Upload({
+    required Device target,
+    required List<HttpUploadFile> files,
+  }) {
+    final isV3 = target.version.startsWith('3.');
+    return isV3 && files.isNotEmpty && files.every((f) => f.filePath != null && !f.filePath!.startsWith('content://'));
+  }
+
   /// Sends the given [files] as one isolate task.
   /// The isolate iterates through the list and reports the state of each file
   /// via [HttpUploadEvent]s.
@@ -615,14 +632,48 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
       return;
     }
 
+    final canUseV3 = canUseV3Upload(target: sessionState.target, files: uploadFiles);
+
+    if (canUseV3) {
+      final durableSend = ref.notifier(durableSendProvider);
+      for (final f in uploadFiles) {
+        if (f.filePath != null) {
+          unawaited(
+            durableSend.recordTransferStart(
+              transferId: f.fileId,
+              targetDeviceAlias: sessionState.target.alias,
+              targetFingerprint: sessionState.target.fingerprint,
+              targetIp: sessionState.target.ip ?? '',
+              targetPort: sessionState.target.port,
+              filePath: f.filePath!,
+              fileName: sessionState.files[f.fileId]?.file.fileName ?? f.fileId,
+              fileSize: f.fileSize,
+            ),
+          );
+        }
+      }
+    }
+
     final taskResult = ref
         .redux(parentIsolateProvider)
         .dispatchTakeResult(
-          IsolateHttpUploadFilesAction(
-            remoteSessionId: sessionState.remoteSessionId,
-            files: uploadFiles,
-            device: sessionState.target,
-          ),
+          canUseV3
+              ? IsolateHttpUploadFilesV3Action(
+                  files: [
+                    for (final f in uploadFiles)
+                      HttpUploadFileV3(
+                        transferId: f.fileId,
+                        filePath: f.filePath!,
+                        fileSize: f.fileSize,
+                      ),
+                  ],
+                  device: sessionState.target,
+                )
+              : IsolateHttpUploadFilesAction(
+                  remoteSessionId: sessionState.remoteSessionId,
+                  files: uploadFiles,
+                  device: sessionState.target,
+                ),
         );
 
     state = state.updateSession(
@@ -651,9 +702,26 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
                   fileId: event.fileId,
                   progress: event.progress,
                 );
+            if (canUseV3) {
+              final fileSize = sessionState.files[event.fileId]?.file.size ?? 0;
+              final bytes = (fileSize * event.progress).toInt();
+              unawaited(
+                ref.notifier(durableSendProvider).recordTransferProgress(
+                  transferId: event.fileId,
+                  bytesTransferred: bytes,
+                ),
+              );
+            }
             _updateForegroundServiceProgress(sessionId);
           case HttpUploadFileFinishedEvent():
             // set progress to 100% when successfully finished
+            if (canUseV3) {
+              unawaited(
+                ref.notifier(durableSendProvider).recordTransferFinished(
+                  transferId: event.fileId,
+                ),
+              );
+            }
             ref
                 .notifier(fileTransferProvider)
                 .setProgress(
@@ -665,6 +733,14 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
             ref.notifier(fileTransferProvider).setStatus(sessionId: sessionId, fileId: event.fileId, status: FileStatus.finished);
           case HttpUploadFileFailedEvent():
             _logger.warning('Error while sending file ${state[sessionId]?.files[event.fileId]?.file.fileName}: ${event.error}');
+            if (canUseV3) {
+              unawaited(
+                ref.notifier(durableSendProvider).recordTransferFailed(
+                  transferId: event.fileId,
+                  error: event.error,
+                ),
+              );
+            }
             ref.notifier(fileTransferProvider).setStatus(sessionId: sessionId, fileId: event.fileId, status: FileStatus.failed);
             state = state.updateSession(
               sessionId: sessionId,
@@ -681,6 +757,16 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
           .map((file) => file.fileId)
           .where((id) => const {FileStatus.queue, FileStatus.sending}.contains(transferNotifier.getStatus(sessionId: sessionId, fileId: id)))
           .toSet();
+      if (canUseV3) {
+        for (final id in failedFileIds) {
+          unawaited(
+            ref.notifier(durableSendProvider).recordTransferFailed(
+              transferId: id,
+              error: error,
+            ),
+          );
+        }
+      }
       transferNotifier.setStatuses(
         sessionId: sessionId,
         statuses: {for (final id in failedFileIds) id: FileStatus.failed},
@@ -811,6 +897,141 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
       sessionId: sessionId,
       state: (s) => s?.copyWith(background: background),
     );
+  }
+
+  /// Tracks actively resuming transfer IDs to prevent duplicate concurrent resume attempts.
+  final _resumingTransferIds = <String>{};
+
+  /// Returns whether a transfer is currently in the process of resuming.
+  bool isTransferResuming(String transferId) => _resumingTransferIds.contains(transferId);
+
+  /// Resumes an interrupted V3 file transfer identified by [transferId].
+  ///
+  /// Loads the existing [DurableSendEntry], validates the source file,
+  /// resolves the original target peer (refreshing IP/port from nearby devices if available
+  /// while strictly preserving TLS certificate pinning to [targetFingerprint]),
+  /// and transmits missing chunks using the original transfer ID.
+  Future<bool> resumeTransfer(String transferId) async {
+    if (_resumingTransferIds.contains(transferId)) {
+      _logger.warning('Transfer $transferId is already being resumed');
+      return false;
+    }
+
+    final entry = ref.read(durableSendProvider).firstWhereOrNull((e) => e.transferId == transferId);
+    if (entry == null) {
+      _logger.warning('Transfer $transferId not found in durable send entries');
+      return false;
+    }
+
+    final isValidSource = ref.notifier(durableSendProvider).verifySourceFile(entry);
+    if (!isValidSource) {
+      _logger.warning('Source file for $transferId is missing or modified on disk');
+      return false;
+    }
+
+    _resumingTransferIds.add(transferId);
+
+    // Resolve target peer: check nearbyDevicesProvider for an updated IP/port
+    // while strictly retaining the original targetFingerprint for certificate pinning.
+    final nearby = ref.read(nearbyDevicesProvider).devices.values.firstWhereOrNull((d) => d.fingerprint == entry.targetFingerprint);
+    final target = Device(
+      signalingId: null,
+      ip: nearby?.ip ?? entry.targetIp,
+      version: '3.0',
+      port: nearby != null && nearby.ip != null ? nearby.port : entry.targetPort,
+      https: true,
+      fingerprint: entry.targetFingerprint,
+      alias: nearby?.alias ?? entry.targetDeviceAlias,
+      deviceModel: nearby?.deviceModel,
+      deviceType: nearby?.deviceType ?? DeviceType.desktop,
+      download: false,
+      channels: [
+        HttpChannel(
+          host: nearby?.ip ?? entry.targetIp,
+          port: nearby != null && nearby.ip != null ? nearby.port : entry.targetPort,
+          https: true,
+        ),
+      ],
+    );
+
+    final sessionId = _uuid.v4();
+    final initialProgress = entry.fileSize > 0 ? (entry.bytesTransferred / entry.fileSize).clamp(0.0, 1.0) : 0.0;
+
+    final sendingFile = SendingFile(
+      file: FileDto(
+        id: entry.transferId,
+        fileName: entry.fileName,
+        size: entry.fileSize,
+        fileType: entry.fileName.guessFileType(),
+        hash: null,
+        preview: null,
+        metadata: null,
+      ),
+      token: entry.transferId,
+      thumbnail: null,
+      asset: null,
+      path: entry.filePath,
+      bytes: null,
+      errorMessage: null,
+    );
+
+    state = state.updateSession(
+      sessionId: sessionId,
+      state: (_) => SendSessionState(
+        sessionId: sessionId,
+        remoteSessionId: null,
+        background: false,
+        status: SessionStatus.sending,
+        target: target,
+        files: {
+          entry.transferId: sendingFile,
+        },
+        hashedFileCount: 1,
+        startTime: DateTime.now().millisecondsSinceEpoch,
+        endTime: null,
+        sendingTasks: [],
+        errorMessage: null,
+      ),
+    );
+
+    final transferNotifier = ref.notifier(fileTransferProvider);
+    transferNotifier.removeSession(sessionId);
+    transferNotifier.setStatuses(
+      sessionId: sessionId,
+      statuses: {entry.transferId: FileStatus.sending},
+    );
+    transferNotifier.setProgress(
+      sessionId: sessionId,
+      fileId: entry.transferId,
+      progress: initialProgress,
+    );
+
+    final routerContext = Routerino.navigatorKey.currentContext;
+    if (routerContext != null) {
+      unawaited(
+        // ignore: use_build_context_synchronously
+        Routerino.context.push(
+          () => ProgressPage(
+            showAppBar: false,
+            closeSessionOnClose: true,
+            sessionId: sessionId,
+          ),
+        ),
+      );
+    }
+
+    try {
+      await _sendFiles(
+        sessionId: sessionId,
+        files: [sendingFile],
+      );
+      return true;
+    } catch (e, st) {
+      _logger.warning('Error while resuming transfer $transferId', e, st);
+      return false;
+    } finally {
+      _resumingTransferIds.remove(transferId);
+    }
   }
 }
 
