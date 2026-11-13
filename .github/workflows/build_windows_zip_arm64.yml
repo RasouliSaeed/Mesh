@@ -98,9 +98,9 @@ jobs:
       - name: Remove MSIX helper from portable bundle
         working-directory: app
         run: |
-          Remove-Item build/windows/arm64/runner/Release/Mesh_msix_helper.msix
-          Remove-Item build/windows/arm64/runner/Release/install_msix_helper.ps1
-          Remove-Item build/windows/arm64/runner/Release/Mesh_app.exe.manifest
+          Remove-Item -Force -ErrorAction SilentlyContinue build/windows/arm64/runner/Release/*msix_helper*
+          Remove-Item -Force -ErrorAction SilentlyContinue build/windows/arm64/runner/Release/*manifest
+          Remove-Item -Force -ErrorAction SilentlyContinue build/windows/arm64/runner/Release/install_msix_helper.ps1
 
       - name: Zip compiled files
         working-directory: app
