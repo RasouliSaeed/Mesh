@@ -2,20 +2,32 @@ name: Build macOS (unsigned)
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 env:
   FLUTTER_VERSION: "3.47.5"
 
 jobs:
-  build_macos:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' app/pubspec.yaml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  build_macos_dmg:
+    needs: build
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Get version
-        id: get_version
-        run: |
-          VERSION=$(sed -n "s/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p" app/pubspec.yaml)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
@@ -23,27 +35,24 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
+
       - name: Dependencies
         working-directory: app
         run: flutter pub get
-      - name: Build macOS app
+
+      - name: Build macOS app (Universal)
         working-directory: app
         run: flutter build macos
-      - name: Archive macOS app
-        working-directory: app/build/macos/Build/Products/Release
-        run: zip -r Mesh-macOS-unsigned.zip *.app
-      - name: Upload artifact
+
+      - name: Create DMG (Universal)
+        run: |
+          VERSION="${{ needs.build.outputs.version }}"
+          APP_PATH=$(find app/build/macos/Build/Products/Release -name "*.app" -maxdepth 1 | head -n 1)
+          hdiutil create -volname "Mesh" -srcfolder "$APP_PATH" -ov -format UDZO "Mesh-${VERSION}-macOS-universal.dmg"
+
+      - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
         with:
-          name: macos-app-unsigned
-          path: app/build/macos/Build/Products/Release/Mesh-macOS-unsigned.zip
-
-
-
-
-
-
-
-
-
-
+          name: macos-dmg-universal-result
+          path: Mesh-*-macOS-universal.dmg
+          if-no-files-found: error

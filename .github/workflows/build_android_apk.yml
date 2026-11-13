@@ -83,6 +83,12 @@ jobs:
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: flutter pub get
 
+      - name: Build APK (Universal)
+        working-directory: ${{ env.APK_BUILD_DIR }}/app
+        run: flutter build apk
+      - name: Preserve APK (Universal)
+        run: cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-release.apk ./app-universal-release.apk
+
       - name: Build APK (armeabi-v7a)
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: flutter build apk --target-platform android-arm --split-per-abi
@@ -106,6 +112,7 @@ jobs:
         with:
           name: apk-result
           path: |
+            app-universal-release.apk
             app-armeabi-v7a-release.apk
             app-arm64-v8a-release.apk
             app-x86_64-release.apk
