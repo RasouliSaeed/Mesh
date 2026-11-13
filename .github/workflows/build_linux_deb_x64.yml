@@ -48,7 +48,7 @@ jobs:
           toolchain: stable
 
       - name: Check rust-toolchain.toml
-        working-directory: packages/mesh_isolates
+        working-directory: packages/locara_isolates
         run: rustup show
 
       - name: Enable dart_distributor
