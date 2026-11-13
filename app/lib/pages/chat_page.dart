@@ -191,9 +191,7 @@ class _ChatPageState extends State<ChatPage> {
                                     Icon(
                                       Icons.copy_rounded,
                                       size: 13,
-                                      color: message.isMine
-                                          ? Colors.white.withValues(alpha: 0.6)
-                                          : LocaraDesignTokens.mutedText,
+                                      color: message.isMine ? Colors.white.withValues(alpha: 0.6) : LocaraDesignTokens.mutedText,
                                     ),
                                   ],
                                 ),

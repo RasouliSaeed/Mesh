@@ -543,8 +543,7 @@ class _Translations$donationPage$hu extends Translations$donationPage$en {
   @override
   String get title => 'Adomány';
   @override
-  String get info =>
-      'A Mesh ingyenes, nyílt forráskódú és hirdetések nélküli. Ha megtetszett az alkalmazás, adományával támogathatja a fejlesztést.';
+  String get info => 'A Mesh ingyenes, nyílt forráskódú és hirdetések nélküli. Ha megtetszett az alkalmazás, adományával támogathatja a fejlesztést.';
   @override
   String donate({required Object amount}) => 'Adomány ${amount}';
   @override

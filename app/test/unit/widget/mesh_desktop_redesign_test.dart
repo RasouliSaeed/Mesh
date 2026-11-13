@@ -67,11 +67,11 @@ class FakeNearbyDevicesService extends NearbyDevicesService {
   final NearbyDevicesState initial;
 
   FakeNearbyDevicesService(this.initial, IsolateController isolateController)
-      : super(
-          isolateController: isolateController,
-          favoriteService: FakeFavoritesService(),
-          discoveryLogs: DiscoveryLogger(),
-        );
+    : super(
+        isolateController: isolateController,
+        favoriteService: FakeFavoritesService(),
+        discoveryLogs: DiscoveryLogger(),
+      );
 
   @override
   NearbyDevicesState init() => initial;
@@ -284,15 +284,17 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(1280, 800));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester.pumpWidget(buildDesktopTestApp(
-        serverState: const ServerState(
-          alias: 'Windows-PC',
-          port: 53317,
-          https: true,
-          session: null,
-          web: null,
+      await tester.pumpWidget(
+        buildDesktopTestApp(
+          serverState: const ServerState(
+            alias: 'Windows-PC',
+            port: 53317,
+            https: true,
+            session: null,
+            web: null,
+          ),
         ),
-      ));
+      );
       await tester.pump();
 
       expect(find.byWidgetPredicate((w) => w is RichText && w.text.toPlainText().contains('به مش خوش آمدید')), findsOneWidget);
@@ -314,14 +316,16 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(1280, 800));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester.pumpWidget(buildDesktopTestApp(
-        nearbyState: const NearbyDevicesState(
-          runningFavoriteScan: false,
-          runningIps: {},
-          devices: {},
-          signalingDevices: {},
+      await tester.pumpWidget(
+        buildDesktopTestApp(
+          nearbyState: const NearbyDevicesState(
+            runningFavoriteScan: false,
+            runningIps: {},
+            devices: {},
+            signalingDevices: {},
+          ),
         ),
-      ));
+      );
       await tester.pump();
 
       expect(find.byType(LocaraStageWidget), findsOneWidget);
@@ -363,14 +367,16 @@ void main() {
         channels: const [],
       );
 
-      await tester.pumpWidget(buildDesktopTestApp(
-        nearbyState: NearbyDevicesState(
-          runningFavoriteScan: false,
-          runningIps: {},
-          devices: {'FP1': device1, 'FP2': device2},
-          signalingDevices: {},
+      await tester.pumpWidget(
+        buildDesktopTestApp(
+          nearbyState: NearbyDevicesState(
+            runningFavoriteScan: false,
+            runningIps: {},
+            devices: {'FP1': device1, 'FP2': device2},
+            signalingDevices: {},
+          ),
         ),
-      ));
+      );
       await tester.pump();
 
       final stage2 = tester.widget<LocaraStageWidget>(find.byType(LocaraStageWidget));
@@ -383,11 +389,13 @@ void main() {
 
       var scanToggled = false;
 
-      await tester.pumpWidget(buildDesktopTestApp(
-        onScanToggled: () {
-          scanToggled = true;
-        },
-      ));
+      await tester.pumpWidget(
+        buildDesktopTestApp(
+          onScanToggled: () {
+            scanToggled = true;
+          },
+        ),
+      );
       await tester.pump();
 
       expect(find.byType(LocaraDiscoveryCard), findsOneWidget);

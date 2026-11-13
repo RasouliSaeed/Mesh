@@ -188,9 +188,7 @@ class _LocaraStageWidgetState extends State<LocaraStageWidget> with SingleTicker
               const SizedBox(height: 10),
               // Status text
               Text(
-                widget.availableDevicesCount > 0
-                    ? '${widget.availableDevicesCount} دستگاه در دسترس'
-                    : 'در حال جستجوی دستگاه‌ها...',
+                widget.availableDevicesCount > 0 ? '${widget.availableDevicesCount} دستگاه در دسترس' : 'در حال جستجوی دستگاه‌ها...',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,

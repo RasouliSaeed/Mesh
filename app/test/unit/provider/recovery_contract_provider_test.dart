@@ -137,7 +137,9 @@ void main() {
       final initialState = await container.notifier(recoveryContractProvider).future;
       expect(initialState.length, 1);
 
-      await container.notifier(recoveryContractProvider).pruneTransfer(
+      await container
+          .notifier(recoveryContractProvider)
+          .pruneTransfer(
             transferId: 'to_prune',
             direction: RecoverableTransferDirection.send,
           );
@@ -160,7 +162,9 @@ void main() {
       expect(initial.isEmpty, true);
 
       // Record a new failed transfer in durableSendProvider
-      await container.notifier(durableSendProvider).recordTransferStart(
+      await container
+          .notifier(durableSendProvider)
+          .recordTransferStart(
             transferId: 'reactive_1',
             targetDeviceAlias: 'Tablet',
             targetFingerprint: 'FP_TAB',
@@ -171,7 +175,9 @@ void main() {
             fileSize: 100,
           );
 
-      await container.notifier(durableSendProvider).recordTransferFailed(
+      await container
+          .notifier(durableSendProvider)
+          .recordTransferFailed(
             transferId: 'reactive_1',
             error: 'Network drop',
           );
@@ -186,7 +192,9 @@ void main() {
       expect(updated.first.unresumableReason, contains('missing or modified'));
 
       // Complete / finish the transfer in durableSendProvider -> should vanish from recovery
-      await container.notifier(durableSendProvider).recordTransferFinished(
+      await container
+          .notifier(durableSendProvider)
+          .recordTransferFinished(
             transferId: 'reactive_1',
           );
 

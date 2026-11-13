@@ -1409,8 +1409,7 @@ class _Translations$dialogs$localNetworkUnauthorized$hy extends Translations$dia
   @override
   String get title => _root.dialogs.noPermission.title;
   @override
-  String get description =>
-      'Mesh-ը չի կարող գտնել այլ սարքեր՝ առանց այդ թույլտվության: Խնդրում ենք տրամադրել այս թույլտվությունը կարգավորումներում:';
+  String get description => 'Mesh-ը չի կարող գտնել այլ սարքեր՝ առանց այդ թույլտվության: Խնդրում ենք տրամադրել այս թույլտվությունը կարգավորումներում:';
   @override
   String get gotoSettings => 'Կարգավորումներ';
 }

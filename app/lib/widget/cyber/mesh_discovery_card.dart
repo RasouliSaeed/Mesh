@@ -52,9 +52,7 @@ class _LocaraDiscoveryCardState extends State<LocaraDiscoveryCard> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _isScanning
-                      ? 'در حال یافتن دستگاه‌های متصل به شبکه محلی'
-                      : 'برای یافتن دستگاه‌های جدید، جستجو را آغاز کنید',
+                  _isScanning ? 'در حال یافتن دستگاه‌های متصل به شبکه محلی' : 'برای یافتن دستگاه‌های جدید، جستجو را آغاز کنید',
                   style: const TextStyle(
                     color: LocaraCyberColors.textSecondary,
                     fontSize: 13,

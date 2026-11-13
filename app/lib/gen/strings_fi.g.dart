@@ -545,8 +545,7 @@ class _Translations$donationPage$fi extends Translations$donationPage$en {
   @override
   String get title => 'Lahjoita';
   @override
-  String get info =>
-      'Mesh on ilmainen, avoimen lähdekoodin sovellus ilman mainoksia. Voit tukea projektia lahjoituksella, jos pidät sovelluksesta.';
+  String get info => 'Mesh on ilmainen, avoimen lähdekoodin sovellus ilman mainoksia. Voit tukea projektia lahjoituksella, jos pidät sovelluksesta.';
   @override
   String donate({required Object amount}) => 'Lahjoita ${amount}';
   @override

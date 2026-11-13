@@ -69,9 +69,7 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: colorScheme.brightness == Brightness.dark
-              ? LocaraDesignTokens.cardBorderSubtle
-              : Colors.white.withValues(alpha: 0.1),
+          color: colorScheme.brightness == Brightness.dark ? LocaraDesignTokens.cardBorderSubtle : Colors.white.withValues(alpha: 0.1),
         ),
       ),
     ),

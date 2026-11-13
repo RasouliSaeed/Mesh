@@ -43,9 +43,7 @@ class RecoveryContractService extends AsyncNotifier<List<RecoverableTransfer>> {
         final bytesTransferred = s.bytesTransferred.toInt();
         final progress = fileSize > 0 ? (bytesTransferred / fileSize).clamp(0.0, 1.0) : 0.0;
         final lastUpdatedSec = s.lastUpdatedAt.toInt();
-        final lastUpdated = lastUpdatedSec > 0
-            ? DateTime.fromMillisecondsSinceEpoch(lastUpdatedSec * 1000, isUtc: true)
-            : DateTime.now().toUtc();
+        final lastUpdated = lastUpdatedSec > 0 ? DateTime.fromMillisecondsSinceEpoch(lastUpdatedSec * 1000, isUtc: true) : DateTime.now().toUtc();
 
         results.add(
           RecoverableTransfer(
@@ -75,9 +73,7 @@ class RecoveryContractService extends AsyncNotifier<List<RecoverableTransfer>> {
     for (final entry in durableSenderState) {
       if (entry.status == 'interrupted' || entry.status == 'failed') {
         final isValidSource = durableSenderService.verifySourceFile(entry);
-        final progress = entry.fileSize > 0
-            ? (entry.bytesTransferred / entry.fileSize).clamp(0.0, 1.0)
-            : 0.0;
+        final progress = entry.fileSize > 0 ? (entry.bytesTransferred / entry.fileSize).clamp(0.0, 1.0) : 0.0;
 
         results.add(
           RecoverableTransfer(
