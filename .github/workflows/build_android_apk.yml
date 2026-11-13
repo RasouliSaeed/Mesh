@@ -99,7 +99,7 @@ jobs:
         run: cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-x86_64-release.apk .
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: apk-result
           path: |

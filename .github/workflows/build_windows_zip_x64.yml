@@ -79,7 +79,7 @@ jobs:
         run: Get-ChildItem -Path build/windows/x64/runner/Release -Exclude *.pdb | Compress-Archive -DestinationPath "Mesh-${{ needs.build.outputs.version }}-windows-x86-64.zip"
 
       - name: Upload signed zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-zip-x86-64-result
           path: app/Mesh-${{ needs.build.outputs.version }}-windows-x86-64.zip
