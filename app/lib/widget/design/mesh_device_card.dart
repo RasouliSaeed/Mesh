@@ -28,9 +28,7 @@ class LocaraDeviceCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: LocaraDesignTokens.radiusLarge,
       borderColor: isSelected ? LocaraDesignTokens.cyan : LocaraDesignTokens.cardBorderSubtle,
-      fillColor: isSelected
-          ? LocaraDesignTokens.cardSurfaceLight.withValues(alpha: 0.9)
-          : LocaraDesignTokens.cardSurface.withValues(alpha: 0.8),
+      fillColor: isSelected ? LocaraDesignTokens.cardSurfaceLight.withValues(alpha: 0.9) : LocaraDesignTokens.cardSurface.withValues(alpha: 0.8),
       withGlow: isSelected,
       padding: const EdgeInsets.symmetric(
         horizontal: LocaraDesignTokens.spacing16,

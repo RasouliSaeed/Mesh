@@ -493,8 +493,7 @@ class _Translations$webSharePage$si extends Translations$webSharePage$en {
   @override
   String pinHint({required Object pin}) => 'PIN එක "${pin}"';
   @override
-  String get encryptionHint =>
-      'Mesh self-signed certificate එකක් භාවිතා කරයි. ඔබ විසින් එය බ්‍රවුසරය (browser) තුළ දි පිළිගැනීම (accept) අවශ්‍ය වේ.';
+  String get encryptionHint => 'Mesh self-signed certificate එකක් භාවිතා කරයි. ඔබ විසින් එය බ්‍රවුසරය (browser) තුළ දි පිළිගැනීම (accept) අවශ්‍ය වේ.';
   @override
   String pendingRequests({required Object n}) => 'Pending වන ඉල්ලීම්: ${n}';
 }

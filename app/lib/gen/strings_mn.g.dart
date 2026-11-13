@@ -1324,8 +1324,7 @@ class _Translations$dialogs$localNetworkUnauthorized$mn extends Translations$dia
   @override
   String get title => _root.dialogs.noPermission.title;
   @override
-  String get description =>
-      'Дотоод сүлжээг скан хийх зөвшөөрөлгүйгээр Mesh бусад төхөөрөмжийг олж чадахгүй. Энэ зөвшөөрлийг тохиргооноос олгоно уу.';
+  String get description => 'Дотоод сүлжээг скан хийх зөвшөөрөлгүйгээр Mesh бусад төхөөрөмжийг олж чадахгүй. Энэ зөвшөөрлийг тохиргооноос олгоно уу.';
   @override
   String get gotoSettings => 'Тохиргоо';
 }

@@ -84,9 +84,7 @@ class LocaraConfirmationDialog extends StatelessWidget {
                     ),
                     child: Icon(
                       icon,
-                      color: confirmVariant == LocaraButtonVariant.danger
-                          ? LocaraDesignTokens.error
-                          : LocaraDesignTokens.cyan,
+                      color: confirmVariant == LocaraButtonVariant.danger ? LocaraDesignTokens.error : LocaraDesignTokens.cyan,
                       size: 26,
                     ),
                   ),

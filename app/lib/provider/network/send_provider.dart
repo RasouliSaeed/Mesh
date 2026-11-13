@@ -706,10 +706,12 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
               final fileSize = sessionState.files[event.fileId]?.file.size ?? 0;
               final bytes = (fileSize * event.progress).toInt();
               unawaited(
-                ref.notifier(durableSendProvider).recordTransferProgress(
-                  transferId: event.fileId,
-                  bytesTransferred: bytes,
-                ),
+                ref
+                    .notifier(durableSendProvider)
+                    .recordTransferProgress(
+                      transferId: event.fileId,
+                      bytesTransferred: bytes,
+                    ),
               );
             }
             _updateForegroundServiceProgress(sessionId);
@@ -717,9 +719,11 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
             // set progress to 100% when successfully finished
             if (canUseV3) {
               unawaited(
-                ref.notifier(durableSendProvider).recordTransferFinished(
-                  transferId: event.fileId,
-                ),
+                ref
+                    .notifier(durableSendProvider)
+                    .recordTransferFinished(
+                      transferId: event.fileId,
+                    ),
               );
             }
             ref
@@ -735,10 +739,12 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
             _logger.warning('Error while sending file ${state[sessionId]?.files[event.fileId]?.file.fileName}: ${event.error}');
             if (canUseV3) {
               unawaited(
-                ref.notifier(durableSendProvider).recordTransferFailed(
-                  transferId: event.fileId,
-                  error: event.error,
-                ),
+                ref
+                    .notifier(durableSendProvider)
+                    .recordTransferFailed(
+                      transferId: event.fileId,
+                      error: event.error,
+                    ),
               );
             }
             ref.notifier(fileTransferProvider).setStatus(sessionId: sessionId, fileId: event.fileId, status: FileStatus.failed);
@@ -760,10 +766,12 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
       if (canUseV3) {
         for (final id in failedFileIds) {
           unawaited(
-            ref.notifier(durableSendProvider).recordTransferFailed(
-              transferId: id,
-              error: error,
-            ),
+            ref
+                .notifier(durableSendProvider)
+                .recordTransferFailed(
+                  transferId: id,
+                  error: error,
+                ),
           );
         }
       }

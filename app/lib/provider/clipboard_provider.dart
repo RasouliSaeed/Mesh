@@ -86,7 +86,9 @@ class ClipboardSyncService {
     ref.notifier(chatProvider).setTarget(target);
     ref.notifier(chatProvider).addMessage(text, isMine: true);
 
-    await ref.notifier(sendProvider).startSession(
+    await ref
+        .notifier(sendProvider)
+        .startSession(
           target: target,
           files: [file],
           background: true,

@@ -1477,8 +1477,7 @@ class _Translations$dialogs$sendModeHelp$es_ES extends Translations$dialogs$send
   @override
   String get multiple => 'Enviar archivos a múltiples destinos. La selección no se borrará.';
   @override
-  String get link =>
-      'Los destinatarios que no tengan Mesh instalado pueden descargar los archivos seleccionados abriendo el enlace en su navegador.';
+  String get link => 'Los destinatarios que no tengan Mesh instalado pueden descargar los archivos seleccionados abriendo el enlace en su navegador.';
 }
 
 // Path: dialogs.zoom
