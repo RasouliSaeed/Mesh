@@ -67,6 +67,9 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Install Android Rust Targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:

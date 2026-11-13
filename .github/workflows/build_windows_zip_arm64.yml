@@ -41,6 +41,9 @@ jobs:
       # Flutter doesn't provide Windows ARM64 binaries, so clone the SDK from GitHub instead of using a setup action.
       - name: Setup Flutter SDK
         run: |
+          if (Test-Path "$env:USERPROFILE\flutter") {
+            Remove-Item -Recurse -Force "$env:USERPROFILE\flutter"
+          }
           git clone --depth 1 --branch ${{ env.FLUTTER_VERSION }} https://github.com/flutter/flutter.git $env:USERPROFILE\flutter
           Add-Content $env:GITHUB_PATH "$env:USERPROFILE\flutter\bin"
           & "$env:USERPROFILE\flutter\bin\flutter.bat" --version
