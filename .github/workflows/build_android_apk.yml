@@ -56,6 +56,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -85,7 +88,7 @@ jobs:
 
       - name: Build APK (Universal)
         working-directory: ${{ env.APK_BUILD_DIR }}/app
-        run: flutter build apk
+        run: flutter build apk --target-platform android-arm,android-arm64,android-x64
       - name: Preserve APK (Universal)
         run: cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-release.apk ./app-universal-release.apk
 
