@@ -134,7 +134,7 @@ jobs:
       # ==============================
       - name: Download APK artifacts
         if: ${{ github.event.inputs.build_android_apk == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: apk-result
           path: apk-result
@@ -192,7 +192,7 @@ jobs:
       # ==============================
       - name: Download Windows Setup x64
         if: ${{ github.event.inputs.build_windows_setup == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: windows-exe-x86-64-unsigned
           path: windows-exe-x86-64-unsigned
@@ -214,7 +214,7 @@ jobs:
 
       - name: Download Windows Portable x64
         if: ${{ github.event.inputs.build_windows_portable == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: windows-zip-x86-64-result
           path: windows-zip-x86-64-result
@@ -239,7 +239,7 @@ jobs:
       # ==============================
       - name: Download macOS DMG Universal
         if: ${{ github.event.inputs.build_macos_dmg == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: macos-dmg-universal-result
           path: macos-dmg-universal-result
@@ -264,7 +264,7 @@ jobs:
       # ==============================
       - name: Download Linux App amd64 (AppImage)
         if: ${{ github.event.inputs.build_linux_app_amd64 == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: appimage-x86-64-result
           path: appimage-x86-64-result
@@ -291,7 +291,7 @@ jobs:
 
       - name: Download Linux App ARM64 (AppImage)
         if: ${{ github.event.inputs.build_linux_app_arm64 == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: appimage-arm-64-result
           path: appimage-arm-64-result
@@ -321,7 +321,7 @@ jobs:
       # ==============================
       - name: Download Linux Core amd64
         if: ${{ github.event.inputs.build_linux_core_amd64 == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cli-linux-x86-64-result
           path: cli-linux-x86-64-result
@@ -343,7 +343,7 @@ jobs:
 
       - name: Download Linux Core ARM64
         if: ${{ github.event.inputs.build_linux_core_arm64 == 'true' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cli-linux-arm-64-result
           path: cli-linux-arm-64-result
