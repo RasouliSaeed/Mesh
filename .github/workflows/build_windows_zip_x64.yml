@@ -74,6 +74,15 @@ jobs:
           Remove-Item -Force -ErrorAction SilentlyContinue build/windows/x64/runner/Release/*manifest
           Remove-Item -Force -ErrorAction SilentlyContinue build/windows/x64/runner/Release/install_msix_helper.ps1
 
+      - name: Sign portable binary
+        working-directory: app
+        shell: powershell
+        run: |
+          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=Mesh, O=Mesh Team" -CertStoreLocation "Cert:\CurrentUser\My" -HashAlgorithm SHA256 -NotAfter (Get-Date).AddYears(10)
+          $signtool = (Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\10.*\x64\signtool.exe' | Select-Object -Last 1).FullName
+          echo "Signing mesh_app.exe with certificate $($cert.Thumbprint)"
+          & $signtool sign /sha1 $cert.Thumbprint /fd SHA256 /d "Mesh" "build\windows\x64\runner\Release\mesh_app.exe"
+
       - name: Zip compiled files
         working-directory: app
         run: Get-ChildItem -Path build/windows/x64/runner/Release -Exclude *.pdb | Compress-Archive -DestinationPath "Mesh-${{ needs.build.outputs.version }}-windows-x86-64.zip"

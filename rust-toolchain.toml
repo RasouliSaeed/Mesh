@@ -1,4 +1,4 @@
 # Mesh Rust Toolchain
 [toolchain]
-channel = "1.97.1"
+channel = "stable"
 components = ["clippy"]

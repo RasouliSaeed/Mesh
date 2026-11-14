@@ -47,13 +47,15 @@ jobs:
 
       - name: Build macOS app (Universal)
         working-directory: app
-        run: flutter build macos -v
+        run: flutter build macos --release -v
 
       - name: Create DMG (Universal)
         run: |
           VERSION="${{ needs.build.outputs.version }}"
           APP_PATH=$(find app/build/macos/Build/Products/Release -name "*.app" -maxdepth 1 | head -n 1)
-          codesign --force --deep --sign - "$APP_PATH" || true
+          echo "Found app at: $APP_PATH"
+          find "$APP_PATH/Contents/PlugIns" -name "*.appex" -exec codesign --force --deep --sign - {} \; 2>/dev/null || true
+          codesign --force --deep --sign - "$APP_PATH"
           hdiutil create -volname "Mesh" -srcfolder "$APP_PATH" -ov -format UDZO "Mesh-${VERSION}-macOS-universal.dmg"
 
       - name: Upload DMG artifact

@@ -58,10 +58,16 @@ android {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-                storeFile file(keystoreProperties['storeFile'])
+                def storeFilePath = keystoreProperties['storeFile']
+                def storeF = rootProject.file(storeFilePath)
+                if (!storeF.exists()) {
+                    storeF = file(storeFilePath)
+                }
+                storeFile storeF
                 storePassword keystoreProperties['storePassword']
+                v1SigningEnabled true
+                v2SigningEnabled true
             }
-
         }
     }
 

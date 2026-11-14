@@ -1,8 +1,8 @@
 import Foundation
 import Defaults
 
-let teamIdentifierPrefix = Bundle.main.infoDictionary!["AppIdentifierPrefix"] as! String
-let sharedDefaults = UserDefaults(suiteName: "\(teamIdentifierPrefix)locara.shared_group")!
+let teamIdentifierPrefix = (Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String) ?? ""
+let sharedDefaults = UserDefaults(suiteName: "\(teamIdentifierPrefix)locara.shared_group") ?? UserDefaults.standard
 
 typealias FileBookmarkData = Data
 extension Defaults.Keys {
