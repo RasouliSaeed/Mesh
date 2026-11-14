@@ -2,6 +2,8 @@
 
 set -e
 
+export PATH="$HOME/.cargo/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
+
 BASEDIR=$(dirname "$0")
 
 mkdir -p "$CARGOKIT_TOOL_TEMP_DIR"

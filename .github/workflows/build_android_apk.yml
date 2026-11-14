@@ -34,13 +34,13 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@main
         with:
-          tool-cache: true
+          tool-cache: false
           android: false
           dotnet: true
           haskell: true
           large-packages: true
           docker-images: true
-          swap-storage: false
+          swap-storage: true
       - name: Remove proprietary dependencies
         run: sh support/scripts/remove_proprietary_dependencies.sh
 
@@ -71,7 +71,10 @@ jobs:
           toolchain: stable
 
       - name: Install Android Rust Targets
-        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+        working-directory: ${{ env.APK_BUILD_DIR }}/packages/locara_isolates
+        run: |
+          rustup show
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
