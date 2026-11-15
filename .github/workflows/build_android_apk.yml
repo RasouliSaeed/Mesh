@@ -59,6 +59,11 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
+      - name: Setup NDK libgcc workaround
+        run: |
+          find /usr/local/lib/android/sdk/ndk -name "libunwind.a" -execdir sh -c 'printf "!<arch>\n" > libgcc.a' \; 2>/dev/null || true
+          find "$ANDROID_HOME" -name "libunwind.a" -execdir sh -c 'printf "!<arch>\n" > libgcc.a' \; 2>/dev/null || true
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -74,6 +79,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: ${{ env.APK_BUILD_DIR }}
+          key: v3-android
 
       - name: Dependencies
         working-directory: ${{ env.APK_BUILD_DIR }}/app
@@ -83,10 +89,12 @@ jobs:
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: |
           flutter build apk --split-per-abi --target-platform android-arm,android-arm64,android-x64
-          cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk $GITHUB_WORKSPACE/app-arm64-v8a-release.apk
-          cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk $GITHUB_WORKSPACE/app-armeabi-v7a-release.apk
-          cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-x86_64-release.apk $GITHUB_WORKSPACE/app-x86_64-release.apk
-          cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
+          echo "=== Built Split APK files ==="
+          ls -la build/app/outputs/flutter-apk/
+          cp build/app/outputs/flutter-apk/*arm64-v8a*.apk $GITHUB_WORKSPACE/app-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/*armeabi-v7a*.apk $GITHUB_WORKSPACE/app-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/*x86_64*.apk $GITHUB_WORKSPACE/app-x86_64-release.apk
+          cd android && ./gradlew --stop || true
 
       - name: Build Universal APK
         working-directory: ${{ env.APK_BUILD_DIR }}/app
@@ -94,8 +102,10 @@ jobs:
           flutter clean
           flutter pub get
           flutter build apk --target-platform android-arm,android-arm64,android-x64
-          cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-release.apk $GITHUB_WORKSPACE/app-universal-release.apk
-          cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
+          echo "=== Built Universal APK ==="
+          ls -la build/app/outputs/flutter-apk/
+          cp build/app/outputs/flutter-apk/app-release.apk $GITHUB_WORKSPACE/app-universal-release.apk
+          cd android && ./gradlew --stop || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

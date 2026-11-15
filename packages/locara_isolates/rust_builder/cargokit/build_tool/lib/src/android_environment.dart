@@ -154,13 +154,21 @@ class AndroidEnvironment {
     final toolTempDir =
         Platform.environment['CARGOKIT_TOOL_TEMP_DIR'] ?? targetTempDir;
 
+    final rustUnder = target.rust.replaceAll('-', '_');
+
     return {
       arKey: arValue,
+      'AR_$rustUnder': arValue,
       ccKey: ccValue,
+      'CC_$rustUnder': ccValue,
       cfFlagsKey: cFlagsValue,
+      'CFLAGS_$rustUnder': cFlagsValue,
       cxxKey: cxxValue,
+      'CXX_$rustUnder': cxxValue,
       cxxFlagsKey: cxxFlagsValue,
+      'CXXFLAGS_$rustUnder': cxxFlagsValue,
       ranlibKey: ranlibValue,
+      'RANLIB_$rustUnder': ranlibValue,
       rustFlagsKey: rustFlagsValue,
       linkerKey: selfPath,
       // Recognized by main() so we know when we're acting as a wrapper
@@ -180,9 +188,11 @@ class AndroidEnvironment {
     );
     Directory(workaroundDir).createSync(recursive: true);
     File(path.join(workaroundDir, 'libgcc.a'))
-        .writeAsStringSync('/* empty dummy libgcc.a */\n');
-    File(path.join(workaroundDir, 'libunwind.a'))
-        .writeAsStringSync('/* empty dummy libunwind.a */\n');
+        .writeAsStringSync('!<arch>\n');
+    final libunwind = File(path.join(workaroundDir, 'libunwind.a'));
+    if (libunwind.existsSync()) {
+      libunwind.deleteSync();
+    }
 
     var rustFlags = Platform.environment['CARGO_ENCODED_RUSTFLAGS'] ?? '';
     if (rustFlags.isNotEmpty) {
