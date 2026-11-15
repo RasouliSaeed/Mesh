@@ -179,15 +179,10 @@ class AndroidEnvironment {
       '${ndkVersion.major}',
     );
     Directory(workaroundDir).createSync(recursive: true);
-    if (ndkVersion.major >= 23) {
-      File(path.join(workaroundDir, 'libgcc.a'))
-          .writeAsStringSync('INPUT(-lunwind)');
-    } else {
-      // Other way around, untested, forward libgcc.a from libunwind once Rust
-      // gets updated for NDK23+.
-      File(path.join(workaroundDir, 'libunwind.a'))
-          .writeAsStringSync('INPUT(-lgcc)');
-    }
+    File(path.join(workaroundDir, 'libgcc.a'))
+        .writeAsStringSync('/* empty dummy libgcc.a */\n');
+    File(path.join(workaroundDir, 'libunwind.a'))
+        .writeAsStringSync('/* empty dummy libunwind.a */\n');
 
     var rustFlags = Platform.environment['CARGO_ENCODED_RUSTFLAGS'] ?? '';
     if (rustFlags.isNotEmpty) {

@@ -79,31 +79,21 @@ jobs:
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: flutter pub get
 
-      - name: Build APK (arm64-v8a)
+      - name: Build Split APKs (arm64-v8a, armeabi-v7a, x86_64)
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: |
-          flutter build apk --verbose --target-platform android-arm64 --split-per-abi
+          flutter build apk --split-per-abi --target-platform android-arm,android-arm64,android-x64
           cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk $GITHUB_WORKSPACE/app-arm64-v8a-release.apk
-          cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
-
-      - name: Build APK (armeabi-v7a)
-        working-directory: ${{ env.APK_BUILD_DIR }}/app
-        run: |
-          flutter build apk --verbose --target-platform android-arm --split-per-abi
           cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk $GITHUB_WORKSPACE/app-armeabi-v7a-release.apk
-          cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
-
-      - name: Build APK (x86_64)
-        working-directory: ${{ env.APK_BUILD_DIR }}/app
-        run: |
-          flutter build apk --verbose --target-platform android-x64 --split-per-abi
           cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-x86_64-release.apk $GITHUB_WORKSPACE/app-x86_64-release.apk
           cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
 
-      - name: Build APK (Universal)
+      - name: Build Universal APK
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: |
-          flutter build apk --verbose --target-platform android-arm,android-arm64,android-x64
+          flutter clean
+          flutter pub get
+          flutter build apk --target-platform android-arm,android-arm64,android-x64
           cp ${{ env.APK_BUILD_DIR }}/app/build/app/outputs/flutter-apk/app-release.apk $GITHUB_WORKSPACE/app-universal-release.apk
           cd ${{ env.APK_BUILD_DIR }}/app/android && ./gradlew --stop || true
 
