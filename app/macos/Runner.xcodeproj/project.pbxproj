@@ -23,7 +23,7 @@
 /* Begin PBXBuildFile section */
 		05251DB32EA03617008503F6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05251DB22EA03615008503F6 /* Utilities.swift */; };
 		053DADDD2C8945EF00C3B4DE /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 053DADDC2C8945EF00C3B4DE /* icon.icns */; };
-		053DADE72C8945EF00C3B4DE /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 053DADDA2C8945EF00C3B4DE /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		053DADE72C8945EF00C3B4DE /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 053DADDA2C8945EF00C3B4DE /* ShareExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		053DADF32C8947A500C3B4DE /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053DADF12C8947A500C3B4DE /* Utilities.swift */; };
 		053DADF62C89486500C3B4DE /* ShareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053DADF42C89486500C3B4DE /* ShareController.swift */; };
 		053DADFD2C89F83400C3B4DE /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053DADFA2C89F25E00C3B4DE /* Shared.swift */; };
@@ -538,7 +538,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Locara;
+				INFOPLIST_KEY_CFBundleDisplayName = Mesh;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -550,7 +550,7 @@
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = app.locara.locaraApp.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = app.mesh.meshApp.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -588,7 +588,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Locara;
+				INFOPLIST_KEY_CFBundleDisplayName = Mesh;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -599,7 +599,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = app.locara.locaraApp.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = app.mesh.meshApp.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -635,7 +635,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Locara;
+				INFOPLIST_KEY_CFBundleDisplayName = Mesh;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -646,7 +646,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = app.locara.locaraApp.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = app.mesh.meshApp.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;

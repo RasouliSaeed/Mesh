@@ -109,7 +109,11 @@ class AndroidEnvironment {
       throw Exception('Failed to find ar for $target in $toolchainPath');
     }
 
-    final targetArg = '--target=${target.rust}$minSdkVersion';
+    final ndkTarget = target.rust == 'armv7-linux-androideabi'
+        ? 'armv7a-linux-androideabi'
+        : target.rust;
+
+    final targetArg = '--target=$ndkTarget$minSdkVersion';
 
     final ccKey = 'CC_${target.rust}';
     final ccValue = path.join(toolchainPath, 'clang$exe');

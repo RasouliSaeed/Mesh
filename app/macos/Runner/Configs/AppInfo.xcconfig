@@ -8,7 +8,7 @@
 PRODUCT_NAME = Mesh
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = org.locara.locaraApp
+PRODUCT_BUNDLE_IDENTIFIER = app.mesh.meshApp
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022-2026 SaeedR
