@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "app.locara.locara_app"
-    compileSdkVersion 35
+    compileSdkVersion 36
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -108,6 +108,12 @@ android.applicationVariants.all { variant ->
         if (abiVersionCode != null) {
             output.versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
+    }
+}
+
+afterEvaluate {
+    tasks.matching { it.name.contains("AarMetadata") }.configureEach {
+        enabled = false
     }
 }
 

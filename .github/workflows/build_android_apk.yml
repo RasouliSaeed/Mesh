@@ -59,6 +59,9 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
+      - name: Install Android Platform 36
+        run: echo y | sdkmanager "platforms;android-36" || true
+
       - name: Setup NDK libgcc workaround
         run: |
           find /usr/local/lib/android/sdk/ndk -name "libunwind.a" -execdir sh -c 'printf "!<arch>\n" > libgcc.a' \; 2>/dev/null || true
