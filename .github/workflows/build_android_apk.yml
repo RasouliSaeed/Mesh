@@ -7,6 +7,7 @@ on:
 env:
   FLUTTER_VERSION: "3.47.5"
   APK_BUILD_DIR: "/tmp/build"
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs='-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+UseG1GC' -Dorg.gradle.parallel=false"
 
 jobs:
   build:
@@ -102,8 +103,6 @@ jobs:
       - name: Build Universal APK
         working-directory: ${{ env.APK_BUILD_DIR }}/app
         run: |
-          flutter clean
-          flutter pub get
           flutter build apk --target-platform android-arm,android-arm64,android-x64
           echo "=== Built Universal APK ==="
           ls -la build/app/outputs/flutter-apk/
