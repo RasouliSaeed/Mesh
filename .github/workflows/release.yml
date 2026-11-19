@@ -133,7 +133,7 @@ jobs:
           name: v${{ steps.get_version.outputs.version }}
 
       # ==============================
-      # Android APKs
+      # Download Build Artifacts
       # ==============================
       - name: Download APK artifacts
         if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
@@ -142,78 +142,12 @@ jobs:
           name: apk-result
           path: apk-result
 
-      - name: Copy APK files to root
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
-        run: cp apk-result/*.apk .
-
-      - name: Upload Release Asset - APK Universal
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: app-universal-release.apk
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-android-universal.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload Release Asset - APK ARMv8
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: app-arm64-v8a-release.apk
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-android-arm64v8.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload Release Asset - APK ARMv7
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: app-armeabi-v7a-release.apk
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-android-arm32v7.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload Release Asset - APK x64
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: app-x86_64-release.apk
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-android-x64.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      # ==============================
-      # Windows
-      # ==============================
       - name: Download Windows Setup x64
         if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: windows-exe-x86-64-unsigned
           path: windows-exe-x86-64-unsigned
-
-      - name: Copy Windows Setup exe to root
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
-        run: cp windows-exe-x86-64-unsigned/*.exe result-windows-setup.exe
-
-      - name: Upload Release Asset - Windows Setup x64
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-windows-setup.exe
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-windows-x86-64.exe
-          asset_content_type: application/vnd.microsoft.portable-executable
 
       - name: Download Windows Portable x64
         if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
@@ -222,24 +156,6 @@ jobs:
           name: windows-zip-x86-64-result
           path: windows-zip-x86-64-result
 
-      - name: Copy Windows Portable zip to root
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
-        run: cp windows-zip-x86-64-result/*.zip result-windows-portable.zip
-
-      - name: Upload Release Asset - Windows Portable x64
-        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-windows-portable.zip
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-windows-x86-64.zip
-          asset_content_type: application/zip
-
-      # ==============================
-      # macOS
-      # ==============================
       - name: Download macOS DMG Universal
         if: ${{ github.event.inputs.build_macos_dmg == 'true' }}
         uses: actions/download-artifact@v4
@@ -247,50 +163,12 @@ jobs:
           name: macos-dmg-universal-result
           path: macos-dmg-universal-result
 
-      - name: Copy macOS DMG to root
-        if: ${{ github.event.inputs.build_macos_dmg == 'true' }}
-        run: cp macos-dmg-universal-result/*.dmg result-macos.dmg
-
-      - name: Upload Release Asset - macOS DMG Universal
-        if: ${{ github.event.inputs.build_macos_dmg == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-macos.dmg
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-macOS-universal.dmg
-          asset_content_type: application/x-apple-diskimage
-
-      # ==============================
-      # Linux Apps (AppImage)
-      # ==============================
       - name: Download Linux App amd64 (AppImage)
         if: ${{ github.event.inputs.build_linux_app_amd64 == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: appimage-x86-64-result
           path: appimage-x86-64-result
-
-      - name: Copy Linux App amd64 to root
-        if: ${{ github.event.inputs.build_linux_app_amd64 == 'true' }}
-        run: |
-          for file in appimage-x86-64-result/*; do
-            if [[ $file == *.AppImage && $file != *.AppImage.zsync ]]; then
-              cp "$file" result-linux-amd64.AppImage
-            fi
-          done
-
-      - name: Upload Release Asset - Linux App amd64
-        if: ${{ github.event.inputs.build_linux_app_amd64 == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-linux-amd64.AppImage
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-linux-x86-64.AppImage
-          asset_content_type: application/x-appimage
 
       - name: Download Linux App ARM64 (AppImage)
         if: ${{ github.event.inputs.build_linux_app_arm64 == 'true' }}
@@ -299,50 +177,12 @@ jobs:
           name: appimage-arm-64-result
           path: appimage-arm-64-result
 
-      - name: Copy Linux App ARM64 to root
-        if: ${{ github.event.inputs.build_linux_app_arm64 == 'true' }}
-        run: |
-          for file in appimage-arm-64-result/*; do
-            if [[ $file == *.AppImage && $file != *.AppImage.zsync ]]; then
-              cp "$file" result-linux-arm64.AppImage
-            fi
-          done
-
-      - name: Upload Release Asset - Linux App ARM64
-        if: ${{ github.event.inputs.build_linux_app_arm64 == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-linux-arm64.AppImage
-          asset_name: Mesh-${{ steps.get_version.outputs.version }}-linux-arm-64.AppImage
-          asset_content_type: application/x-appimage
-
-      # ==============================
-      # Linux Core (CLI)
-      # ==============================
       - name: Download Linux Core amd64
         if: ${{ github.event.inputs.build_linux_core_amd64 == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: cli-linux-x86-64-result
           path: cli-linux-x86-64-result
-
-      - name: Copy Linux Core amd64 to root
-        if: ${{ github.event.inputs.build_linux_core_amd64 == 'true' }}
-        run: cp cli-linux-x86-64-result/*.tar.gz result-linux-core-amd64.tar.gz
-
-      - name: Upload Release Asset - Linux Core amd64
-        if: ${{ github.event.inputs.build_linux_core_amd64 == 'true' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-linux-core-amd64.tar.gz
-          asset_name: Mesh-CLI-${{ steps.get_version.outputs.version }}-linux-x86-64.tar.gz
-          asset_content_type: application/gzip
 
       - name: Download Linux Core ARM64
         if: ${{ github.event.inputs.build_linux_core_arm64 == 'true' }}
@@ -351,17 +191,73 @@ jobs:
           name: cli-linux-arm-64-result
           path: cli-linux-arm-64-result
 
-      - name: Copy Linux Core ARM64 to root
-        if: ${{ github.event.inputs.build_linux_core_arm64 == 'true' }}
-        run: cp cli-linux-arm-64-result/*.tar.gz result-linux-core-arm64.tar.gz
+      # ==============================
+      # Stage & Standardize Release Asset Names
+      # ==============================
+      - name: Stage Release Assets
+        run: |
+          mkdir -p release_assets
+          # Android APKs
+          if [ -d "apk-result" ]; then
+            [ -f "apk-result/app-universal-release.apk" ] && cp apk-result/app-universal-release.apk release_assets/Mesh-${{ steps.get_version.outputs.version }}-android-universal.apk
+            [ -f "apk-result/app-arm64-v8a-release.apk" ] && cp apk-result/app-arm64-v8a-release.apk release_assets/Mesh-${{ steps.get_version.outputs.version }}-android-arm64v8.apk
+            [ -f "apk-result/app-armeabi-v7a-release.apk" ] && cp apk-result/app-armeabi-v7a-release.apk release_assets/Mesh-${{ steps.get_version.outputs.version }}-android-arm32v7.apk
+            [ -f "apk-result/app-x86_64-release.apk" ] && cp apk-result/app-x86_64-release.apk release_assets/Mesh-${{ steps.get_version.outputs.version }}-android-x64.apk
+          fi
+          # Windows
+          if [ -d "windows-exe-x86-64-unsigned" ]; then
+            for f in windows-exe-x86-64-unsigned/*.exe; do
+              [ -f "$f" ] && cp "$f" release_assets/Mesh-${{ steps.get_version.outputs.version }}-windows-x86-64.exe
+            done
+          fi
+          if [ -d "windows-zip-x86-64-result" ]; then
+            for f in windows-zip-x86-64-result/*.zip; do
+              [ -f "$f" ] && cp "$f" release_assets/Mesh-${{ steps.get_version.outputs.version }}-windows-x86-64.zip
+            done
+          fi
+          # macOS
+          if [ -d "macos-dmg-universal-result" ]; then
+            for f in macos-dmg-universal-result/*.dmg; do
+              [ -f "$f" ] && cp "$f" release_assets/Mesh-${{ steps.get_version.outputs.version }}-macOS-universal.dmg
+            done
+          fi
+          # Linux AppImage
+          if [ -d "appimage-x86-64-result" ]; then
+            for f in appimage-x86-64-result/*; do
+              if [[ $f == *.AppImage && $f != *.AppImage.zsync ]]; then
+                cp "$f" release_assets/Mesh-${{ steps.get_version.outputs.version }}-linux-x86-64.AppImage
+              fi
+            done
+          fi
+          if [ -d "appimage-arm-64-result" ]; then
+            for f in appimage-arm-64-result/*; do
+              if [[ $f == *.AppImage && $f != *.AppImage.zsync ]]; then
+                cp "$f" release_assets/Mesh-${{ steps.get_version.outputs.version }}-linux-arm-64.AppImage
+              fi
+            done
+          fi
+          # Linux CLI
+          if [ -d "cli-linux-x86-64-result" ]; then
+            for f in cli-linux-x86-64-result/*.tar.gz; do
+              [ -f "$f" ] && cp "$f" release_assets/Mesh-CLI-${{ steps.get_version.outputs.version }}-linux-x86-64.tar.gz
+            done
+          fi
+          if [ -d "cli-linux-arm-64-result" ]; then
+            for f in cli-linux-arm-64-result/*.tar.gz; do
+              [ -f "$f" ] && cp "$f" release_assets/Mesh-CLI-${{ steps.get_version.outputs.version }}-linux-arm-64.tar.gz
+            done
+          fi
+          echo "=== Staged Release Assets ==="
+          ls -la release_assets/
 
-      - name: Upload Release Asset - Linux Core ARM64
-        if: ${{ github.event.inputs.build_linux_core_arm64 == 'true' }}
-        uses: actions/upload-release-asset@v1
+      # ==============================
+      # Upload Assets to GitHub Release
+      # ==============================
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          files: release_assets/*
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.draft_release.outputs.upload_url }}
-          asset_path: result-linux-core-arm64.tar.gz
-          asset_name: Mesh-CLI-${{ steps.get_version.outputs.version }}-linux-arm-64.tar.gz
-          asset_content_type: application/gzip
