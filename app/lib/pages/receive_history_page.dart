@@ -271,12 +271,14 @@ class ReceiveHistoryPage extends StatelessWidget {
                                 );
                                 if (context.mounted) {
                                   unawaited(
-                                    context.redux(selectedSendingFilesProvider).dispatchAsync(
-                                      AddFilesAction<CrossFile>(
-                                        files: [crossFile],
-                                        converter: (f) async => f,
-                                      ),
-                                    ),
+                                    context
+                                        .redux(selectedSendingFilesProvider)
+                                        .dispatchAsync(
+                                          AddFilesAction<CrossFile>(
+                                            files: [crossFile],
+                                            converter: (f) async => f,
+                                          ),
+                                        ),
                                   );
                                   context.redux(homePageControllerProvider).dispatch(ChangeTabAction(HomeTab.send));
                                   Navigator.of(context).pop();

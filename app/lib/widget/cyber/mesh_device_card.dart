@@ -28,7 +28,9 @@ class MeshDeviceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final isOnline = status == MeshDeviceStatus.online;
-    final statusColor = isOnline ? LocaraDesignTokens.success : (status == MeshDeviceStatus.suspected ? LocaraDesignTokens.warning : LocaraDesignTokens.mutedText);
+    final statusColor = isOnline
+        ? LocaraDesignTokens.success
+        : (status == MeshDeviceStatus.suspected ? LocaraDesignTokens.warning : LocaraDesignTokens.mutedText);
     final statusText = isOnline
         ? (isRtl ? 'آنلاین' : 'Online')
         : (status == MeshDeviceStatus.suspected ? (isRtl ? 'مشکوک' : 'Suspected') : (isRtl ? 'آفلاین' : 'Offline'));

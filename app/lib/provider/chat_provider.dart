@@ -32,11 +32,9 @@ class ChatMessage {
     required this.timestamp,
     MessageDeliveryStatus? deliveryStatus,
     bool isRead = false,
-  })  : id = id ?? '${timestamp.microsecondsSinceEpoch}_${sequenceNumber}_${isMine ? "m" : "t"}',
-        deliveryStatus = deliveryStatus ??
-            (isRead
-                ? MessageDeliveryStatus.read
-                : (isMine ? MessageDeliveryStatus.delivered : MessageDeliveryStatus.delivered));
+  }) : id = id ?? '${timestamp.microsecondsSinceEpoch}_${sequenceNumber}_${isMine ? "m" : "t"}',
+       deliveryStatus =
+           deliveryStatus ?? (isRead ? MessageDeliveryStatus.read : (isMine ? MessageDeliveryStatus.delivered : MessageDeliveryStatus.delivered));
 
   bool get isRead => deliveryStatus == MessageDeliveryStatus.read;
 
@@ -57,10 +55,8 @@ class ChatMessage {
       isMine: isMine ?? this.isMine,
       sender: sender ?? this.sender,
       timestamp: timestamp ?? this.timestamp,
-      deliveryStatus: deliveryStatus ??
-          (isRead != null
-              ? (isRead ? MessageDeliveryStatus.read : MessageDeliveryStatus.delivered)
-              : this.deliveryStatus),
+      deliveryStatus:
+          deliveryStatus ?? (isRead != null ? (isRead ? MessageDeliveryStatus.read : MessageDeliveryStatus.delivered) : this.deliveryStatus),
     );
   }
 }
@@ -90,8 +86,7 @@ class ChatState {
       return combined;
     }
     final list = peerMessages[peerKeyFor(currentTarget!)] ?? const [];
-    return List<ChatMessage>.from(list)
-      ..sort((a, b) => a.sequenceNumber.compareTo(b.sequenceNumber));
+    return List<ChatMessage>.from(list)..sort((a, b) => a.sequenceNumber.compareTo(b.sequenceNumber));
   }
 
   /// Total unread messages across all active peer sessions.
@@ -151,10 +146,9 @@ class ChatNotifier extends Notifier<ChatState> {
     final nextSeq = sequenceNumber ?? (existing.isEmpty ? 1 : existing.last.sequenceNumber + 1);
 
     final isTargetActive = state.currentTarget != null && ChatState.peerKeyFor(state.currentTarget!) == key;
-    final initialStatus = deliveryStatus ??
-        (isMine
-            ? MessageDeliveryStatus.delivered
-            : (isTargetActive ? MessageDeliveryStatus.read : MessageDeliveryStatus.delivered));
+    final initialStatus =
+        deliveryStatus ??
+        (isMine ? MessageDeliveryStatus.delivered : (isTargetActive ? MessageDeliveryStatus.read : MessageDeliveryStatus.delivered));
 
     final newMessage = ChatMessage(
       id: id,
@@ -166,8 +160,7 @@ class ChatNotifier extends Notifier<ChatState> {
       deliveryStatus: initialStatus,
     );
 
-    final updatedList = [...existing, newMessage]
-      ..sort((a, b) => a.sequenceNumber.compareTo(b.sequenceNumber));
+    final updatedList = [...existing, newMessage]..sort((a, b) => a.sequenceNumber.compareTo(b.sequenceNumber));
 
     final updatedMessages = Map<String, List<ChatMessage>>.from(state.peerMessages);
     updatedMessages[key] = updatedList;
@@ -273,9 +266,7 @@ class ChatNotifier extends Notifier<ChatState> {
 
     final updatedMessages = Map<String, List<ChatMessage>>.from(state.peerMessages);
     if (updatedMessages.containsKey(key)) {
-      updatedMessages[key] = updatedMessages[key]!
-          .map((m) => m.copyWith(deliveryStatus: MessageDeliveryStatus.read))
-          .toList();
+      updatedMessages[key] = updatedMessages[key]!.map((m) => m.copyWith(deliveryStatus: MessageDeliveryStatus.read)).toList();
     }
 
     state = ChatState(
@@ -331,9 +322,7 @@ class ChatNotifier extends Notifier<ChatState> {
       peerMessages: updatedMessages,
       unreadCounts: updatedUnread,
       readCursors: updatedCursors,
-      currentTarget: state.currentTarget != null && ChatState.peerKeyFor(state.currentTarget!) == key
-          ? null
-          : state.currentTarget,
+      currentTarget: state.currentTarget != null && ChatState.peerKeyFor(state.currentTarget!) == key ? null : state.currentTarget,
     );
   }
 
@@ -382,11 +371,13 @@ class ChatNotifier extends Notifier<ChatState> {
       client.badCertificateCallback = (cert, host, port) => true;
       final request = await client.postUrl(url);
       request.headers.contentType = ContentType.json;
-      request.write(jsonEncode({
-        'messageIds': messageIdsToSend,
-        'receiptType': 'read',
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
-      }));
+      request.write(
+        jsonEncode({
+          'messageIds': messageIdsToSend,
+          'receiptType': 'read',
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        }),
+      );
       final response = await request.close().timeout(const Duration(seconds: 4));
 
       if (response.statusCode >= 200 && response.statusCode < 300) {

@@ -37,22 +37,18 @@ import 'package:shared_preferences/shared_preferences.dart' as _i16;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeStoredSecurityContext_0 extends _i1.SmartFake
-    implements _i2.StoredSecurityContext {
-  _FakeStoredSecurityContext_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+class _FakeStoredSecurityContext_0 extends _i1.SmartFake implements _i2.StoredSecurityContext {
+  _FakeStoredSecurityContext_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
 }
 
 class _FakeColor_1 extends _i1.SmartFake implements _i3.Color {
-  _FakeColor_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeColor_1(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
 }
 
 /// A class which mocks [PersistenceService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPersistenceService extends _i1.Mock
-    implements _i4.PersistenceService {
+class MockPersistenceService extends _i1.Mock implements _i4.PersistenceService {
   @override
   bool get isFirstAppStart =>
       (super.noSuchMethod(

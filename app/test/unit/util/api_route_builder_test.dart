@@ -34,8 +34,14 @@ void main() {
       expect(ApiRoute.prepareUpload.target(_target(version: '1.0', https: true)), 'https://0.0.0.0:8080/api/locara/v1/send-request');
       expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: false)), 'http://0.0.0.0:8080/api/locara/v2/prepare-upload');
       expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: true)), 'https://0.0.0.0:8080/api/locara/v2/prepare-upload');
-      expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v2/prepare-upload');
-      expect(ApiRoute.prepareUpload.target(_target(version: '3.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v3/prepare-upload');
+      expect(
+        ApiRoute.prepareUpload.target(_target(version: '2.0', https: true), preferMesh: true),
+        'https://0.0.0.0:8080/api/mesh/v2/prepare-upload',
+      );
+      expect(
+        ApiRoute.prepareUpload.target(_target(version: '3.0', https: true), preferMesh: true),
+        'https://0.0.0.0:8080/api/mesh/v3/prepare-upload',
+      );
     });
   });
 

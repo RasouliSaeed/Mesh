@@ -158,16 +158,16 @@ class ReceiveController {
     // trigger security alert and force manual confirmation.
     final matchingFavoriteByAlias = server.ref.read(favoritesProvider).firstWhereOrNull((e) => e.alias == event.info.alias);
     if (matchingFavoriteByAlias != null && matchingFavoriteByAlias.fingerprint != senderFingerprint) {
-      _logger.warning('SECURITY ALERT: Known device "${event.info.alias}" certificate fingerprint mismatch! Pinned: ${matchingFavoriteByAlias.fingerprint}, Received: $senderFingerprint');
+      _logger.warning(
+        'SECURITY ALERT: Known device "${event.info.alias}" certificate fingerprint mismatch! Pinned: ${matchingFavoriteByAlias.fingerprint}, Received: $senderFingerprint',
+      );
       quickSave = false;
     }
 
     // Executable / Dangerous Script Protection:
     // When enabled, bypass auto-accept for executable binaries and scripts to prevent drive-by execution.
     if (quickSave && settings.blockDangerousAutoAccept) {
-      const dangerousExtensions = {
-        '.exe', '.bat', '.cmd', '.msi', '.vbs', '.ps1', '.scr', '.sh', '.apk', '.com', '.pif', '.jar'
-      };
+      const dangerousExtensions = {'.exe', '.bat', '.cmd', '.msi', '.vbs', '.ps1', '.scr', '.sh', '.apk', '.com', '.pif', '.jar'};
       final hasDangerousFile = files.values.any((f) {
         final lower = f.fileName.toLowerCase();
         return dangerousExtensions.any((ext) => lower.endsWith(ext));

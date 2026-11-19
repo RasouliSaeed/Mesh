@@ -22,21 +22,21 @@ class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(PackageInfo.fromPlatform().then((info) {
-      if (mounted) {
-        setState(() {
-          _packageInfo = info;
-        });
-      }
-    }));
+    unawaited(
+      PackageInfo.fromPlatform().then((info) {
+        if (mounted) {
+          setState(() {
+            _packageInfo = info;
+          });
+        }
+      }),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final isPersian = LocaleSettings.currentLocale == AppLocale.fa;
-    final versionStr = _packageInfo != null
-        ? '${_packageInfo!.version} (${_packageInfo!.buildNumber})'
-        : '...';
+    final versionStr = _packageInfo != null ? '${_packageInfo!.version} (${_packageInfo!.buildNumber})' : '...';
 
     return Scaffold(
       appBar: AppBar(

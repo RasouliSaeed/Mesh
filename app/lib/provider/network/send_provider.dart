@@ -524,19 +524,21 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
         // Log successful outgoing files to unified transfer history
         for (final sendingFile in sessionState.files.values) {
           unawaited(
-            ref.redux(receiveHistoryProvider).dispatchAsync(
-              AddHistoryEntryAction(
-                entryId: '${sessionId}_${sendingFile.file.id}',
-                fileName: sendingFile.file.fileName,
-                fileType: sendingFile.file.fileType,
-                path: sendingFile.path,
-                savedToGallery: false,
-                isMessage: false,
-                fileSize: sendingFile.file.size,
-                senderAlias: 'ارسال به ${sessionState.target.alias}',
-                timestamp: DateTime.now(),
-              ),
-            ),
+            ref
+                .redux(receiveHistoryProvider)
+                .dispatchAsync(
+                  AddHistoryEntryAction(
+                    entryId: '${sessionId}_${sendingFile.file.id}',
+                    fileName: sendingFile.file.fileName,
+                    fileType: sendingFile.file.fileType,
+                    path: sendingFile.path,
+                    savedToGallery: false,
+                    isMessage: false,
+                    fileSize: sendingFile.file.size,
+                    senderAlias: 'ارسال به ${sessionState.target.alias}',
+                    timestamp: DateTime.now(),
+                  ),
+                ),
           );
         }
       }
