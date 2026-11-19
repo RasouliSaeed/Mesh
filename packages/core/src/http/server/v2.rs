@@ -166,9 +166,7 @@ pub enum ServerEventV2 {
     },
 
     /// A V3 transfer was cancelled.
-    TransferCancelledV3 {
-        session_id: String,
-    },
+    TransferCancelledV3 { session_id: String },
 }
 
 /// The application's decision for a V3 prepare-upload (manifest) request.

@@ -77,14 +77,17 @@ pub fn validate_filename(file_name: &str) -> Result<(), &'static str> {
             return Err("File name contains illegal or path separator characters");
         }
     }
-    let stem = file_name.split('.').next().unwrap_or("").to_ascii_uppercase();
+    let stem = file_name
+        .split('.')
+        .next()
+        .unwrap_or("")
+        .to_ascii_uppercase();
     const RESERVED: &[&str] = &[
-        "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7",
-        "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+        "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8",
+        "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
     ];
     if RESERVED.contains(&stem.as_str()) {
         return Err("File name is a reserved device name");
     }
     Ok(())
 }
-

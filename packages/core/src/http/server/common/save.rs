@@ -1,7 +1,7 @@
 use crate::crypto;
+use crate::model::transport::BoxedTransportStream;
 use bytes::Bytes;
 use futures_util::StreamExt;
-use crate::model::transport::BoxedTransportStream;
 
 use tokio::sync::{mpsc, oneshot};
 
@@ -56,12 +56,19 @@ pub enum FileUploadTarget {
 impl std::fmt::Debug for FileUploadTarget {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Stream { binary_tx, result_rx } => f
+            Self::Stream {
+                binary_tx,
+                result_rx,
+            } => f
                 .debug_struct("Stream")
                 .field("binary_tx", binary_tx)
                 .field("result_rx", result_rx)
                 .finish(),
-            Self::Storage { handle: _, result_tx, progress_tx } => f
+            Self::Storage {
+                handle: _,
+                result_tx,
+                progress_tx,
+            } => f
                 .debug_struct("Storage")
                 .field("handle", &"<StorageHandle>")
                 .field("result_tx", result_tx)
@@ -112,12 +119,8 @@ pub(crate) async fn save_req_to_target(
             result_tx,
             progress_tx,
         } => {
-            let (binary_tx, result_rx) = spawn_file_writer(
-                handle,
-                file_size,
-                progress_tx,
-                timestamps,
-            );
+            let (binary_tx, result_rx) =
+                spawn_file_writer(handle, file_size, progress_tx, timestamps);
             (binary_tx, result_rx, Some(result_tx))
         }
     };
@@ -216,9 +219,14 @@ fn spawn_file_writer(
     let (internal_tx, internal_rx) = oneshot::channel::<Result<(), String>>();
 
     tokio::spawn(async move {
-        let result =
-            write_file_from_receiver(handle, expected_size, &mut binary_rx, progress_tx, timestamps)
-                .await;
+        let result = write_file_from_receiver(
+            handle,
+            expected_size,
+            &mut binary_rx,
+            progress_tx,
+            timestamps,
+        )
+        .await;
         // Unblock the request handler if it is still sending chunks.
         binary_rx.close();
         let _ = internal_tx.send(result);
@@ -262,7 +270,7 @@ async fn write_file_from_receiver(
             let _ = progress_tx.try_send(written);
         }
     }
-    
+
     if let Err(e) = handle.flush().await {
         let _ = handle.abort().await;
         return Err(format!("Failed to flush file: {e}"));

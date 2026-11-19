@@ -1,37 +1,38 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class LocaraCyberColors {
-  LocaraCyberColors._();
+class MeshCyberColors {
+  MeshCyberColors._();
 
-  static const Color background = Color(0xFF030712);
-  static const Color backgroundSurface = Color(0xFF060B18);
-  static const Color backgroundGradientTop = Color(0xFF050E24);
-  static const Color backgroundGradientBottom = Color(0xFF02040A);
+  static const Color background = Color(0xFF070B1A);
+  static const Color backgroundSurface = Color(0xFF0A1026);
+  static const Color backgroundGradientTop = Color(0xFF070B1A);
+  static const Color backgroundGradientBottom = Color(0xFF050814);
 
   // Aurora Ambient Lights
-  static const Color auroraCyan = Color(0xFF00D2FF);
-  static const Color auroraBlue = Color(0xFF0066FF);
-  static const Color auroraPurple = Color(0xFF8A2BE2);
+  static const Color auroraCyan = Color(0xFF12D8E8);
+  static const Color auroraBlue = Color(0xFF168BFF);
+  static const Color auroraPurple = Color(0xFF7838F5);
   static const Color auroraMagenta = Color(0xFFB5179E);
 
   // Cards and Glass
-  static const Color cardGlass = Color(0xCC0B1428);
-  static const Color cardGlassLighter = Color(0xEE0E1C38);
-  static const Color cardBorder = Color(0x3800D2FF);
-  static const Color cardBorderSubtle = Color(0x2200D2FF);
+  static const Color cardGlass = Color(0xCC10172D);
+  static const Color cardGlassLighter = Color(0xEE151F3D);
+  static const Color cardBorder = Color(0x3812D8E8);
+  static const Color cardBorderSubtle = Color(0x2212D8E8);
 
   // Accents and Status
-  static const Color primaryBlue = Color(0xFF0066FF);
-  static const Color primaryCyan = Color(0xFF00E5FF);
-  static const Color neonPurple = Color(0xFF9D4EDD);
-  static const Color statusGreen = Color(0xFF00E676);
-  static const Color statusGreenGlow = Color(0x5500E676);
+  static const Color primaryBlue = Color(0xFF168BFF);
+  static const Color primaryCyan = Color(0xFF12D8E8);
+  static const Color neonPurple = Color(0xFF7838F5);
+  static const Color statusGreen = Color(0xFF20D890);
+  static const Color statusGreenGlow = Color(0x5520D890);
+  static const Color statusAmber = Color(0xFFF5B942);
 
   // Text
-  static const Color textWhite = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFF8EA2C6);
-  static const Color textMuted = Color(0xFF53678A);
+  static const Color textWhite = Color(0xFFF4F6FF);
+  static const Color textSecondary = Color(0xFFA8B1CA);
+  static const Color textMuted = Color(0xFF6B7A99);
 
   // Gradients
   static const LinearGradient sendButtonGradient = LinearGradient(
@@ -63,8 +64,8 @@ class LocaraCyberColors {
   );
 }
 
-class LocaraCyberTheme {
-  LocaraCyberTheme._();
+class MeshCyberTheme {
+  MeshCyberTheme._();
 
   static BoxDecoration glassCardDecoration({
     double borderRadius = 24,
@@ -73,10 +74,10 @@ class LocaraCyberTheme {
     bool withGlow = false,
   }) {
     return BoxDecoration(
-      color: fillColor ?? LocaraCyberColors.cardGlass,
+      color: fillColor ?? MeshCyberColors.cardGlass,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: borderColor ?? LocaraCyberColors.cardBorder,
+        color: borderColor ?? MeshCyberColors.cardBorder,
         width: 1.2,
       ),
       boxShadow: [
@@ -87,7 +88,7 @@ class LocaraCyberTheme {
         ),
         if (withGlow)
           BoxShadow(
-            color: (borderColor ?? LocaraCyberColors.auroraCyan).withValues(alpha: 0.15),
+            color: (borderColor ?? MeshCyberColors.auroraCyan).withValues(alpha: 0.15),
             blurRadius: 18,
             spreadRadius: 1,
           ),
@@ -126,6 +127,6 @@ class LocaraCyberTheme {
   }
 }
 
-/// Mesh cyber theme and colors aliases
-typedef MeshCyberTheme = LocaraCyberTheme;
-typedef MeshCyberColors = LocaraCyberColors;
+/// Legacy aliases for backward compatibility
+typedef LocaraCyberTheme = MeshCyberTheme;
+typedef LocaraCyberColors = MeshCyberColors;

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 
-class LocaraStatsBar extends StatelessWidget {
+class MeshStatsBar extends StatelessWidget {
   final bool isDesktop;
   final int transferredFilesCount;
   final String successRate;
   final String speedText;
   final String elapsedTime;
+  final bool isTransferring;
 
-  const LocaraStatsBar({
+  const MeshStatsBar({
     required this.isDesktop,
-    this.transferredFilesCount = 1248,
-    this.successRate = '۹۸٪',
-    this.speedText = '۱۲.۵ MB/s',
-    this.elapsedTime = '۰۰:۰۱:۲۳',
+    this.transferredFilesCount = 0,
+    this.successRate = '۱۰۰٪',
+    this.speedText = 'آماده',
+    this.elapsedTime = '--',
+    this.isTransferring = false,
     super.key,
   });
 
@@ -182,5 +184,5 @@ class LocaraStatsBar extends StatelessWidget {
   }
 }
 
-/// Mesh stats bar alias
-typedef MeshStatsBar = LocaraStatsBar;
+/// Legacy stats bar alias for backward compatibility
+typedef LocaraStatsBar = MeshStatsBar;

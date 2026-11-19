@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locara_isolates/rust/frb_generated.dart';
 import 'package:locara_isolates/src/task/server/file_saver.dart';
+import 'package:locara_isolates/util/file_security_guard.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
@@ -50,6 +51,11 @@ void main() {
     '..',
     '/etc/passwd',
     '//tmp/absolute.txt',
+    '%2e%2e/escaped.txt',
+    '..%2fescaped.txt',
+    '%2e%2e%2fescaped.txt',
+    'C:\\Windows\\System32\\cmd.exe',
+    'D:/secret.txt',
   ];
 
   for (final fileName in escaping) {
@@ -95,6 +101,103 @@ void main() {
       await digest('sub\u0000dir/file.txt'),
       p.join(destination.path, 'sub_dir', 'file.txt'),
     );
+  });
+
+  group('FileSecurityGuard negative tests', () {
+    test('rejects RTLO and directional spoofing in filenames', () async {
+      const maliciousNames = [
+        'invoice\u202Efdp.exe',
+        'report\u202Ddoc.bat',
+        'photo\u202Ajpg.scr',
+        'document\u200E.pdf.exe',
+      ];
+      for (final name in maliciousNames) {
+        expect(
+          () => digest(name),
+          throwsA(predicate((e) => e.toString().contains('directional spoofing') || e.toString().contains('Dangerous double extension'))),
+        );
+      }
+    });
+
+    test('rejects dangerous double extensions', () async {
+      const doubleExts = [
+        'sample.pdf.exe',
+        'picture.jpg.vbs',
+        'document.docx.scr',
+        'spreadsheet.xlsx.bat',
+        'music.mp3.cmd',
+        'video.mp4.ps1',
+      ];
+      for (final name in doubleExts) {
+        expect(
+          () => digest(name),
+          throwsA(predicate((e) => e.toString().contains('Dangerous double extension'))),
+        );
+      }
+    });
+
+    test('detects disguised executable PE headers (Magic Bytes)', () {
+      final mzHeader = [0x4D, 0x5A, 0x90, 0x00]; // MZ Windows PE header
+      expect(
+        () => FileSecurityGuard.validateMagicBytes(headerBytes: mzHeader, extension: 'pdf'),
+        throwsA(isA<FileSecurityException>()),
+      );
+      expect(
+        () => FileSecurityGuard.validateMagicBytes(headerBytes: mzHeader, extension: 'jpg'),
+        throwsA(isA<FileSecurityException>()),
+      );
+    });
+
+    test('detects disguised ELF binary headers (Magic Bytes)', () {
+      final elfHeader = [0x7F, 0x45, 0x4C, 0x46]; // \x7fELF
+      expect(
+        () => FileSecurityGuard.validateMagicBytes(headerBytes: elfHeader, extension: 'png'),
+        throwsA(isA<FileSecurityException>()),
+      );
+    });
+
+    test('validates genuine PNG and PDF headers', () {
+      final pngHeader = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+      expect(
+        () => FileSecurityGuard.validateMagicBytes(headerBytes: pngHeader, extension: 'png'),
+        returnsNormally,
+      );
+
+      final pdfHeader = [0x25, 0x50, 0x44, 0x46, 0x2D, 0x31, 0x2E, 0x37];
+      expect(
+        () => FileSecurityGuard.validateMagicBytes(headerBytes: pdfHeader, extension: 'pdf'),
+        returnsNormally,
+      );
+    });
+
+    test('guards against zip bomb anomalous ratios and sizes', () {
+      // 100 MB uncompressed from 500 KB compressed -> 200:1 ratio
+      expect(
+        () => FileSecurityGuard.validateArchiveSafety(
+          uncompressedSize: 100 * 1024 * 1024,
+          compressedSize: 500 * 1024,
+        ),
+        throwsA(isA<FileSecurityException>()),
+      );
+
+      // Huge size > 10GB
+      expect(
+        () => FileSecurityGuard.validateArchiveSafety(
+          uncompressedSize: 11 * 1024 * 1024 * 1024,
+          compressedSize: 2 * 1024 * 1024 * 1024,
+        ),
+        throwsA(isA<FileSecurityException>()),
+      );
+
+      // Normal archive: 50MB uncompressed, 25MB compressed -> 2:1 ratio
+      expect(
+        () => FileSecurityGuard.validateArchiveSafety(
+          uncompressedSize: 50 * 1024 * 1024,
+          compressedSize: 25 * 1024 * 1024,
+        ),
+        returnsNormally,
+      );
+    });
   });
 }
 

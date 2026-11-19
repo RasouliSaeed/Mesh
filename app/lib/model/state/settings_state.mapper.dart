@@ -169,6 +169,28 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     'advancedSettings',
     _$advancedSettings,
   );
+  static bool _$enableNotifications(SettingsState v) => v.enableNotifications;
+  static const Field<SettingsState, bool> _f$enableNotifications = Field(
+    'enableNotifications',
+    _$enableNotifications,
+    opt: true,
+    def: true,
+  );
+  static bool _$notificationSound(SettingsState v) => v.notificationSound;
+  static const Field<SettingsState, bool> _f$notificationSound = Field(
+    'notificationSound',
+    _$notificationSound,
+    opt: true,
+    def: true,
+  );
+  static bool _$blockDangerousAutoAccept(SettingsState v) =>
+      v.blockDangerousAutoAccept;
+  static const Field<SettingsState, bool> _f$blockDangerousAutoAccept = Field(
+    'blockDangerousAutoAccept',
+    _$blockDangerousAutoAccept,
+    opt: true,
+    def: true,
+  );
 
   @override
   final MappableFields<SettingsState> fields = const {
@@ -202,6 +224,9 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     #verifyChecksums: _f$verifyChecksums,
     #discoveryTimeout: _f$discoveryTimeout,
     #advancedSettings: _f$advancedSettings,
+    #enableNotifications: _f$enableNotifications,
+    #notificationSound: _f$notificationSound,
+    #blockDangerousAutoAccept: _f$blockDangerousAutoAccept,
   };
 
   static SettingsState _instantiate(DecodingData data) {
@@ -236,6 +261,9 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
       verifyChecksums: data.dec(_f$verifyChecksums),
       discoveryTimeout: data.dec(_f$discoveryTimeout),
       advancedSettings: data.dec(_f$advancedSettings),
+      enableNotifications: data.dec(_f$enableNotifications),
+      notificationSound: data.dec(_f$notificationSound),
+      blockDangerousAutoAccept: data.dec(_f$blockDangerousAutoAccept),
     );
   }
 
@@ -336,6 +364,9 @@ abstract class SettingsStateCopyWith<$R, $In extends SettingsState, $Out>
     bool? verifyChecksums,
     int? discoveryTimeout,
     bool? advancedSettings,
+    bool? enableNotifications,
+    bool? notificationSound,
+    bool? blockDangerousAutoAccept,
   });
   SettingsStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -398,6 +429,9 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     bool? verifyChecksums,
     int? discoveryTimeout,
     bool? advancedSettings,
+    bool? enableNotifications,
+    bool? notificationSound,
+    bool? blockDangerousAutoAccept,
   }) => $apply(
     FieldCopyWithData({
       if (showToken != null) #showToken: showToken,
@@ -434,6 +468,11 @@ class _SettingsStateCopyWithImpl<$R, $Out>
       if (verifyChecksums != null) #verifyChecksums: verifyChecksums,
       if (discoveryTimeout != null) #discoveryTimeout: discoveryTimeout,
       if (advancedSettings != null) #advancedSettings: advancedSettings,
+      if (enableNotifications != null)
+        #enableNotifications: enableNotifications,
+      if (notificationSound != null) #notificationSound: notificationSound,
+      if (blockDangerousAutoAccept != null)
+        #blockDangerousAutoAccept: blockDangerousAutoAccept,
     }),
   );
   @override
@@ -480,6 +519,18 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     verifyChecksums: data.get(#verifyChecksums, or: $value.verifyChecksums),
     discoveryTimeout: data.get(#discoveryTimeout, or: $value.discoveryTimeout),
     advancedSettings: data.get(#advancedSettings, or: $value.advancedSettings),
+    enableNotifications: data.get(
+      #enableNotifications,
+      or: $value.enableNotifications,
+    ),
+    notificationSound: data.get(
+      #notificationSound,
+      or: $value.notificationSound,
+    ),
+    blockDangerousAutoAccept: data.get(
+      #blockDangerousAutoAccept,
+      or: $value.blockDangerousAutoAccept,
+    ),
   );
 
   @override

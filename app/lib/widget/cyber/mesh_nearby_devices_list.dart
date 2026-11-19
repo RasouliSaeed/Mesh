@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 import 'package:locara_isolates/model/device.dart';
 
-class LocaraNearbyDevicesList extends StatelessWidget {
+class MeshNearbyDevicesList extends StatelessWidget {
   final List<Device> devices;
   final VoidCallback onSeeAll;
   final void Function(Device device) onSelectDevice;
 
-  const LocaraNearbyDevicesList({
+  const MeshNearbyDevicesList({
     required this.devices,
     required this.onSeeAll,
     required this.onSelectDevice,
@@ -260,5 +260,5 @@ class LocaraNearbyDevicesList extends StatelessWidget {
   }
 }
 
-/// Mesh nearby devices list alias
-typedef MeshNearbyDevicesList = LocaraNearbyDevicesList;
+/// Legacy nearby devices list alias for backward compatibility
+typedef LocaraNearbyDevicesList = MeshNearbyDevicesList;

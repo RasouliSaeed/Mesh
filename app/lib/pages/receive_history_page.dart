@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:locara_app/config/theme.dart';
 import 'package:locara_app/gen/strings.g.dart';
+import 'package:locara_app/model/cross_file.dart';
 import 'package:locara_app/model/persistence/receive_history_entry.dart';
+import 'package:locara_app/pages/home_page.dart';
+import 'package:locara_app/pages/home_page_controller.dart';
 import 'package:locara_app/pages/receive_page.dart';
 import 'package:locara_app/provider/receive_history_provider.dart';
 import 'package:locara_app/provider/recovery_contract_provider.dart';
+import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/util/native/directories.dart';
 import 'package:locara_app/util/native/open_file.dart';
@@ -28,6 +33,7 @@ enum _EntryOption {
   open,
   showInFolder,
   info,
+  resend,
   delete;
 
   String get label {
@@ -35,6 +41,7 @@ enum _EntryOption {
       _EntryOption.open => t.receiveHistoryPage.entryActions.open,
       _EntryOption.showInFolder => t.receiveHistoryPage.entryActions.showInFolder,
       _EntryOption.info => t.receiveHistoryPage.entryActions.info,
+      _EntryOption.resend => t.receiveHistoryPage.entryActions.resend,
       _EntryOption.delete => t.receiveHistoryPage.entryActions.deleteFromHistory,
     };
   }
@@ -228,6 +235,53 @@ class ReceiveHistoryPage extends StatelessWidget {
                                 context: context,
                                 builder: (_) => FileInfoDialog(entry: entry),
                               );
+                              break;
+                            case _EntryOption.resend:
+                              if (entry.path != null) {
+                                final file = File(entry.path!);
+                                if (!file.existsSync()) {
+                                  if (context.mounted) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: const Text('فایل یافت نشد'),
+                                        content: Text('فایل «${entry.fileName}» در مسیر اصلی یافت نشد یا حذف شده است.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: Text(t.general.close),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  break;
+                                }
+
+                                final crossFile = CrossFile(
+                                  name: entry.fileName,
+                                  fileType: entry.fileType,
+                                  size: entry.fileSize,
+                                  thumbnail: null,
+                                  asset: null,
+                                  path: entry.path,
+                                  bytes: null,
+                                  lastModified: null,
+                                  lastAccessed: null,
+                                );
+                                if (context.mounted) {
+                                  unawaited(
+                                    context.redux(selectedSendingFilesProvider).dispatchAsync(
+                                      AddFilesAction<CrossFile>(
+                                        files: [crossFile],
+                                        converter: (f) async => f,
+                                      ),
+                                    ),
+                                  );
+                                  context.redux(homePageControllerProvider).dispatch(ChangeTabAction(HomeTab.send));
+                                  Navigator.of(context).pop();
+                                }
+                              }
                               break;
                             case _EntryOption.delete:
                               // ignore: use_build_context_synchronously

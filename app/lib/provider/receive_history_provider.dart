@@ -50,6 +50,11 @@ class AddHistoryEntryAction extends AsyncReduxAction<ReceiveHistoryService, List
       return state;
     }
 
+    // Deduplicate: ignore if an entry with the exact same entry ID already exists
+    if (state.any((e) => e.id == entryId)) {
+      return state;
+    }
+
     final updated = [
       ReceiveHistoryEntry(
         id: entryId,

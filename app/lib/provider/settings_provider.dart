@@ -75,6 +75,9 @@ class SettingsService extends PureNotifier<SettingsState> {
     verifyChecksums: _persistence.getVerifyChecksums(),
     discoveryTimeout: _persistence.getDiscoveryTimeout(),
     advancedSettings: _persistence.getAdvancedSettingsEnabled(),
+    enableNotifications: _persistence.isEnableNotifications(),
+    notificationSound: _persistence.isNotificationSound(),
+    blockDangerousAutoAccept: _persistence.isBlockDangerousAutoAccept(),
   );
 
   Future<void> setAlias(String alias) async {
@@ -295,6 +298,27 @@ class SettingsService extends PureNotifier<SettingsState> {
     await _persistence.setVerifyChecksums(verifyChecksums);
     state = state.copyWith(
       verifyChecksums: verifyChecksums,
+    );
+  }
+
+  Future<void> setEnableNotifications(bool enableNotifications) async {
+    await _persistence.setEnableNotifications(enableNotifications);
+    state = state.copyWith(
+      enableNotifications: enableNotifications,
+    );
+  }
+
+  Future<void> setNotificationSound(bool notificationSound) async {
+    await _persistence.setNotificationSound(notificationSound);
+    state = state.copyWith(
+      notificationSound: notificationSound,
+    );
+  }
+
+  Future<void> setBlockDangerousAutoAccept(bool block) async {
+    await _persistence.setBlockDangerousAutoAccept(block);
+    state = state.copyWith(
+      blockDangerousAutoAccept: block,
     );
   }
 }

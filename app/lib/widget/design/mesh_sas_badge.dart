@@ -20,7 +20,7 @@ const List<Color> _sasColors = [
 /// A compact, cyber-styled Short Authentication String (SAS) visual badge.
 /// Displays deterministic security icons derived from the cryptographic fingerprints
 /// of both devices, allowing users to verify end-to-end identity at a glance.
-class LocaraSasBadge extends StatelessWidget {
+class MeshSasBadge extends StatelessWidget {
   final CombinedFingerprint? fingerprint;
   final Device? device;
   final String? peerFingerprint;
@@ -29,7 +29,7 @@ class LocaraSasBadge extends StatelessWidget {
   final bool showVerificationModalOnTap;
   final VoidCallback? onTap;
 
-  const LocaraSasBadge({
+  const MeshSasBadge({
     this.fingerprint,
     this.device,
     this.peerFingerprint,
@@ -366,5 +366,5 @@ Future<void> showLocaraSasVerificationModal(
   );
 }
 
-/// Mesh SAS badge alias
-typedef MeshSasBadge = LocaraSasBadge;
+/// Legacy SAS badge alias for backward compatibility
+typedef LocaraSasBadge = MeshSasBadge;

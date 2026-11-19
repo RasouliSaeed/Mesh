@@ -3,8 +3,8 @@ use crate::http;
 use crate::http::client::url::{ApiVersion, TargetUrl};
 use crate::model::discovery::ProtocolType;
 use crate::model::dto_v3::{
-    calculate_chunk_count, validate_filename, DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE,
-    MAX_FILE_SIZE, ManifestResponseDto, TransferManifestDto,
+    calculate_chunk_count, validate_filename, ManifestResponseDto, TransferManifestDto,
+    DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE, MAX_FILE_SIZE,
 };
 use crate::model::resume::ResumeManager;
 use crate::{crypto, util};
@@ -21,7 +21,6 @@ use tokio_util::sync::CancellationToken;
 
 #[derive(Clone)]
 pub struct LsHttpClientV3 {
-
     client: reqwest::Client,
 
     /// Maps client identifiers to nonces that have been received from remote.
@@ -453,7 +452,11 @@ impl LsHttpClientV3 {
     }
 
     /// Executes an operation with bounded retries for transient errors.
-    async fn execute_with_retry<T, F, Fut>(&self, config: &TransferConfigV3, op: F) -> Result<T, ClientError>
+    async fn execute_with_retry<T, F, Fut>(
+        &self,
+        config: &TransferConfigV3,
+        op: F,
+    ) -> Result<T, ClientError>
     where
         F: Fn() -> Fut,
         Fut: std::future::Future<Output = Result<T, ClientError>>,
@@ -607,9 +610,9 @@ impl LsHttpClientV3 {
         let mut initial_bytes = 0u64;
         for i in 0..total_chunks {
             if !seen_indices.contains(&i) {
-                let offset = i.checked_mul(manifest.chunk_size).ok_or_else(|| {
-                    ClientError::Other(anyhow::anyhow!("Offset overflow"))
-                })?;
+                let offset = i
+                    .checked_mul(manifest.chunk_size)
+                    .ok_or_else(|| ClientError::Other(anyhow::anyhow!("Offset overflow")))?;
                 let chunk_len = if i == total_chunks - 1 {
                     manifest.file_size.checked_sub(offset).ok_or_else(|| {
                         ClientError::Other(anyhow::anyhow!("Final chunk offset exceeds file size"))
@@ -673,7 +676,10 @@ impl LsHttpClientV3 {
                             chunk_size
                         };
 
-                        if offset.checked_add(expected_len).map_or(true, |end| end > file_size) {
+                        if offset
+                            .checked_add(expected_len)
+                            .map_or(true, |end| end > file_size)
+                        {
                             return Err(ClientError::Other(anyhow::anyhow!(
                                 "Chunk extends beyond declared file size"
                             )));
@@ -797,7 +803,10 @@ pub struct SourceFileInfo {
 
 impl SourceFileInfo {
     /// Inspects the file at `path`, reading its metadata and optionally computing a streaming SHA-256.
-    pub async fn from_path(path: impl AsRef<Path>, compute_sha256: bool) -> Result<Self, ClientError> {
+    pub async fn from_path(
+        path: impl AsRef<Path>,
+        compute_sha256: bool,
+    ) -> Result<Self, ClientError> {
         let path = path.as_ref().to_path_buf();
         let meta = tokio::fs::metadata(&path).await?;
         if !meta.is_file() {
@@ -813,8 +822,9 @@ impl SourceFileInfo {
             .ok_or_else(|| anyhow::anyhow!("Invalid file name for path {:?}", path))?
             .to_string();
 
-        validate_filename(&file_name)
-            .map_err(|e| ClientError::Other(anyhow::anyhow!("Invalid file name '{}': {}", file_name, e)))?;
+        validate_filename(&file_name).map_err(|e| {
+            ClientError::Other(anyhow::anyhow!("Invalid file name '{}': {}", file_name, e))
+        })?;
 
         let file_size = meta.len();
         if file_size > MAX_FILE_SIZE {
@@ -850,8 +860,9 @@ impl SourceFileInfo {
         modified: Option<SystemTime>,
         sha256: Option<String>,
     ) -> Result<Self, ClientError> {
-        validate_filename(&file_name)
-            .map_err(|e| ClientError::Other(anyhow::anyhow!("Invalid file name '{}': {}", file_name, e)))?;
+        validate_filename(&file_name).map_err(|e| {
+            ClientError::Other(anyhow::anyhow!("Invalid file name '{}': {}", file_name, e))
+        })?;
 
         if file_size > MAX_FILE_SIZE {
             return Err(ClientError::Other(anyhow::anyhow!(
@@ -873,7 +884,11 @@ impl SourceFileInfo {
     /// Verifies that the source file on disk still exists and its size/mtime have not changed.
     pub async fn verify_unchanged(&self) -> Result<(), ClientError> {
         let meta = tokio::fs::metadata(&self.path).await.map_err(|e| {
-            ClientError::Other(anyhow::anyhow!("Failed to stat source file {:?}: {}", self.path, e))
+            ClientError::Other(anyhow::anyhow!(
+                "Failed to stat source file {:?}: {}",
+                self.path,
+                e
+            ))
         })?;
 
         if !meta.is_file() {
@@ -918,8 +933,9 @@ impl SourceFileInfo {
         validate_filename(&self.file_name)
             .map_err(|e| ClientError::Other(anyhow::anyhow!("Invalid file_name: {}", e)))?;
 
-        let total_chunks = calculate_chunk_count(self.file_size, chunk_size)
-            .map_err(|e| ClientError::Other(anyhow::anyhow!("Invalid manifest parameters: {}", e)))?;
+        let total_chunks = calculate_chunk_count(self.file_size, chunk_size).map_err(|e| {
+            ClientError::Other(anyhow::anyhow!("Invalid manifest parameters: {}", e))
+        })?;
 
         Ok(TransferManifestDto {
             transfer_id,
@@ -1007,4 +1023,3 @@ fn to_identifier(
             .map_err(ClientError::Other),
     }
 }
-

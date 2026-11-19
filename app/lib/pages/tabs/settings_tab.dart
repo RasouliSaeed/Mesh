@@ -7,7 +7,6 @@ import 'package:locara_app/gen/strings.g.dart';
 import 'package:locara_app/model/persistence/color_mode.dart';
 import 'package:locara_app/pages/about/about_page.dart';
 import 'package:locara_app/pages/changelog_page.dart';
-import 'package:locara_app/pages/donation/donation_page.dart';
 import 'package:locara_app/pages/settings/network_interfaces_page.dart';
 import 'package:locara_app/pages/tabs/settings_tab_controller.dart';
 import 'package:locara_app/provider/network/server/server_provider.dart';
@@ -33,7 +32,6 @@ import 'package:locara_isolates/constants.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SettingsTab extends StatelessWidget {
   const SettingsTab();
@@ -52,6 +50,7 @@ class SettingsTab extends StatelessWidget {
               child: Text(t.settingsTab.title, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
             ),
             const SizedBox(height: 30),
+            // Section 1: عمومی (General)
             _SettingsSection(
               title: t.settingsTab.general.title,
               children: [
@@ -88,56 +87,6 @@ class SettingsTab extends StatelessWidget {
                   buttonLabel: vm.settings.locale?.getLocaleName() ?? t.settingsTab.general.languageOptions.system,
                   onTap: () => vm.onTapLanguage(context),
                 ),
-                if (checkPlatformIsDesktop()) ...[
-                  /// Wayland does window position handling, so there's no need for it. See [https://github.com/Locara/Locara/issues/544]
-                  if (vm.advanced && checkPlatformIsNotWaylandDesktop())
-                    _BooleanEntry(
-                      label: defaultTargetPlatform == TargetPlatform.windows
-                          ? t.settingsTab.general.saveWindowPlacementWindows
-                          : t.settingsTab.general.saveWindowPlacement,
-                      value: vm.settings.saveWindowPlacement,
-                      onChanged: (b) async {
-                        await ref.notifier(settingsProvider).setSaveWindowPlacement(b);
-                      },
-                    ),
-                  if (checkPlatformHasTray()) ...[
-                    _BooleanEntry(
-                      label: t.settingsTab.general.minimizeToTray,
-                      value: vm.settings.minimizeToTray,
-                      onChanged: (b) async {
-                        await ref.notifier(settingsProvider).setMinimizeToTray(b);
-                      },
-                    ),
-                  ],
-                  if (checkPlatformIsDesktop()) ...[
-                    _BooleanEntry(
-                      label: t.settingsTab.general.launchAtStartup,
-                      value: vm.autoStart,
-                      onChanged: (_) => vm.onToggleAutoStart(context),
-                    ),
-                    Visibility(
-                      visible: vm.autoStart,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: AnimatedOpacity(
-                        opacity: vm.autoStart ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 500),
-                        child: _BooleanEntry(
-                          label: t.settingsTab.general.launchMinimized,
-                          value: vm.autoStartLaunchHidden,
-                          onChanged: (_) => vm.onToggleAutoStartLaunchHidden(context),
-                        ),
-                      ),
-                    ),
-                  ],
-                  if (vm.advanced && checkPlatform([TargetPlatform.windows])) ...[
-                    _BooleanEntry(
-                      label: t.settingsTab.general.showInContextMenu,
-                      value: vm.showInContextMenu,
-                      onChanged: (_) => vm.onToggleShowInContextMenu(context),
-                    ),
-                  ],
-                ],
                 _BooleanEntry(
                   label: t.settingsTab.general.animations,
                   value: vm.settings.enableAnimations,
@@ -145,66 +94,20 @@ class SettingsTab extends StatelessWidget {
                     await ref.notifier(settingsProvider).setEnableAnimations(b);
                   },
                 ),
+                _ButtonEntry(
+                  label: t.aboutPage.title,
+                  buttonLabel: t.general.open,
+                  onTap: () async {
+                    await context.push(() => const AboutPage());
+                  },
+                ),
               ],
             ),
+
+            // Section 2: دریافت و ذخیره‌سازی (Receive & Storage)
             _SettingsSection(
               title: t.settingsTab.receive.title,
               children: [
-                _BooleanEntry(
-                  label: t.settingsTab.receive.quickSave,
-                  value: vm.settings.quickSave,
-                  onChanged: (b) async {
-                    final old = vm.settings.quickSave;
-                    await ref.notifier(settingsProvider).setQuickSave(b);
-                    if (b) {
-                      await ref.notifier(settingsProvider).setQuickSaveFromFavorites(false);
-                    }
-                    if (!old && b && context.mounted) {
-                      await QuickSaveNotice.open(context);
-                    }
-                  },
-                ),
-                _BooleanEntry(
-                  label: t.settingsTab.receive.quickSaveFromFavorites,
-                  value: vm.settings.quickSaveFromFavorites,
-                  onChanged: (b) async {
-                    final old = vm.settings.quickSaveFromFavorites;
-                    await ref.notifier(settingsProvider).setQuickSaveFromFavorites(b);
-                    if (b) {
-                      await ref.notifier(settingsProvider).setQuickSave(false);
-                    }
-                    if (!old && b && context.mounted) {
-                      await QuickSaveFromFavoritesNotice.open(context);
-                    }
-                  },
-                ),
-                _BooleanEntry(
-                  label: t.settingsTab.receive.requirePin,
-                  value: vm.settings.receivePin != null,
-                  onChanged: (b) async {
-                    final currentPIN = vm.settings.receivePin;
-                    if (currentPIN != null) {
-                      await ref.notifier(settingsProvider).setReceivePin(null);
-                    } else {
-                      final String? newPin = await showDialog<String>(
-                        context: context,
-                        builder: (_) => const PinDialog(
-                          obscureText: false,
-                          generateRandom: false,
-                        ),
-                      );
-
-                      if (newPin != null && newPin.isNotEmpty) {
-                        await ref.notifier(settingsProvider).setReceivePin(newPin);
-                      }
-                    }
-
-                    // The pin is enforced by the Rust server, so it needs a restart.
-                    if (ref.read(serverProvider) != null) {
-                      await ref.notifier(serverProvider).restartServerFromSettings();
-                    }
-                  },
-                ),
                 if (checkPlatformWithFileSystem())
                   _SettingsEntry(
                     label: t.settingsTab.receive.destination,
@@ -237,6 +140,41 @@ class SettingsTab extends StatelessWidget {
                       ),
                     ),
                   ),
+                _BooleanEntry(
+                  label: t.settingsTab.receive.quickSave,
+                  value: vm.settings.quickSave,
+                  onChanged: (b) async {
+                    final old = vm.settings.quickSave;
+                    await ref.notifier(settingsProvider).setQuickSave(b);
+                    if (b) {
+                      await ref.notifier(settingsProvider).setQuickSaveFromFavorites(false);
+                    }
+                    if (!old && b && context.mounted) {
+                      await QuickSaveNotice.open(context);
+                    }
+                  },
+                ),
+                _BooleanEntry(
+                  label: t.settingsTab.receive.quickSaveFromFavorites,
+                  value: vm.settings.quickSaveFromFavorites,
+                  onChanged: (b) async {
+                    final old = vm.settings.quickSaveFromFavorites;
+                    await ref.notifier(settingsProvider).setQuickSaveFromFavorites(b);
+                    if (b) {
+                      await ref.notifier(settingsProvider).setQuickSave(false);
+                    }
+                    if (!old && b && context.mounted) {
+                      await QuickSaveFromFavoritesNotice.open(context);
+                    }
+                  },
+                ),
+                _BooleanEntry(
+                  label: 'مسدودسازی دریافت خودکار فایل‌های اجرایی/اسکریپت',
+                  value: vm.settings.blockDangerousAutoAccept,
+                  onChanged: (b) async {
+                    await ref.notifier(settingsProvider).setBlockDangerousAutoAccept(b);
+                  },
+                ),
                 if (checkPlatformWithGallery())
                   _BooleanEntry(
                     label: t.settingsTab.receive.saveToGallery,
@@ -265,8 +203,6 @@ class SettingsTab extends StatelessWidget {
                     value: vm.settings.verifyChecksums,
                     onChanged: (b) async {
                       await ref.notifier(settingsProvider).setVerifyChecksums(b);
-
-                      // The checksums are verified by the Rust server, so it needs a restart.
                       if (ref.read(serverProvider) != null) {
                         await ref.notifier(serverProvider).restartServerFromSettings();
                       }
@@ -274,26 +210,8 @@ class SettingsTab extends StatelessWidget {
                   ),
               ],
             ),
-            if (vm.advanced)
-              _SettingsSection(
-                title: t.settingsTab.send.title,
-                children: [
-                  _BooleanEntry(
-                    label: t.settingsTab.send.shareViaLinkAutoAccept,
-                    value: vm.settings.shareViaLinkAutoAccept,
-                    onChanged: (b) async {
-                      await ref.notifier(settingsProvider).setShareViaLinkAutoAccept(b);
-                    },
-                  ),
-                  _BooleanEntry(
-                    label: t.settingsTab.send.createChecksums,
-                    value: vm.settings.createChecksums,
-                    onChanged: (b) async {
-                      await ref.notifier(settingsProvider).setCreateChecksums(b);
-                    },
-                  ),
-                ],
-              ),
+
+            // Section 3: شبکه و کشف (Network & Discovery)
             _SettingsSection(
               title: t.settingsTab.network.title,
               children: [
@@ -366,13 +284,8 @@ class SettingsTab extends StatelessWidget {
                         message: t.settingsTab.network.generateRandomAlias,
                         child: IconButton(
                           onPressed: () async {
-                            // Generates random alias
                             final newAlias = generateRandomAlias();
-
-                            // Update the TextField with the new alias
                             vm.aliasController.text = newAlias;
-
-                            // Persist the new alias using the settingsProvider
                             await ref.notifier(settingsProvider).setAlias(newAlias);
                           },
                           icon: const Icon(Icons.casino),
@@ -389,7 +302,6 @@ class SettingsTab extends StatelessWidget {
                             } else {
                               newAlias = Platform.localHostname;
                             }
-
                             vm.aliasController.text = newAlias;
                             await ref.notifier(settingsProvider).setAlias(newAlias);
                           },
@@ -467,18 +379,6 @@ class SettingsTab extends StatelessWidget {
                     ),
                   ),
                 if (vm.advanced)
-                  _BooleanEntry(
-                    label: t.settingsTab.network.encryption,
-                    value: vm.settings.https,
-                    onChanged: (b) async {
-                      final old = vm.settings.https;
-                      await ref.notifier(settingsProvider).setHttps(b);
-                      if (old && !b && context.mounted) {
-                        await EncryptionDisabledNotice.open(context);
-                      }
-                    },
-                  ),
-                if (vm.advanced)
                   _SettingsEntry(
                     label: t.settingsTab.network.multicastGroup,
                     child: TextFieldTv(
@@ -502,60 +402,151 @@ class SettingsTab extends StatelessWidget {
                     ),
                   ),
                 ),
-                AnimatedCrossFade(
-                  crossFadeState: vm.settings.multicastGroup != defaultMulticastGroup ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                  duration: const Duration(milliseconds: 200),
-                  alignment: Alignment.topLeft,
-                  firstChild: Container(),
-                  secondChild: Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Text(
-                      t.settingsTab.network.multicastGroupWarning(defaultMulticast: defaultMulticastGroup),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ),
+              ],
+            ),
+
+            // Section 4: امنیت و حریم خصوصی (Security & Privacy)
+            _SettingsSection(
+              title: 'امنیت و حریم خصوصی',
+              children: [
+                _BooleanEntry(
+                  label: t.settingsTab.network.encryption,
+                  value: vm.settings.https,
+                  onChanged: (b) async {
+                    final old = vm.settings.https;
+                    await ref.notifier(settingsProvider).setHttps(b);
+                    if (old && !b && context.mounted) {
+                      await EncryptionDisabledNotice.open(context);
+                    }
+                  },
+                ),
+                _BooleanEntry(
+                  label: t.settingsTab.receive.requirePin,
+                  value: vm.settings.receivePin != null,
+                  onChanged: (b) async {
+                    final currentPIN = vm.settings.receivePin;
+                    if (currentPIN != null) {
+                      await ref.notifier(settingsProvider).setReceivePin(null);
+                    } else {
+                      final String? newPin = await showDialog<String>(
+                        context: context,
+                        builder: (_) => const PinDialog(
+                          obscureText: false,
+                          generateRandom: false,
+                        ),
+                      );
+                      if (newPin != null && newPin.isNotEmpty) {
+                        await ref.notifier(settingsProvider).setReceivePin(newPin);
+                      }
+                    }
+                    if (ref.read(serverProvider) != null) {
+                      await ref.notifier(serverProvider).restartServerFromSettings();
+                    }
+                  },
                 ),
               ],
             ),
+
+            // Section 5: همگام‌سازی و اعلان‌ها (Sync & Notifications)
             _SettingsSection(
-              title: t.settingsTab.other.title,
-              padding: const EdgeInsets.only(bottom: 0),
+              title: 'همگام‌سازی و اعلان‌ها',
               children: [
-                _ButtonEntry(
-                  label: t.aboutPage.title,
-                  buttonLabel: t.general.open,
-                  onTap: () async {
-                    await context.push(() => const AboutPage());
+                _BooleanEntry(
+                  label: 'اعلان‌های سیستمی',
+                  value: vm.settings.enableNotifications,
+                  onChanged: (b) async {
+                    await ref.notifier(settingsProvider).setEnableNotifications(b);
                   },
                 ),
-                _ButtonEntry(
-                  label: t.settingsTab.other.support,
-                  buttonLabel: t.settingsTab.other.donate,
-                  onTap: () async {
-                    await context.push(() => const DonationPage());
+                _BooleanEntry(
+                  label: 'صدای اعلان',
+                  value: vm.settings.notificationSound,
+                  onChanged: (b) async {
+                    await ref.notifier(settingsProvider).setNotificationSound(b);
                   },
                 ),
-                _ButtonEntry(
-                  label: t.settingsTab.other.privacyPolicy,
-                  buttonLabel: t.general.open,
-                  onTap: () async {
-                    await launchUrl(
-                      Uri.parse('https://Locara.org/privacy'),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                ),
-                if (checkPlatform([TargetPlatform.iOS, TargetPlatform.macOS]))
-                  _ButtonEntry(
-                    label: t.settingsTab.other.termsOfUse,
-                    buttonLabel: t.general.open,
-                    onTap: () async {
-                      await launchUrl(
-                        Uri.parse('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
-                        mode: LaunchMode.externalApplication,
-                      );
+                if (vm.advanced) ...[
+                  _BooleanEntry(
+                    label: t.settingsTab.send.shareViaLinkAutoAccept,
+                    value: vm.settings.shareViaLinkAutoAccept,
+                    onChanged: (b) async {
+                      await ref.notifier(settingsProvider).setShareViaLinkAutoAccept(b);
                     },
                   ),
+                  _BooleanEntry(
+                    label: t.settingsTab.send.createChecksums,
+                    value: vm.settings.createChecksums,
+                    onChanged: (b) async {
+                      await ref.notifier(settingsProvider).setCreateChecksums(b);
+                    },
+                  ),
+                ],
+              ],
+            ),
+
+            // Section 6: میانبرها و رفتار پیشرفته (Shortcuts & Advanced)
+            _SettingsSection(
+              title: 'میانبرها و رفتار پیشرفته',
+              children: [
+                if (checkPlatformIsDesktop()) ...[
+                  if (vm.advanced && checkPlatformIsNotWaylandDesktop())
+                    _BooleanEntry(
+                      label: defaultTargetPlatform == TargetPlatform.windows
+                          ? t.settingsTab.general.saveWindowPlacementWindows
+                          : t.settingsTab.general.saveWindowPlacement,
+                      value: vm.settings.saveWindowPlacement,
+                      onChanged: (b) async {
+                        await ref.notifier(settingsProvider).setSaveWindowPlacement(b);
+                      },
+                    ),
+                  if (checkPlatformHasTray())
+                    _BooleanEntry(
+                      label: t.settingsTab.general.minimizeToTray,
+                      value: vm.settings.minimizeToTray,
+                      onChanged: (b) async {
+                        await ref.notifier(settingsProvider).setMinimizeToTray(b);
+                      },
+                    ),
+                  _BooleanEntry(
+                    label: t.settingsTab.general.launchAtStartup,
+                    value: vm.autoStart,
+                    onChanged: (_) => vm.onToggleAutoStart(context),
+                  ),
+                  Visibility(
+                    visible: vm.autoStart,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: AnimatedOpacity(
+                      opacity: vm.autoStart ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: _BooleanEntry(
+                        label: t.settingsTab.general.launchMinimized,
+                        value: vm.autoStartLaunchHidden,
+                        onChanged: (_) => vm.onToggleAutoStartLaunchHidden(context),
+                      ),
+                    ),
+                  ),
+                  if (vm.advanced && checkPlatform([TargetPlatform.windows]))
+                    _BooleanEntry(
+                      label: t.settingsTab.general.showInContextMenu,
+                      value: vm.showInContextMenu,
+                      onChanged: (_) => vm.onToggleShowInContextMenu(context),
+                    ),
+                ],
+                _SettingsEntry(
+                  label: 'کلیدهای میانبر فعال',
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      'Ctrl+V (ارسال کلیپ‌بورد) | Esc (بازگشت) | Ctrl+Q (خروج)',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             Row(
@@ -719,19 +710,17 @@ class _ButtonEntry extends StatelessWidget {
 class _SettingsSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
-  final EdgeInsets padding;
 
   const _SettingsSection({
     required this.title,
     required this.children,
-    this.padding = const EdgeInsets.only(bottom: 15),
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: padding,
+      padding: const EdgeInsets.only(bottom: 15),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3) : colorScheme.surface,

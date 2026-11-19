@@ -411,7 +411,10 @@ async fn test_client_transfer_bounded_memory_concurrency() {
 
     // Verify progress was recorded and reached 256
     let calls = progress_calls.lock().unwrap();
-    assert!(!calls.is_empty(), "Progress callback should have been called");
+    assert!(
+        !calls.is_empty(),
+        "Progress callback should have been called"
+    );
     let last = calls.last().unwrap();
     assert_eq!(last.0, 256);
     assert_eq!(last.1, 256);
@@ -441,7 +444,10 @@ async fn test_client_transfer_source_changed_during_transfer() {
 
     // verify_unchanged must immediately detect the discrepancy and fail
     let check = src_info.verify_unchanged().await;
-    assert!(check.is_err(), "verify_unchanged must fail when size changed");
+    assert!(
+        check.is_err(),
+        "verify_unchanged must fail when size changed"
+    );
     let err_msg = check.unwrap_err().to_string();
     assert!(err_msg.contains("size changed"));
 
@@ -530,8 +536,14 @@ async fn test_client_transfer_resume_partial_chunks() {
         .expect("Resumed transfer must complete successfully");
 
     assert_eq!(result.total_chunks, 4);
-    assert_eq!(result.chunks_uploaded, 2, "Only 2 missing chunks should be uploaded");
-    assert_eq!(result.chunks_resumed, 2, "2 chunks should be reported as resumed");
+    assert_eq!(
+        result.chunks_uploaded, 2,
+        "Only 2 missing chunks should be uploaded"
+    );
+    assert_eq!(
+        result.chunks_resumed, 2,
+        "2 chunks should be reported as resumed"
+    );
 
     // Verify published file content matches original
     let storage_dir = ResumeManager::default_storage_dir().unwrap();
@@ -617,7 +629,10 @@ async fn test_client_idempotent_chunk_retry_and_conflicting_rejection() {
         )
         .await;
 
-    assert!(res.is_err(), "Conflicting chunk must be rejected with 409 Conflict");
+    assert!(
+        res.is_err(),
+        "Conflicting chunk must be rejected with 409 Conflict"
+    );
     if let Err(ClientError::StatusCode(status)) = res {
         assert_eq!(status.status, 409);
     } else {
@@ -668,7 +683,14 @@ async fn test_client_commit_retry_and_destination_collision() {
 
     // Idempotent commit retry: calling commit on already committed session returns 200 OK
     client
-        .commit(ProtocolType::Http, "127.0.0.1", server.port, None, &id, None)
+        .commit(
+            ProtocolType::Http,
+            "127.0.0.1",
+            server.port,
+            None,
+            &id,
+            None,
+        )
         .await
         .expect("Retrying commit on committed session must succeed idempotently");
 
@@ -681,7 +703,13 @@ async fn test_client_commit_retry_and_destination_collision() {
     let manifest2 = src_info2.create_manifest(id2.clone(), 64).unwrap();
 
     client
-        .manifest(ProtocolType::Http, "127.0.0.1", server.port, None, manifest2)
+        .manifest(
+            ProtocolType::Http,
+            "127.0.0.1",
+            server.port,
+            None,
+            manifest2,
+        )
         .await
         .unwrap();
 
@@ -703,13 +731,25 @@ async fn test_client_commit_retry_and_destination_collision() {
     // Create collision at destination path prior to commit
     let storage_dir = ResumeManager::default_storage_dir().unwrap();
     let dest_collision_path = storage_dir.join(format!("{fname2}.locara_incoming"));
-    tokio::fs::write(&dest_collision_path, b"pre-existing collision file").await.unwrap();
+    tokio::fs::write(&dest_collision_path, b"pre-existing collision file")
+        .await
+        .unwrap();
 
     let collision_commit = client
-        .commit(ProtocolType::Http, "127.0.0.1", server.port, None, &id2, None)
+        .commit(
+            ProtocolType::Http,
+            "127.0.0.1",
+            server.port,
+            None,
+            &id2,
+            None,
+        )
         .await;
 
-    assert!(collision_commit.is_err(), "Commit must fail with 409 on destination collision");
+    assert!(
+        collision_commit.is_err(),
+        "Commit must fail with 409 on destination collision"
+    );
     if let Err(ClientError::StatusCode(status)) = collision_commit {
         assert_eq!(status.status, 409);
     } else {
@@ -723,7 +763,6 @@ async fn test_client_commit_retry_and_destination_collision() {
     cleanup_transfer(&id2, &fname2).await;
     server.stop().await;
 }
-
 
 // ─── Test 11: Malformed manifest response rejection ───────────────────────────
 
@@ -843,7 +882,13 @@ async fn test_client_cold_restart_tls_peer_binding_negative() {
 
     // Client A registers manifest over mTLS
     let resp_a = client_a
-        .manifest(ProtocolType::Https, "127.0.0.1", port, None, manifest.clone())
+        .manifest(
+            ProtocolType::Https,
+            "127.0.0.1",
+            port,
+            None,
+            manifest.clone(),
+        )
         .await
         .unwrap();
     assert_eq!(resp_a.session_id, id);

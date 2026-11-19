@@ -104,11 +104,12 @@ pub fn negotiate(
     }
 
     // Determine TransferMode
-    let mode = if protocol == ProtocolVersion::V3_0 && capabilities.contains(&Capability::ChunkTransfer) {
-        TransferMode::ChunkedV3
-    } else {
-        TransferMode::LegacyV2
-    };
+    let mode =
+        if protocol == ProtocolVersion::V3_0 && capabilities.contains(&Capability::ChunkTransfer) {
+            TransferMode::ChunkedV3
+        } else {
+            TransferMode::LegacyV2
+        };
 
     Ok(NegotiatedSession {
         protocol,
@@ -127,10 +128,14 @@ mod tests {
         let our_caps = HashSet::from([Capability::Sha256, Capability::ChunkTransfer]);
 
         let peer_protocols = vec![ProtocolVersion::V2_2, ProtocolVersion::V3_0];
-        let peer_caps = HashSet::from([Capability::Sha256, Capability::ChunkTransfer, Capability::PersistentResume]);
+        let peer_caps = HashSet::from([
+            Capability::Sha256,
+            Capability::ChunkTransfer,
+            Capability::PersistentResume,
+        ]);
 
         let session = negotiate(&our_protocols, &our_caps, &peer_protocols, &peer_caps).unwrap();
-        
+
         assert_eq!(session.protocol, ProtocolVersion::V3_0);
         assert_eq!(session.mode, TransferMode::ChunkedV3);
         assert!(session.capabilities.contains(&Capability::Sha256));
@@ -147,7 +152,7 @@ mod tests {
         let peer_caps = HashSet::new();
 
         let session = negotiate(&our_protocols, &our_caps, &peer_protocols, &peer_caps).unwrap();
-        
+
         assert_eq!(session.protocol, ProtocolVersion::V2_2);
         assert_eq!(session.mode, TransferMode::LegacyV2);
         assert!(session.capabilities.is_empty());
@@ -162,7 +167,7 @@ mod tests {
         let peer_caps = HashSet::from([Capability::Sha256]);
 
         let session = negotiate(&our_protocols, &our_caps, &peer_protocols, &peer_caps).unwrap();
-        
+
         assert_eq!(session.protocol, ProtocolVersion::V2_2);
         assert_eq!(session.mode, TransferMode::LegacyV2);
         assert!(session.capabilities.is_empty());

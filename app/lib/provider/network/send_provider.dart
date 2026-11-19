@@ -15,6 +15,7 @@ import 'package:locara_app/provider/durable_send_provider.dart';
 import 'package:locara_app/provider/file_transfer_provider.dart';
 import 'package:locara_app/provider/http_provider.dart';
 import 'package:locara_app/provider/network/nearby_devices_provider.dart';
+import 'package:locara_app/provider/receive_history_provider.dart';
 import 'package:locara_app/provider/selection/selected_sending_files_provider.dart';
 import 'package:locara_app/provider/settings_provider.dart';
 import 'package:locara_app/widget/dialogs/pin_dialog.dart';
@@ -519,6 +520,27 @@ class SendNotifier extends Notifier<Map<String, SendSessionState>> {
       _logger.info('Transfer was canceled.');
     } else {
       final hasError = ref.read(fileTransferProvider).getStatuses(sessionId).any((status) => status == FileStatus.failed);
+      if (!hasError) {
+        // Log successful outgoing files to unified transfer history
+        for (final sendingFile in sessionState.files.values) {
+          unawaited(
+            ref.redux(receiveHistoryProvider).dispatchAsync(
+              AddHistoryEntryAction(
+                entryId: '${sessionId}_${sendingFile.file.id}',
+                fileName: sendingFile.file.fileName,
+                fileType: sendingFile.file.fileType,
+                path: sendingFile.path,
+                savedToGallery: false,
+                isMessage: false,
+                fileSize: sendingFile.file.size,
+                senderAlias: 'ارسال به ${sessionState.target.alias}',
+                timestamp: DateTime.now(),
+              ),
+            ),
+          );
+        }
+      }
+
       if (!hasError && sessionState.background == true) {
         // close session because everything is fine and it is in background
         closeSession(sessionId);

@@ -28,24 +28,14 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
     borderRadius: _borderRadius,
   );
 
-  // https://github.com/Locara/Locara/issues/52
+  // Use Vazirmatn for Persian, and native standard font for English
   final String? fontFamily;
-  if (checkPlatform([TargetPlatform.windows])) {
-    fontFamily = switch (LocaleSettings.currentLocale) {
-      AppLocale.ja => 'Yu Gothic UI',
-      AppLocale.ko => 'Malgun Gothic',
-      AppLocale.zhCn => 'Microsoft YaHei UI',
-      AppLocale.zhHk || AppLocale.zhTw => 'Microsoft JhengHei UI',
-      _ => 'Segoe UI Variable Display',
-    };
+  if (LocaleSettings.currentLocale == AppLocale.fa) {
+    fontFamily = 'Vazirmatn';
+  } else if (checkPlatform([TargetPlatform.windows])) {
+    fontFamily = 'Segoe UI Variable Display';
   } else if (checkPlatform([TargetPlatform.linux])) {
-    fontFamily = switch (LocaleSettings.currentLocale) {
-      AppLocale.ja => 'Noto Sans CJK JP',
-      AppLocale.ko => 'Noto Sans CJK KR',
-      AppLocale.zhCn => 'Noto Sans CJK SC',
-      AppLocale.zhHk || AppLocale.zhTw => 'Noto Sans CJK TC',
-      _ => 'Noto Sans',
-    };
+    fontFamily = 'Noto Sans';
   } else {
     fontFamily = null;
   }

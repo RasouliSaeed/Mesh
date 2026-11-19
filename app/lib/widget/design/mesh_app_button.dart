@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
 
-enum LocaraButtonVariant {
+enum MeshButtonVariant {
   primary,
   secondary,
   outline,
   danger,
 }
 
-class LocaraAppButton extends StatelessWidget {
+class MeshAppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
-  final LocaraButtonVariant variant;
+  final MeshButtonVariant variant;
   final bool isLoading;
   final double? width;
   final double height;
   final double borderRadius;
 
-  const LocaraAppButton({
+  const MeshAppButton({
     required this.label,
     required this.onPressed,
     this.icon,
-    this.variant = LocaraButtonVariant.primary,
+    this.variant = MeshButtonVariant.primary,
     this.isLoading = false,
     this.width,
     this.height = 48.0,
-    this.borderRadius = LocaraDesignTokens.radiusLarge,
+    this.borderRadius = MeshDesignTokens.radiusLarge,
     super.key,
   });
 
@@ -36,16 +36,16 @@ class LocaraAppButton extends StatelessWidget {
 
     Decoration decoration;
     TextStyle textStyle = const TextStyle(
-      color: LocaraDesignTokens.primaryText,
+      color: MeshDesignTokens.primaryText,
       fontSize: 15,
       fontWeight: FontWeight.bold,
     );
 
     switch (variant) {
-      case LocaraButtonVariant.primary:
+      case MeshButtonVariant.primary:
         decoration = BoxDecoration(
-          gradient: isEnabled ? LocaraDesignTokens.primaryGradient : null,
-          color: isEnabled ? null : LocaraDesignTokens.cardSurface,
+          gradient: isEnabled ? MeshDesignTokens.primaryGradient : null,
+          color: isEnabled ? null : MeshDesignTokens.cardSurface,
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: isEnabled
               ? [
@@ -140,6 +140,6 @@ class LocaraAppButton extends StatelessWidget {
   }
 }
 
-/// Mesh button aliases
-typedef MeshAppButton = LocaraAppButton;
-typedef MeshButtonVariant = LocaraButtonVariant;
+/// Legacy button aliases for backward compatibility
+typedef LocaraAppButton = MeshAppButton;
+typedef LocaraButtonVariant = MeshButtonVariant;

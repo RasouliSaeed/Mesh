@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
 
-class LocaraTransferProgress extends StatelessWidget {
+class MeshTransferProgress extends StatelessWidget {
   final double progress; // 0.0 to 1.0
   final String? speed;
   final String? eta;
   final String? statusText;
   final double height;
 
-  const LocaraTransferProgress({
+  const MeshTransferProgress({
     required this.progress,
     this.speed,
     this.eta,
@@ -141,5 +141,5 @@ class LocaraTransferProgress extends StatelessWidget {
   }
 }
 
-/// Mesh transfer progress alias
-typedef MeshTransferProgress = LocaraTransferProgress;
+/// Legacy transfer progress alias for backward compatibility
+typedef LocaraTransferProgress = MeshTransferProgress;

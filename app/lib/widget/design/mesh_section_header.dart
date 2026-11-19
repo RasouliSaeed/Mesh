@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
 
-class LocaraSectionHeader extends StatelessWidget {
+class MeshSectionHeader extends StatelessWidget {
   final String title;
   final bool hasLiveIndicator;
   final String? actionLabel;
   final VoidCallback? onAction;
   final EdgeInsetsGeometry? padding;
 
-  const LocaraSectionHeader({
+  const MeshSectionHeader({
     required this.title,
     this.hasLiveIndicator = false,
     this.actionLabel,
@@ -93,5 +93,5 @@ class LocaraSectionHeader extends StatelessWidget {
   }
 }
 
-/// Mesh section header alias
-typedef MeshSectionHeader = LocaraSectionHeader;
+/// Legacy section header alias for backward compatibility
+typedef LocaraSectionHeader = MeshSectionHeader;

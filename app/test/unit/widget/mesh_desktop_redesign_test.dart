@@ -254,7 +254,7 @@ void main() {
       expect(find.byIcon(Icons.info_outline_rounded), findsOneWidget);
 
       // Verify Sidebar Footer: version and IP / network status
-      expect(find.text('Mesh v1.8.0'), findsOneWidget);
+      expect(find.text('Mesh v2.0.0'), findsOneWidget);
       expect(find.text('192.168.1.150'), findsOneWidget);
       expect(find.byIcon(Icons.signal_cellular_alt_rounded), findsOneWidget);
     });
@@ -445,15 +445,15 @@ void main() {
 
       // Capsule 2: Success Rate
       expect(find.text('موفقیت انتقال'), findsOneWidget);
-      expect(find.text('۹۸٪'), findsOneWidget);
+      expect(find.text('۱۰۰٪'), findsOneWidget);
 
       // Capsule 3: Transfer Speed
       expect(find.text('سرعت انتقال'), findsOneWidget);
-      expect(find.text('۱۲.۵ MB/s'), findsOneWidget);
+      expect(find.text('آماده'), findsOneWidget);
 
       // Capsule 4: Elapsed Time (Desktop only)
       expect(find.text('زمان سپری شده'), findsOneWidget);
-      expect(find.text('۰۰:۰۱:۲۳'), findsOneWidget);
+      expect(find.text('--'), findsOneWidget);
     });
 
     testWidgets('7. Sidebar Interactive Navigation: Switch to Local Messages & Back to Home', (tester) async {

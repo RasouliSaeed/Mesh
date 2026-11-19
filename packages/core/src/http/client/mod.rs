@@ -182,7 +182,6 @@ impl LsHttpClient {
     }
 }
 
-
 /// Builds a streaming request body from the file content, invoking `progress`
 /// with the cumulative number of bytes read as each chunk is sent.
 ///
@@ -250,7 +249,8 @@ pub(super) fn create_reqwest_client(
         // Peers never redirect; following one would talk to a different host
         // than the one whose certificate is being verified.
         .redirect(reqwest::redirect::Policy::none())
-        .dns_resolver(Arc::new(ScopedHostResolver));
+        .dns_resolver(Arc::new(ScopedHostResolver))
+        .connect_timeout(std::time::Duration::from_millis(3500));
 
     if let Some(timeout) = timeout {
         builder = builder.timeout(timeout);

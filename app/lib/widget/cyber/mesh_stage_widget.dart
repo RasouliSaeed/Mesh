@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:locara_app/gen/assets.gen.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 
-class LocaraStageWidget extends StatefulWidget {
+class MeshStageWidget extends StatefulWidget {
   final bool isDesktop;
   final int availableDevicesCount;
 
-  const LocaraStageWidget({
+  const MeshStageWidget({
     required this.isDesktop,
     this.availableDevicesCount = 2,
     super.key,
   });
 
   @override
-  State<LocaraStageWidget> createState() => _LocaraStageWidgetState();
+  State<MeshStageWidget> createState() => _MeshStageWidgetState();
 }
 
-class _LocaraStageWidgetState extends State<LocaraStageWidget> with SingleTickerProviderStateMixin {
+class _MeshStageWidgetState extends State<MeshStageWidget> with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
 
   @override
@@ -466,5 +466,5 @@ class _MobilePodiumPainter extends CustomPainter {
   }
 }
 
-/// Mesh stage widget alias
-typedef MeshStageWidget = LocaraStageWidget;
+/// Legacy stage widget alias for backward compatibility
+typedef LocaraStageWidget = MeshStageWidget;

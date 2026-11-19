@@ -7,11 +7,15 @@ void main() {
     test('register', () {
       expect(ApiRoute.register.v1, '/api/locara/v1/register');
       expect(ApiRoute.register.v2, '/api/locara/v2/register');
+      expect(ApiRoute.register.meshV2, '/api/mesh/v2/register');
+      expect(ApiRoute.register.meshV3, '/api/mesh/v3/register');
     });
 
     test('prepareUpload', () {
       expect(ApiRoute.prepareUpload.v1, '/api/locara/v1/send-request');
       expect(ApiRoute.prepareUpload.v2, '/api/locara/v2/prepare-upload');
+      expect(ApiRoute.prepareUpload.meshV2, '/api/mesh/v2/prepare-upload');
+      expect(ApiRoute.prepareUpload.meshV3, '/api/mesh/v3/prepare-upload');
     });
   });
 
@@ -21,6 +25,8 @@ void main() {
       expect(ApiRoute.register.target(_target(version: '1.0', https: true)), 'https://0.0.0.0:8080/api/locara/v1/register');
       expect(ApiRoute.register.target(_target(version: '2.0', https: false)), 'http://0.0.0.0:8080/api/locara/v2/register');
       expect(ApiRoute.register.target(_target(version: '2.0', https: true)), 'https://0.0.0.0:8080/api/locara/v2/register');
+      expect(ApiRoute.register.target(_target(version: '2.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v2/register');
+      expect(ApiRoute.register.target(_target(version: '3.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v3/register');
     });
 
     test('prepareUpload', () {
@@ -28,6 +34,8 @@ void main() {
       expect(ApiRoute.prepareUpload.target(_target(version: '1.0', https: true)), 'https://0.0.0.0:8080/api/locara/v1/send-request');
       expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: false)), 'http://0.0.0.0:8080/api/locara/v2/prepare-upload');
       expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: true)), 'https://0.0.0.0:8080/api/locara/v2/prepare-upload');
+      expect(ApiRoute.prepareUpload.target(_target(version: '2.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v2/prepare-upload');
+      expect(ApiRoute.prepareUpload.target(_target(version: '3.0', https: true), preferMesh: true), 'https://0.0.0.0:8080/api/mesh/v3/prepare-upload');
     });
   });
 

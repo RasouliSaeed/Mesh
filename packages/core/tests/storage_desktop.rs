@@ -8,7 +8,11 @@ fn to_hex(bytes: &[u8]) -> String {
 }
 
 fn create_isolated_test_dir(name: &str) -> PathBuf {
-    let dir = std::env::temp_dir().join(format!("locara-storage-test-{}-{}", name, uuid::Uuid::new_v4()));
+    let dir = std::env::temp_dir().join(format!(
+        "locara-storage-test-{}-{}",
+        name,
+        uuid::Uuid::new_v4()
+    ));
     std::fs::create_dir_all(&dir).expect("Failed to create isolated test dir");
     dir
 }
@@ -24,7 +28,10 @@ async fn test_create_new_partial_file() {
         .await
         .expect("create_new should succeed");
 
-    assert!(temp_path.exists(), "Temporary .locara.part file should exist");
+    assert!(
+        temp_path.exists(),
+        "Temporary .locara.part file should exist"
+    );
     assert!(!final_path.exists(), "Final destination must not exist yet");
 
     handle
@@ -83,7 +90,9 @@ async fn test_reopen_without_truncation() {
         .expect("write chunk 1");
     resume_handle.flush().await.expect("flush resume handle");
 
-    let total_bytes = tokio::fs::read(&temp_path).await.expect("read full .part file");
+    let total_bytes = tokio::fs::read(&temp_path)
+        .await
+        .expect("read full .part file");
     assert_eq!(total_bytes, b"chunk_0_data_12345_chunk_1_data_67890");
 
     let _ = Box::new(resume_handle).abort().await;
@@ -106,10 +115,7 @@ async fn test_random_access_write() {
         .await
         .expect("write at 100");
     // Write chunk at offset 0 next
-    handle
-        .write_at(0, b"CHUNK_AT_0")
-        .await
-        .expect("write at 0");
+    handle.write_at(0, b"CHUNK_AT_0").await.expect("write at 0");
     // Write chunk at offset 50
     handle
         .write_at(50, b"CHUNK_AT_50")
@@ -127,7 +133,10 @@ async fn test_random_access_write() {
     assert_eq!(&buf_50[..n50], b"CHUNK_AT_50");
 
     let mut buf_100 = [0u8; 12];
-    let n100 = handle.read_at(100, &mut buf_100).await.expect("read at 100");
+    let n100 = handle
+        .read_at(100, &mut buf_100)
+        .await
+        .expect("read at 100");
     assert_eq!(&buf_100[..n100], b"CHUNK_AT_100");
 
     // Verify intermediate gap (e.g. between 10 and 50) is zeroed by filesystem
@@ -181,7 +190,10 @@ async fn test_read_existing_partial_content_bounded_streaming() {
 
     assert_eq!(offset, total_size as u64, "Must have read exactly 256 KiB");
     let actual_sha256 = to_hex(&streaming_hasher.finalize());
-    assert_eq!(actual_sha256, expected_sha256, "Full-file streaming SHA-256 must match");
+    assert_eq!(
+        actual_sha256, expected_sha256,
+        "Full-file streaming SHA-256 must match"
+    );
 
     let _ = Box::new(handle).abort().await;
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
@@ -203,17 +215,23 @@ async fn test_invalid_or_conflicting_reopen() {
     );
 
     // Case 5b: reopen_existing when partial path is a directory -> UnexpectedFileType
-    tokio::fs::create_dir(&temp_path).await.expect("create dir at temp_path");
+    tokio::fs::create_dir(&temp_path)
+        .await
+        .expect("create dir at temp_path");
     let err_dir = DesktopStorageHandle::reopen_existing(final_path.clone()).await;
     assert!(
         matches!(err_dir, Err(StorageError::UnexpectedFileType(_))),
         "Expected UnexpectedFileType when path is a directory, got: {:?}",
         err_dir
     );
-    tokio::fs::remove_dir(&temp_path).await.expect("clean up temp dir");
+    tokio::fs::remove_dir(&temp_path)
+        .await
+        .expect("clean up temp dir");
 
     // Case 5c: create_new when partial file already exists -> AlreadyExists (conflict prevention)
-    tokio::fs::write(&temp_path, b"already exists").await.expect("create existing .part");
+    tokio::fs::write(&temp_path, b"already exists")
+        .await
+        .expect("create existing .part");
     let err_already_exists = DesktopStorageHandle::create_new(final_path.clone()).await;
     assert!(
         matches!(err_already_exists, Err(StorageError::AlreadyExists)),
@@ -240,17 +258,28 @@ async fn test_atomic_commit_lifecycle() {
     handle.flush().await.expect("flush payload");
 
     assert!(temp_path.exists(), "Temporary file exists before commit");
-    assert!(!final_path.exists(), "Final file does not exist before commit");
+    assert!(
+        !final_path.exists(),
+        "Final file does not exist before commit"
+    );
 
     Box::new(handle)
         .commit(FileTimestamps::default())
         .await
         .expect("commit should succeed");
 
-    assert!(!temp_path.exists(), "Temporary file must be removed/renamed after commit");
-    assert!(final_path.exists(), "Final destination must exist after commit");
+    assert!(
+        !temp_path.exists(),
+        "Temporary file must be removed/renamed after commit"
+    );
+    assert!(
+        final_path.exists(),
+        "Final destination must exist after commit"
+    );
 
-    let final_bytes = tokio::fs::read(&final_path).await.expect("read final destination");
+    let final_bytes = tokio::fs::read(&final_path)
+        .await
+        .expect("read final destination");
     assert_eq!(final_bytes, content);
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
@@ -272,17 +301,34 @@ async fn test_abort_cleanup_preserves_unrelated_files() {
         .await
         .expect("create_new should succeed");
 
-    handle.write_data(b"incomplete partial junk").await.expect("write partial");
+    handle
+        .write_data(b"incomplete partial junk")
+        .await
+        .expect("write partial");
     assert!(temp_path.exists(), "Temporary file exists prior to abort");
 
-    Box::new(handle).abort().await.expect("abort should succeed");
+    Box::new(handle)
+        .abort()
+        .await
+        .expect("abort should succeed");
 
-    assert!(!temp_path.exists(), "Temporary file must be cleaned up on abort");
-    assert!(!final_path.exists(), "Final file must never be created on abort");
+    assert!(
+        !temp_path.exists(),
+        "Temporary file must be cleaned up on abort"
+    );
+    assert!(
+        !final_path.exists(),
+        "Final file must never be created on abort"
+    );
 
     // Unrelated file must be intact
-    assert!(unrelated_file.exists(), "Unrelated file must not be deleted");
-    let unrelated_bytes = tokio::fs::read(&unrelated_file).await.expect("read unrelated file");
+    assert!(
+        unrelated_file.exists(),
+        "Unrelated file must not be deleted"
+    );
+    let unrelated_bytes = tokio::fs::read(&unrelated_file)
+        .await
+        .expect("read unrelated file");
     assert_eq!(unrelated_bytes, b"precious user content");
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
@@ -317,10 +363,19 @@ async fn test_destination_collision_rejection() {
 
     // 8c. new (V2 legacy mode) permits opening and overwriting final_path upon commit
     let new_res = DesktopStorageHandle::new(final_path.clone()).await;
-    assert!(new_res.is_ok(), "new must succeed in V2 legacy mode even if final_path exists");
+    assert!(
+        new_res.is_ok(),
+        "new must succeed in V2 legacy mode even if final_path exists"
+    );
     let mut new_handle = new_res.unwrap();
-    new_handle.write_data(b"overwritten by v2").await.expect("write data");
-    Box::new(new_handle).commit(FileTimestamps::default()).await.expect("commit v2 overwrite");
+    new_handle
+        .write_data(b"overwritten by v2")
+        .await
+        .expect("write data");
+    Box::new(new_handle)
+        .commit(FileTimestamps::default())
+        .await
+        .expect("commit v2 overwrite");
     let overwritten = tokio::fs::read(&final_path).await.expect("read final_path");
     assert_eq!(overwritten, b"overwritten by v2");
 
@@ -330,7 +385,10 @@ async fn test_destination_collision_rejection() {
     let mut handle = DesktopStorageHandle::create_new(target_path.clone())
         .await
         .expect("create_new in clean dir");
-    handle.write_data(b"new incoming data").await.expect("write data");
+    handle
+        .write_data(b"new incoming data")
+        .await
+        .expect("write data");
 
     // Create target_path behind the handle's back before commit
     tokio::fs::write(&target_path, b"racing existing file")
@@ -364,7 +422,10 @@ async fn test_desktop_storage_v2_compat_retry_truncation() {
         let mut handle1 = DesktopStorageHandle::new(final_path.clone())
             .await
             .expect("initial V2 handle");
-        handle1.write_data(b"corrupted attempt").await.expect("write bad");
+        handle1
+            .write_data(b"corrupted attempt")
+            .await
+            .expect("write bad");
         handle1.flush().await.expect("flush bad");
         // Drop handle1 without commit
     }
@@ -374,14 +435,19 @@ async fn test_desktop_storage_v2_compat_retry_truncation() {
     let mut handle2 = DesktopStorageHandle::new(final_path.clone())
         .await
         .expect("retry V2 handle");
-    handle2.write_data(b"clean successful retry").await.expect("write clean");
+    handle2
+        .write_data(b"clean successful retry")
+        .await
+        .expect("write clean");
     handle2.flush().await.expect("flush clean");
     Box::new(handle2)
         .commit(FileTimestamps::default())
         .await
         .expect("commit clean retry");
 
-    let final_data = tokio::fs::read(&final_path).await.expect("read final V2 file");
+    let final_data = tokio::fs::read(&final_path)
+        .await
+        .expect("read final V2 file");
     assert_eq!(final_data, b"clean successful retry");
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
@@ -428,7 +494,9 @@ async fn test_reopen_existing_symlink_rejection() {
         );
 
         // Verify the secret target file was never modified
-        let intact = tokio::fs::read(&target_file).await.expect("read secret target");
+        let intact = tokio::fs::read(&target_file)
+            .await
+            .expect("read secret target");
         assert_eq!(intact, b"CONFIDENTIAL_DATA");
     } else {
         println!("Note: Symlink creation skipped due to platform privileges (e.g. Windows non-developer mode)");
@@ -457,7 +525,10 @@ async fn test_destination_byte_for_byte_unchanged_on_strict_commit_collision() {
         .expect("create_new in clean staging dir");
 
     let attack_bytes = b"COMPLETELY_DIFFERENT_CORRUPT_BYTES";
-    handle.write_data(attack_bytes).await.expect("write attack bytes");
+    handle
+        .write_data(attack_bytes)
+        .await
+        .expect("write attack bytes");
 
     // Manually point handle's final_path to the pre-existing target file to simulate collision
     // (Or create a handle with target_path = final_path by creating it before destination was written)
@@ -465,12 +536,19 @@ async fn test_destination_byte_for_byte_unchanged_on_strict_commit_collision() {
     let mut collision_handle = DesktopStorageHandle::create_new(alt_staging.clone())
         .await
         .expect("create alt handle");
-    collision_handle.write_data(attack_bytes).await.expect("write data");
+    collision_handle
+        .write_data(attack_bytes)
+        .await
+        .expect("write data");
 
     // Create collision by racing: create final_path for alt_staging
-    tokio::fs::write(&alt_staging, &original_bytes).await.expect("create destination race");
+    tokio::fs::write(&alt_staging, &original_bytes)
+        .await
+        .expect("create destination race");
 
-    let commit_res = Box::new(collision_handle).commit(FileTimestamps::default()).await;
+    let commit_res = Box::new(collision_handle)
+        .commit(FileTimestamps::default())
+        .await;
     assert!(
         matches!(commit_res, Err(StorageError::AlreadyExists)),
         "strict commit must return AlreadyExists on collision, got: {:?}",
@@ -554,7 +632,9 @@ async fn test_reopen_existing_directory_and_junction_rejection() {
     let temp_part_path = DesktopStorageHandle::temp_path_for(&final_path);
 
     // 1. Create a directory at the partial file path
-    tokio::fs::create_dir(&temp_part_path).await.expect("create dir at part path");
+    tokio::fs::create_dir(&temp_part_path)
+        .await
+        .expect("create dir at part path");
 
     let err_dir = DesktopStorageHandle::reopen_existing(final_path.clone()).await;
     assert!(
@@ -563,7 +643,9 @@ async fn test_reopen_existing_directory_and_junction_rejection() {
         err_dir
     );
 
-    tokio::fs::remove_dir(&temp_part_path).await.expect("remove test dir");
+    tokio::fs::remove_dir(&temp_part_path)
+        .await
+        .expect("remove test dir");
 
     // 2. On Windows, test directory junction if command is available
     #[cfg(windows)]
@@ -572,7 +654,13 @@ async fn test_reopen_existing_directory_and_junction_rejection() {
         let _ = tokio::fs::create_dir(&target_dir).await;
 
         let status = std::process::Command::new("cmd")
-            .args(&["/C", "mklink", "/J", temp_part_path.to_str().unwrap(), target_dir.to_str().unwrap()])
+            .args(&[
+                "/C",
+                "mklink",
+                "/J",
+                temp_part_path.to_str().unwrap(),
+                target_dir.to_str().unwrap(),
+            ])
             .output();
 
         if let Ok(output) = status {
@@ -585,12 +673,13 @@ async fn test_reopen_existing_directory_and_junction_rejection() {
                 );
                 let _ = tokio::fs::remove_dir(&temp_part_path).await;
             } else {
-                println!("Note: Junction creation skipped: {:?}", String::from_utf8_lossy(&output.stderr));
+                println!(
+                    "Note: Junction creation skipped: {:?}",
+                    String::from_utf8_lossy(&output.stderr)
+                );
             }
         }
     }
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
 }
-
-

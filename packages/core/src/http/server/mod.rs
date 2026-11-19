@@ -658,7 +658,14 @@ async fn handle_request_inner(mut req: Request<Incoming>) -> Result<Response<Box
 
     let v2_enabled = state.v2.is_some();
 
-    match (req.method(), req.uri().path()) {
+    let raw_path = req.uri().path();
+    let normalized_path = if let Some(stripped) = raw_path.strip_prefix("/api/mesh/") {
+        format!("/api/locara/{}", stripped)
+    } else {
+        raw_path.to_string()
+    };
+
+    match (req.method(), normalized_path.as_str()) {
         (&Method::GET, "/") => Ok(web::index(&state)),
         (&Method::GET, "/i18n.json") => web::i18n(&state),
         (&Method::POST, "/api/locara/v2/prepare-download") => {

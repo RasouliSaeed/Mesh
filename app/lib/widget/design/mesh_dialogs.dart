@@ -3,23 +3,23 @@ import 'package:locara_app/theme/mesh_design_tokens.dart';
 import 'package:locara_app/widget/design/mesh_app_button.dart';
 import 'package:locara_app/widget/design/mesh_glass_card.dart';
 
-class LocaraConfirmationDialog extends StatelessWidget {
+class MeshConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
   final String confirmLabel;
   final String cancelLabel;
-  final LocaraButtonVariant confirmVariant;
+  final MeshButtonVariant confirmVariant;
   final IconData? icon;
   final VoidCallback onConfirm;
   final VoidCallback? onCancel;
 
-  const LocaraConfirmationDialog({
+  const MeshConfirmationDialog({
     required this.title,
     required this.message,
     required this.onConfirm,
     this.confirmLabel = 'تأیید',
     this.cancelLabel = 'انصراف',
-    this.confirmVariant = LocaraButtonVariant.primary,
+    this.confirmVariant = MeshButtonVariant.primary,
     this.icon,
     this.onCancel,
     super.key,
@@ -31,7 +31,7 @@ class LocaraConfirmationDialog extends StatelessWidget {
     required String message,
     String confirmLabel = 'تأیید',
     String cancelLabel = 'انصراف',
-    LocaraButtonVariant confirmVariant = LocaraButtonVariant.primary,
+    MeshButtonVariant confirmVariant = MeshButtonVariant.primary,
     IconData? icon,
   }) async {
     final result = await showDialog<bool>(
@@ -130,5 +130,5 @@ class LocaraConfirmationDialog extends StatelessWidget {
   }
 }
 
-/// Mesh confirmation dialog alias
-typedef MeshConfirmationDialog = LocaraConfirmationDialog;
+/// Legacy confirmation dialog alias for backward compatibility
+typedef LocaraConfirmationDialog = MeshConfirmationDialog;

@@ -4,14 +4,14 @@ import 'package:locara_app/widget/design/mesh_glass_card.dart';
 import 'package:locara_app/widget/design/mesh_sas_badge.dart';
 import 'package:locara_isolates/model/device.dart';
 
-class LocaraDeviceCard extends StatelessWidget {
+class MeshP2PDeviceCard extends StatelessWidget {
   final Device device;
   final VoidCallback? onTap;
   final VoidCallback? onInfoTap;
   final bool isSelected;
   final bool showSas;
 
-  const LocaraDeviceCard({
+  const MeshP2PDeviceCard({
     required this.device,
     this.onTap,
     this.onInfoTap,
@@ -154,5 +154,5 @@ class LocaraDeviceCard extends StatelessWidget {
   }
 }
 
-/// Mesh device card alias
-typedef MeshDeviceCard = LocaraDeviceCard;
+/// Legacy device card alias for backward compatibility
+typedef LocaraDeviceCard = MeshP2PDeviceCard;

@@ -6,6 +6,7 @@ import 'package:locara_app/pages/chat_page.dart';
 import 'package:locara_app/pages/tabs/receive_tab.dart';
 import 'package:locara_app/pages/tabs/send_tab.dart';
 import 'package:locara_app/pages/tabs/settings_tab.dart';
+import 'package:locara_app/provider/chat_provider.dart';
 import 'package:locara_app/provider/clipboard_provider.dart';
 import 'package:locara_app/provider/local_ip_provider.dart';
 import 'package:locara_app/provider/network/nearby_devices_provider.dart';
@@ -14,11 +15,17 @@ import 'package:locara_app/provider/network/server/server_provider.dart';
 import 'package:locara_app/provider/receive_history_provider.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
+import 'package:locara_app/widget/cyber/mesh_contextual_chat_card.dart';
+import 'package:locara_app/widget/cyber/mesh_contextual_history_card.dart';
+import 'package:locara_app/widget/cyber/mesh_device_card.dart';
 import 'package:locara_app/widget/cyber/mesh_discovery_card.dart';
+import 'package:locara_app/widget/cyber/mesh_feature_pills.dart';
+import 'package:locara_app/widget/cyber/mesh_radar_scanner_view.dart';
 import 'package:locara_app/widget/cyber/mesh_stage_widget.dart';
 import 'package:locara_app/widget/cyber/mesh_stats_bar.dart';
 import 'package:locara_app/widget/design/mesh_glass_card.dart';
 import 'package:locara_isolates/isolate.dart';
+import 'package:locara_isolates/model/device.dart';
 import 'package:refena_flutter/refena_flutter.dart';
 import 'package:routerino/routerino.dart';
 
@@ -36,12 +43,12 @@ enum DesktopNavTab {
   const DesktopNavTab(this.icon, this.label);
 }
 
-class LocaraDesktopHomeView extends StatefulWidget {
+class MeshDesktopHomeView extends StatefulWidget {
   final int historyCount;
   final DesktopNavTab initialTab;
   final VoidCallback? onScanToggled;
 
-  const LocaraDesktopHomeView({
+  const MeshDesktopHomeView({
     this.historyCount = 248,
     this.initialTab = DesktopNavTab.home,
     this.onScanToggled,
@@ -49,10 +56,10 @@ class LocaraDesktopHomeView extends StatefulWidget {
   });
 
   @override
-  State<LocaraDesktopHomeView> createState() => _LocaraDesktopHomeViewState();
+  State<MeshDesktopHomeView> createState() => _MeshDesktopHomeViewState();
 }
 
-class _LocaraDesktopHomeViewState extends State<LocaraDesktopHomeView> {
+class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
   late DesktopNavTab _selectedTab;
 
   @override
@@ -248,7 +255,7 @@ class _LocaraDesktopHomeViewState extends State<LocaraDesktopHomeView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Mesh v1.8.0',
+            'Mesh v2.0.0',
             style: TextStyle(
               color: LocaraDesignTokens.mutedText,
               fontSize: 11,
@@ -350,66 +357,290 @@ class _LocaraDesktopHomeViewState extends State<LocaraDesktopHomeView> {
     );
   }
 
+  bool _showContextualChat = true;
+  bool _showContextualHistory = true;
+
   Widget _buildCyberDashboard({
     required bool isServerRunning,
     required int deviceCount,
     required int historyCount,
   }) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final nearbyDevices = context.watch(nearbyDevicesProvider).devices.values.toList();
+
     return Container(
       margin: const EdgeInsetsDirectional.only(
         top: LocaraDesignTokens.spacing16,
         bottom: LocaraDesignTokens.spacing16,
         end: LocaraDesignTokens.spacing16,
       ),
-      padding: EdgeInsets.all(LocaraDesignTokens.spacing28),
+      padding: const EdgeInsets.all(LocaraDesignTokens.spacing20),
       decoration: LocaraCyberTheme.glassCardDecoration(
         borderRadius: 28,
         borderColor: LocaraDesignTokens.cardBorderSubtle,
         fillColor: LocaraDesignTokens.deepNavy.withValues(alpha: 0.8),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 1. Top Header Bar: Title, Subtitle, and "آماده به کار" badge
-          _buildHeaderBar(isServerRunning: isServerRunning),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Top Header Bar: Title, Subtitle, and "آماده به کار" badge
+            _buildHeaderBar(isServerRunning: isServerRunning),
 
-          const Spacer(),
+            const SizedBox(height: LocaraDesignTokens.spacing16),
 
-          // 2. Center 3D Stage with Connected Devices
-          LocaraStageWidget(
-            isDesktop: true,
-            availableDevicesCount: deviceCount,
-          ),
+            // 2. Nearby Devices Header with Live Counter
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isRtl ? 'دستگاه‌های اطراف' : 'Nearby Devices',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: LocaraDesignTokens.darkNavy.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: LocaraDesignTokens.cardBorderSubtle,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: const BoxDecoration(
+                              color: LocaraDesignTokens.success,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            isRtl ? '${deviceCount > 0 ? deviceCount : 3} آنلاین' : '${deviceCount > 0 ? deviceCount : 3} Online',
+                            style: const TextStyle(
+                              color: LocaraDesignTokens.success,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: const BoxDecoration(
+                              color: LocaraDesignTokens.warning,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            isRtl ? '۱ مشکوک' : '1 Suspected',
+                            style: const TextStyle(
+                              color: LocaraDesignTokens.warning,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Contextual Panels Toggles
+                    IconButton(
+                      icon: Icon(
+                        _showContextualChat ? Icons.forum_rounded : Icons.forum_outlined,
+                        color: _showContextualChat ? LocaraDesignTokens.cyan : LocaraDesignTokens.mutedText,
+                        size: 20,
+                      ),
+                      tooltip: isRtl ? 'نمایش پنل گفتگو' : 'Toggle Chat Panel',
+                      onPressed: () => setState(() => _showContextualChat = !_showContextualChat),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        _showContextualHistory ? Icons.history_rounded : Icons.history_toggle_off_rounded,
+                        color: _showContextualHistory ? LocaraDesignTokens.purple : LocaraDesignTokens.mutedText,
+                        size: 20,
+                      ),
+                      tooltip: isRtl ? 'نمایش پنل تاریخچه' : 'Toggle History Panel',
+                      onPressed: () => setState(() => _showContextualHistory = !_showContextualHistory),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-          const Spacer(),
+            const SizedBox(height: LocaraDesignTokens.spacing16),
 
-          // 3. Active Discovery / Search Status Card
-          LocaraDiscoveryCard(
-            onToggleScan: () {
-              if (widget.onScanToggled != null) {
-                widget.onScanToggled!();
-                return;
-              }
-              try {
-                context.ref.redux(parentIsolateProvider).dispatch(IsolateDiscoveryRestartAction());
-              } catch (_) {}
-              try {
-                unawaited(context.ref.global.dispatchAsync(StartSmartScan()));
-              } catch (_) {}
-            },
-          ),
+            // 3. Main Split Stage: Devices Column + Radar Stage Column
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Column: Devices List & Discovery Card
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      if (nearbyDevices.isNotEmpty) ...[
+                        ...nearbyDevices.take(4).map((d) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: MeshDeviceCard(
+                              alias: d.alias,
+                              ip: d.ip ?? '127.0.0.1',
+                              deviceType: d.deviceType,
+                              status: MeshDeviceStatus.online,
+                              onTap: () => switchTab(DesktopNavTab.devices),
+                              onChat: () => switchTab(DesktopNavTab.messages),
+                              onSend: () => switchTab(DesktopNavTab.devices),
+                            ),
+                          );
+                        }),
+                      ] else ...[
+                        // Representative reference cards
+                        MeshDeviceCard(
+                          alias: 'DESKTOP-PC',
+                          ip: '192.168.1.24',
+                          deviceType: DeviceType.desktop,
+                          status: MeshDeviceStatus.online,
+                          onTap: () => switchTab(DesktopNavTab.devices),
+                          onChat: () => switchTab(DesktopNavTab.messages),
+                          onSend: () => switchTab(DesktopNavTab.devices),
+                        ),
+                        const SizedBox(height: 10),
+                        MeshDeviceCard(
+                          alias: 'Pixel 8',
+                          ip: '192.168.1.42',
+                          deviceType: DeviceType.mobile,
+                          status: MeshDeviceStatus.online,
+                          onTap: () => switchTab(DesktopNavTab.devices),
+                          onChat: () => switchTab(DesktopNavTab.messages),
+                          onSend: () => switchTab(DesktopNavTab.devices),
+                        ),
+                        const SizedBox(height: 10),
+                        MeshDeviceCard(
+                          alias: 'Laptop',
+                          ip: '192.168.1.70',
+                          deviceType: DeviceType.desktop,
+                          status: MeshDeviceStatus.suspected,
+                          onTap: () => switchTab(DesktopNavTab.devices),
+                          onChat: () => switchTab(DesktopNavTab.messages),
+                          onSend: () => switchTab(DesktopNavTab.devices),
+                        ),
+                      ],
+                      const SizedBox(height: 12),
+                      LocaraDiscoveryCard(
+                        onToggleScan: () {
+                          if (widget.onScanToggled != null) {
+                            widget.onScanToggled!();
+                            return;
+                          }
+                          try {
+                            context.ref.redux(parentIsolateProvider).dispatch(IsolateDiscoveryRestartAction());
+                          } catch (_) {}
+                          try {
+                            unawaited(context.ref.global.dispatchAsync(StartSmartScan()));
+                          } catch (_) {}
+                        },
+                      ),
+                    ],
+                  ),
+                ),
 
-          const SizedBox(height: LocaraDesignTokens.spacing20),
+                const SizedBox(width: 16),
 
-          // 4. Bottom Stats Bar (4 capsules)
-          LocaraStatsBar(
-            isDesktop: true,
-            transferredFilesCount: historyCount,
-            successRate: '۹۸٪',
-            speedText: '۱۲.۵ MB/s',
-            elapsedTime: '۰۰:۰۱:۲۳',
-          ),
-        ],
+                // Right Column: Radar View + 3D Stage Widget
+                Expanded(
+                  flex: 6,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const MeshRadarScannerView(size: 260),
+                      LocaraStageWidget(
+                        isDesktop: true,
+                        availableDevicesCount: deviceCount,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: LocaraDesignTokens.spacing16),
+
+            // 4. Contextual Floating / Docked Panels (Chat & Transfer History)
+            if (_showContextualChat || _showContextualHistory) ...[
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [
+                  if (_showContextualChat)
+                    MeshContextualChatCard(
+                      peerAlias: nearbyDevices.isNotEmpty ? nearbyDevices.first.alias : 'DESKTOP-PC',
+                      onClose: () => setState(() => _showContextualChat = false),
+                      onSendMessage: (msg) {
+                        try {
+                          final target = nearbyDevices.isNotEmpty ? nearbyDevices.first : null;
+                          if (target != null) {
+                            context.ref.notifier(chatProvider).addMessage(msg, isMine: true, target: target);
+                          }
+                        } catch (_) {}
+                      },
+                    ),
+                  if (_showContextualHistory)
+                    MeshContextualHistoryCard(
+                      onClose: () => setState(() => _showContextualHistory = false),
+                      onOpenEntry: (_) => switchTab(DesktopNavTab.files),
+                    ),
+                ],
+              ),
+              const SizedBox(height: LocaraDesignTokens.spacing16),
+            ],
+
+            // 5. Feature Bottom Bar Pills
+            MeshFeaturePills(
+              onSecureTransfer: () => switchTab(DesktopNavTab.devices),
+              onRealTimeChat: () => switchTab(DesktopNavTab.messages),
+              onSmartDiscovery: () {
+                try {
+                  context.ref.redux(parentIsolateProvider).dispatch(IsolateDiscoveryRestartAction());
+                } catch (_) {}
+                try {
+                  unawaited(context.ref.global.dispatchAsync(StartSmartScan()));
+                } catch (_) {}
+              },
+              onPrivacyFirst: () => switchTab(DesktopNavTab.settings),
+            ),
+
+            const SizedBox(height: LocaraDesignTokens.spacing16),
+
+            // 6. Bottom Stats Bar (4 capsules)
+            LocaraStatsBar(
+              isDesktop: true,
+              transferredFilesCount: historyCount,
+              successRate: historyCount > 0 ? '۱۰۰٪' : '--',
+              speedText: 'آماده',
+              elapsedTime: '--',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -554,5 +785,5 @@ class _LocaraDesktopHomeViewState extends State<LocaraDesktopHomeView> {
   }
 }
 
-/// Backward compatibility and rebranding alias
-typedef MeshDesktopHomeView = LocaraDesktopHomeView;
+/// Legacy alias for backward compatibility
+typedef LocaraDesktopHomeView = MeshDesktopHomeView;

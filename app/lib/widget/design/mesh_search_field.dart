@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
 
-class LocaraSearchField extends StatefulWidget {
+class MeshSearchField extends StatefulWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final String hintText;
   final VoidCallback? onClear;
 
-  const LocaraSearchField({
+  const MeshSearchField({
     this.controller,
     this.onChanged,
     this.hintText = 'جستجوی دستگاه یا فایل...',
@@ -16,10 +16,10 @@ class LocaraSearchField extends StatefulWidget {
   });
 
   @override
-  State<LocaraSearchField> createState() => _LocaraSearchFieldState();
+  State<MeshSearchField> createState() => _MeshSearchFieldState();
 }
 
-class _LocaraSearchFieldState extends State<LocaraSearchField> {
+class _MeshSearchFieldState extends State<MeshSearchField> {
   late final TextEditingController _controller;
   bool _hasText = false;
 
@@ -107,5 +107,5 @@ class _LocaraSearchFieldState extends State<LocaraSearchField> {
   }
 }
 
-/// Mesh search field alias
-typedef MeshSearchField = LocaraSearchField;
+/// Legacy search field alias for backward compatibility
+typedef LocaraSearchField = MeshSearchField;

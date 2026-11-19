@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 
-class LocaraRadarPulseWidget extends StatefulWidget {
+class MeshRadarPulseWidget extends StatefulWidget {
   final double size;
   final bool isScanning;
 
-  const LocaraRadarPulseWidget({
+  const MeshRadarPulseWidget({
     this.size = 56,
     this.isScanning = true,
     super.key,
   });
 
   @override
-  State<LocaraRadarPulseWidget> createState() => _LocaraRadarPulseWidgetState();
+  State<MeshRadarPulseWidget> createState() => _MeshRadarPulseWidgetState();
 }
 
-class _LocaraRadarPulseWidgetState extends State<LocaraRadarPulseWidget> with SingleTickerProviderStateMixin {
+class _MeshRadarPulseWidgetState extends State<MeshRadarPulseWidget> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -120,5 +120,5 @@ class _RadarPulsePainter extends CustomPainter {
   }
 }
 
-/// Mesh radar pulse alias
-typedef MeshRadarPulseWidget = LocaraRadarPulseWidget;
+/// Legacy radar pulse alias for backward compatibility
+typedef LocaraRadarPulseWidget = MeshRadarPulseWidget;

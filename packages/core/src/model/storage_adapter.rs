@@ -1,8 +1,8 @@
-use crate::model::storage::{StorageHandle, StorageError, FileTimestamps};
+use crate::model::storage::{FileTimestamps, StorageError, StorageHandle};
 use std::path::{Path, PathBuf};
+use std::pin::Pin;
 use tokio::fs::File;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
-use std::pin::Pin;
 
 #[derive(Debug)]
 pub struct DesktopStorageHandle {
@@ -25,7 +25,10 @@ impl DesktopStorageHandle {
     /// # Errors
     /// - `StorageError::AlreadyExists` if either `final_path` or `temp_path` already exists.
     /// - `StorageError::OpenFailed` if creating the partial file fails.
-    pub async fn create_new_with_temp(temp_path: PathBuf, final_path: PathBuf) -> Result<Self, StorageError> {
+    pub async fn create_new_with_temp(
+        temp_path: PathBuf,
+        final_path: PathBuf,
+    ) -> Result<Self, StorageError> {
         if tokio::fs::symlink_metadata(&final_path).await.is_ok() {
             return Err(StorageError::AlreadyExists);
         }
@@ -45,16 +48,13 @@ impl DesktopStorageHandle {
             options.custom_flags(FILE_FLAG_OPEN_REPARSE_POINT);
         }
 
-        let file = options
-            .open(&temp_path)
-            .await
-            .map_err(|e| {
-                if e.kind() == std::io::ErrorKind::AlreadyExists {
-                    StorageError::AlreadyExists
-                } else {
-                    StorageError::OpenFailed(e.to_string())
-                }
-            })?;
+        let file = options.open(&temp_path).await.map_err(|e| {
+            if e.kind() == std::io::ErrorKind::AlreadyExists {
+                StorageError::AlreadyExists
+            } else {
+                StorageError::OpenFailed(e.to_string())
+            }
+        })?;
 
         Ok(Self {
             file: Some(file),
@@ -81,7 +81,10 @@ impl DesktopStorageHandle {
     /// - `StorageError::NotFound` if `temp_path` does not exist.
     /// - `StorageError::UnexpectedFileType` if `temp_path` is a symlink, junction, or non-regular file.
     /// - `StorageError::OpenFailed` if opening the partial file fails.
-    pub async fn reopen_existing_with_temp(temp_path: PathBuf, final_path: PathBuf) -> Result<Self, StorageError> {
+    pub async fn reopen_existing_with_temp(
+        temp_path: PathBuf,
+        final_path: PathBuf,
+    ) -> Result<Self, StorageError> {
         if tokio::fs::symlink_metadata(&final_path).await.is_ok() {
             return Err(StorageError::AlreadyExists);
         }
@@ -124,27 +127,29 @@ impl DesktopStorageHandle {
             options.custom_flags(FILE_FLAG_OPEN_REPARSE_POINT);
         }
 
-        let file = options
-            .open(&temp_path)
-            .await
-            .map_err(|e| {
-                #[cfg(unix)]
-                if e.raw_os_error() == Some(libc::ELOOP) {
-                    return StorageError::UnexpectedFileType(format!(
-                        "Partial path {:?} is a symbolic link (O_NOFOLLOW)",
-                        temp_path
-                    ));
-                }
-                StorageError::OpenFailed(e.to_string())
-            })?;
+        let file = options.open(&temp_path).await.map_err(|e| {
+            #[cfg(unix)]
+            if e.raw_os_error() == Some(libc::ELOOP) {
+                return StorageError::UnexpectedFileType(format!(
+                    "Partial path {:?} is a symbolic link (O_NOFOLLOW)",
+                    temp_path
+                ));
+            }
+            StorageError::OpenFailed(e.to_string())
+        })?;
 
-        let opened_meta = file.metadata().await.map_err(|e| StorageError::OpenFailed(e.to_string()))?;
+        let opened_meta = file
+            .metadata()
+            .await
+            .map_err(|e| StorageError::OpenFailed(e.to_string()))?;
 
         #[cfg(windows)]
         {
             use std::os::windows::fs::MetadataExt;
             const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x00000400;
-            if opened_meta.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0 || opened_meta.file_type().is_symlink() {
+            if opened_meta.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
+                || opened_meta.file_type().is_symlink()
+            {
                 return Err(StorageError::UnexpectedFileType(format!(
                     "Opened partial handle {:?} is a reparse point or junction",
                     temp_path
@@ -225,67 +230,103 @@ impl DesktopStorageHandle {
 }
 
 impl StorageHandle for DesktopStorageHandle {
-    fn write_data<'a>(&'a mut self, data: &'a [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn write_data<'a>(
+        &'a mut self,
+        data: &'a [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.write_all(data).await.map_err(|e| StorageError::WriteFailed(e.to_string()))
+                f.write_all(data)
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn write_at<'a>(&'a mut self, offset: u64, data: &'a [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn write_at<'a>(
+        &'a mut self,
+        offset: u64,
+        data: &'a [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.seek(std::io::SeekFrom::Start(offset)).await.map_err(|e| StorageError::WriteFailed(e.to_string()))?;
-                f.write_all(data).await.map_err(|e| StorageError::WriteFailed(e.to_string()))
+                f.seek(std::io::SeekFrom::Start(offset))
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))?;
+                f.write_all(data)
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn read_at<'a>(&'a mut self, offset: u64, buf: &'a mut [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<usize, StorageError>> + Send + 'a>> {
+    fn read_at<'a>(
+        &'a mut self,
+        offset: u64,
+        buf: &'a mut [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<usize, StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.seek(std::io::SeekFrom::Start(offset)).await.map_err(|e| StorageError::ReadFailed(e.to_string()))?;
-                f.read(buf).await.map_err(|e| StorageError::ReadFailed(e.to_string()))
+                f.seek(std::io::SeekFrom::Start(offset))
+                    .await
+                    .map_err(|e| StorageError::ReadFailed(e.to_string()))?;
+                f.read(buf)
+                    .await
+                    .map_err(|e| StorageError::ReadFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn flush<'a>(&'a mut self) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn flush<'a>(
+        &'a mut self,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.flush().await.map_err(|e| StorageError::FlushFailed(e.to_string()))?;
-                f.sync_data().await.map_err(|e| StorageError::FlushFailed(e.to_string()))
+                f.flush()
+                    .await
+                    .map_err(|e| StorageError::FlushFailed(e.to_string()))?;
+                f.sync_data()
+                    .await
+                    .map_err(|e| StorageError::FlushFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn set_len<'a>(&'a mut self, len: u64) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn set_len<'a>(
+        &'a mut self,
+        len: u64,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.set_len(len).await.map_err(|e| StorageError::WriteFailed(e.to_string()))?;
+                f.set_len(len)
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))?;
             }
             Ok(())
         })
     }
 
-    fn commit(mut self: Box<Self>, timestamps: FileTimestamps) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
+    fn commit(
+        mut self: Box<Self>,
+        timestamps: FileTimestamps,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
         Box::pin(async move {
-            if !self.allow_overwrite && tokio::fs::symlink_metadata(&self.final_path).await.is_ok() {
+            if !self.allow_overwrite && tokio::fs::symlink_metadata(&self.final_path).await.is_ok()
+            {
                 return Err(StorageError::AlreadyExists);
             }
             if let Some(mut f) = self.file.take() {
                 let _ = f.flush().await; // Ignore flush error on commit
                 let _ = f.sync_data().await;
-                
+
                 if !timestamps.is_empty() {
                     let mut times = std::fs::FileTimes::new();
                     if let Some(m) = timestamps.modified {
@@ -367,7 +408,9 @@ impl StorageHandle for DesktopStorageHandle {
         })
     }
 
-    fn abort(mut self: Box<Self>) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
+    fn abort(
+        mut self: Box<Self>,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
         Box::pin(async move {
             if let Some(f) = self.file.take() {
                 drop(f);
@@ -397,45 +440,71 @@ impl AndroidSafStorageHandle {
 
 #[cfg(target_os = "android")]
 impl StorageHandle for AndroidSafStorageHandle {
-    fn write_data<'a>(&'a mut self, data: &'a [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn write_data<'a>(
+        &'a mut self,
+        data: &'a [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.write_all(data).await.map_err(|e| StorageError::WriteFailed(e.to_string()))
+                f.write_all(data)
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-        fn write_at<'a>(&'a mut self, offset: u64, data: &'a [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn write_at<'a>(
+        &'a mut self,
+        offset: u64,
+        data: &'a [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
                 use tokio::io::{AsyncSeekExt, AsyncWriteExt};
-                f.seek(std::io::SeekFrom::Start(offset)).await.map_err(|e| StorageError::WriteFailed(e.to_string()))?;
-                f.write_all(data).await.map_err(|e| StorageError::WriteFailed(e.to_string()))
+                f.seek(std::io::SeekFrom::Start(offset))
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))?;
+                f.write_all(data)
+                    .await
+                    .map_err(|e| StorageError::WriteFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn read_at<'a>(&'a mut self, _offset: u64, _buf: &'a mut [u8]) -> Pin<Box<dyn std::future::Future<Output = Result<usize, StorageError>> + Send + 'a>> {
+    fn read_at<'a>(
+        &'a mut self,
+        _offset: u64,
+        _buf: &'a mut [u8],
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<usize, StorageError>> + Send + 'a>> {
         Box::pin(async move {
-            Err(StorageError::ReadFailed("read_at is not currently supported or tested on Android SAF".to_string()))
+            Err(StorageError::ReadFailed(
+                "read_at is not currently supported or tested on Android SAF".to_string(),
+            ))
         })
     }
 
-    fn flush<'a>(&'a mut self) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn flush<'a>(
+        &'a mut self,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
-                f.flush().await.map_err(|e| StorageError::FlushFailed(e.to_string()))
+                f.flush()
+                    .await
+                    .map_err(|e| StorageError::FlushFailed(e.to_string()))
             } else {
                 Err(StorageError::Unavailable)
             }
         })
     }
 
-    fn set_len<'a>(&'a mut self, len: u64) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
+    fn set_len<'a>(
+        &'a mut self,
+        len: u64,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send + 'a>> {
         Box::pin(async move {
             if let Some(f) = self.file.as_mut() {
                 let _ = f.set_len(len).await;
@@ -444,11 +513,14 @@ impl StorageHandle for AndroidSafStorageHandle {
         })
     }
 
-    fn commit(mut self: Box<Self>, timestamps: FileTimestamps) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
+    fn commit(
+        mut self: Box<Self>,
+        timestamps: FileTimestamps,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
         Box::pin(async move {
             if let Some(mut f) = self.file.take() {
                 let _ = f.flush().await; // Flush before close
-                
+
                 if !timestamps.is_empty() {
                     let mut times = std::fs::FileTimes::new();
                     if let Some(m) = timestamps.modified {
@@ -467,7 +539,9 @@ impl StorageHandle for AndroidSafStorageHandle {
         })
     }
 
-    fn abort(mut self: Box<Self>) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
+    fn abort(
+        mut self: Box<Self>,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StorageError>> + Send>> {
         Box::pin(async move {
             if let Some(f) = self.file.take() {
                 drop(f);

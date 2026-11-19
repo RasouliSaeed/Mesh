@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 import 'package:locara_app/widget/cyber/mesh_radar_pulse.dart';
 
-class LocaraDiscoveryCard extends StatefulWidget {
+class MeshDiscoveryCard extends StatefulWidget {
   final VoidCallback? onToggleScan;
 
-  const LocaraDiscoveryCard({
+  const MeshDiscoveryCard({
     this.onToggleScan,
     super.key,
   });
 
   @override
-  State<LocaraDiscoveryCard> createState() => _LocaraDiscoveryCardState();
+  State<MeshDiscoveryCard> createState() => _MeshDiscoveryCardState();
 }
 
-class _LocaraDiscoveryCardState extends State<LocaraDiscoveryCard> {
+class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
   bool _isScanning = true;
 
   @override
@@ -115,5 +115,5 @@ class _LocaraDiscoveryCardState extends State<LocaraDiscoveryCard> {
   }
 }
 
-/// Mesh discovery card alias
-typedef MeshDiscoveryCard = LocaraDiscoveryCard;
+/// Legacy discovery card alias for backward compatibility
+typedef LocaraDiscoveryCard = MeshDiscoveryCard;

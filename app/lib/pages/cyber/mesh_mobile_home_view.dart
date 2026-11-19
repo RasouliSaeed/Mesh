@@ -3,13 +3,15 @@ import 'package:locara_app/gen/assets.gen.dart';
 import 'package:locara_app/pages/changelog_page.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
+import 'package:locara_app/widget/cyber/mesh_constellation_widget.dart';
+import 'package:locara_app/widget/cyber/mesh_feature_pills.dart';
 import 'package:locara_app/widget/cyber/mesh_nearby_devices_list.dart';
 import 'package:locara_app/widget/cyber/mesh_stage_widget.dart';
 import 'package:locara_app/widget/cyber/mesh_stats_bar.dart';
 import 'package:locara_isolates/model/device.dart';
 import 'package:routerino/routerino.dart';
 
-class LocaraMobileHomeView extends StatelessWidget {
+class MeshMobileHomeView extends StatelessWidget {
   final List<Device> nearbyDevices;
   final int historyCount;
   final VoidCallback onSendFile;
@@ -19,7 +21,7 @@ class LocaraMobileHomeView extends StatelessWidget {
   final VoidCallback onSeeAllDevices;
   final void Function(Device device) onSelectDevice;
 
-  const LocaraMobileHomeView({
+  const MeshMobileHomeView({
     required this.nearbyDevices,
     required this.historyCount,
     required this.onSendFile,
@@ -47,9 +49,12 @@ class LocaraMobileHomeView extends StatelessWidget {
               // 1. Top Header Bar (Info, Logo, App Title, Settings)
               _buildTopHeader(context),
 
-              const SizedBox(height: LocaraDesignTokens.spacing12),
+              // 2. Digital Mesh Constellation Graphic (from reference design)
+              const MeshConstellationWidget(height: 110),
 
-              // 2. Hero Stage Card
+              const SizedBox(height: LocaraDesignTokens.spacing8),
+
+              // 3. Hero Stage Card
               LocaraStageWidget(
                 isDesktop: false,
                 availableDevicesCount: nearbyDevices.length,
@@ -57,22 +62,36 @@ class LocaraMobileHomeView extends StatelessWidget {
 
               const SizedBox(height: LocaraDesignTokens.spacing16),
 
-              // 3. Two Big Primary Action Buttons
+              // 4. Primary Call-to-Action & Send/Receive Buttons
               _buildActionButtons(context),
 
               const SizedBox(height: LocaraDesignTokens.spacing16),
 
-              // 4. Quick Stats Bar (3 capsules)
+              // 5. Feature Pills (from reference design)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: MeshFeaturePills(
+                  onSecureTransfer: onSendFile,
+                  onRealTimeChat: onSeeAllDevices,
+                  onSmartDiscovery: onSeeAllDevices,
+                  onPrivacyFirst: onOpenSettings,
+                ),
+              ),
+
+              const SizedBox(height: LocaraDesignTokens.spacing16),
+
+              // 6. Quick Stats Bar (3 capsules)
               LocaraStatsBar(
                 isDesktop: false,
-                transferredFilesCount: historyCount > 0 ? historyCount : 1248,
-                successRate: '۹۸٪',
-                speedText: '۱۲.۵ MB/s',
+                transferredFilesCount: historyCount,
+                successRate: historyCount > 0 ? '۱۰۰٪' : '--',
+                speedText: 'آماده',
               ),
 
               const SizedBox(height: LocaraDesignTokens.spacing20),
 
-              // 5. Nearby Devices Section
+              // 7. Nearby Devices Section
               LocaraNearbyDevicesList(
                 devices: nearbyDevices,
                 onSeeAll: onSeeAllDevices,
@@ -191,21 +210,59 @@ class LocaraMobileHomeView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
+          // 0. "Get Started" Gradient Pill Button (Direct from Reference Design)
+          InkWell(
+            onTap: onSendFile,
+            borderRadius: BorderRadius.circular(28),
+            child: Container(
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF7838F5), Color(0xFF168BFF)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF7838F5).withValues(alpha: 0.45),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  isRtl ? 'شروع کنید' : 'Get Started',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
           // 1. Send File (Gradient Button)
           InkWell(
             onTap: onSendFile,
             borderRadius: BorderRadius.circular(26),
             child: Container(
-              height: 62,
+              height: 58,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                 gradient: LocaraDesignTokens.primaryGradient,
                 borderRadius: BorderRadius.circular(26),
                 boxShadow: [
                   BoxShadow(
-                    color: LocaraDesignTokens.purple.withValues(alpha: 0.45),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
+                    color: LocaraDesignTokens.purple.withValues(alpha: 0.4),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
@@ -214,15 +271,15 @@ class LocaraMobileHomeView extends StatelessWidget {
                   const Icon(
                     Icons.near_me_rounded,
                     color: Colors.white,
-                    size: 26,
+                    size: 24,
                   ),
                   const SizedBox(width: 14),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'ارسال فایل',
-                      style: TextStyle(
+                      isRtl ? 'ارسال فایل' : 'Send File',
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -230,21 +287,21 @@ class LocaraMobileHomeView extends StatelessWidget {
                   Icon(
                     isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
                     color: Colors.white,
-                    size: 28,
+                    size: 26,
                   ),
                 ],
               ),
             ),
           ),
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
 
           // 2. Receive File (Glassmorphic Button)
           InkWell(
             onTap: onReceiveFile,
             borderRadius: BorderRadius.circular(26),
             child: Container(
-              height: 62,
+              height: 58,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: LocaraCyberTheme.glassCardDecoration(
                 borderRadius: 26,
@@ -257,15 +314,15 @@ class LocaraMobileHomeView extends StatelessWidget {
                   const Icon(
                     Icons.file_download_outlined,
                     color: Colors.white,
-                    size: 26,
+                    size: 24,
                   ),
                   const SizedBox(width: 14),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'دریافت فایل',
-                      style: TextStyle(
+                      isRtl ? 'دریافت فایل' : 'Receive File',
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -273,7 +330,7 @@ class LocaraMobileHomeView extends StatelessWidget {
                   Icon(
                     isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
                     color: Colors.white,
-                    size: 28,
+                    size: 26,
                   ),
                 ],
               ),
@@ -285,5 +342,5 @@ class LocaraMobileHomeView extends StatelessWidget {
   }
 }
 
-/// Backward compatibility and rebranding alias
-typedef MeshMobileHomeView = LocaraMobileHomeView;
+/// Legacy alias for backward compatibility
+typedef LocaraMobileHomeView = MeshMobileHomeView;

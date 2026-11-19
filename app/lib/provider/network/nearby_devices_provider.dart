@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:locara_app/model/persistence/favorite_device.dart';
 import 'package:locara_app/model/state/nearby_devices_state.dart';
 import 'package:locara_app/provider/favorites_provider.dart';
@@ -22,10 +23,19 @@ final nearbyDevicesProvider = ReduxProvider<NearbyDevicesService, NearbyDevicesS
   );
 });
 
+enum DeviceOnlineStatus {
+  online,
+  suspected,
+  offline;
+
+  bool get isAvailable => this != DeviceOnlineStatus.offline;
+}
+
 class NearbyDevicesService extends ReduxNotifier<NearbyDevicesState> {
   final IsolateController _isolateController;
   final FavoritesService _favoriteService;
   final DiscoveryLogger _discoveryLogger;
+  final Map<String, DateTime> _lastSeen = {};
 
   NearbyDevicesService({
     required IsolateController isolateController,
@@ -42,6 +52,68 @@ class NearbyDevicesService extends ReduxNotifier<NearbyDevicesState> {
     devices: {},
     signalingDevices: {},
   );
+
+  void recordHeartbeat(String fingerprint) {
+    _lastSeen[fingerprint] = DateTime.now();
+  }
+
+  DateTime? getLastSeen(String fingerprint) => _lastSeen[fingerprint];
+
+  DeviceOnlineStatus getStatus(String fingerprint) {
+    final last = _lastSeen[fingerprint];
+    if (last == null) {
+      return state.devices.containsKey(fingerprint) ? DeviceOnlineStatus.online : DeviceOnlineStatus.offline;
+    }
+    final diff = DateTime.now().difference(last);
+    if (diff.inSeconds <= 90) {
+      return DeviceOnlineStatus.online;
+    } else if (diff.inSeconds <= 300) {
+      return DeviceOnlineStatus.suspected;
+    } else {
+      return DeviceOnlineStatus.offline;
+    }
+  }
+
+  int get onlineCount {
+    return state.devices.keys.where((fp) => getStatus(fp) == DeviceOnlineStatus.online).length;
+  }
+
+  Timer? _heartbeatTimer;
+  StreamSubscription? _connectivitySub;
+
+  void startHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 45), (_) {
+      try {
+        redux.dispatch(TriggerAnnouncementAction());
+      } catch (e) {
+        _discoveryLogger.addLog('[HEARTBEAT] Probe error: $e');
+      }
+    });
+
+    unawaited(_connectivitySub?.cancel());
+    _connectivitySub = Connectivity().onConnectivityChanged.listen((_) {
+      _discoveryLogger.addLog('[NETWORK] Interface change detected: re-announcing');
+      try {
+        redux.dispatch(TriggerAnnouncementAction());
+      } catch (e) {
+        _discoveryLogger.addLog('[NETWORK] Re-announce error: $e');
+      }
+    });
+  }
+
+  void stopHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = null;
+    unawaited(_connectivitySub?.cancel());
+    _connectivitySub = null;
+  }
+
+  @override
+  void dispose() {
+    stopHeartbeat();
+    super.dispose();
+  }
 }
 
 /// Starts the discovery (which binds the UDP port) and registers every
@@ -51,11 +123,21 @@ class NearbyDevicesService extends ReduxNotifier<NearbyDevicesState> {
 class StartDiscoveryListener extends AsyncReduxAction<NearbyDevicesService, NearbyDevicesState> {
   @override
   Future<NearbyDevicesState> reduce() async {
+    notifier.startHeartbeat();
     final stream = external(notifier._isolateController).dispatchTakeResult(IsolateDiscoveryListenAction());
     await for (final device in stream) {
       await dispatchAsync(RegisterDeviceAction(device));
       notifier._discoveryLogger.addLog('[DISCOVER] ${device.alias} (${device.ip}, model: ${device.deviceModel})');
     }
+    return state;
+  }
+}
+
+/// Triggers a multicast announcement from the parent isolate.
+class TriggerAnnouncementAction extends ReduxAction<NearbyDevicesService, NearbyDevicesState> {
+  @override
+  NearbyDevicesState reduce() {
+    external(notifier._isolateController).dispatch(IsolateDiscoveryAnnouncementAction());
     return state;
   }
 }
@@ -93,6 +175,7 @@ class RegisterDeviceAction extends AsyncReduxAction<NearbyDevicesService, Nearby
     } else {
       await Future.microtask(() {});
     }
+    notifier.recordHeartbeat(device.fingerprint);
     return state.copyWith(
       devices: {...state.devices}..update(device.fingerprint, (_) => device, ifAbsent: () => device),
     );

@@ -10,7 +10,7 @@ AppDir:
     id: org.mesh.mesh_app
     name: Mesh
     icon: Mesh
-    version: 1.8.0
+    version: 2.0.0
     exec: mesh_app
     exec_args: $@
   apt:

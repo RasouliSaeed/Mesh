@@ -31,9 +31,7 @@ impl Stream for HttpIncomingAdapter {
                     Poll::Ready(Some(Ok(Bytes::new())))
                 }
             }
-            Poll::Ready(Some(Err(_e))) => {
-                Poll::Ready(Some(Err(TransportError::ReadFailed)))
-            }
+            Poll::Ready(Some(Err(_e))) => Poll::Ready(Some(Err(TransportError::ReadFailed))),
             Poll::Ready(None) => Poll::Ready(None),
             Poll::Pending => Poll::Pending,
         }

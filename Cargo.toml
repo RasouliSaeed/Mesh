@@ -21,5 +21,18 @@ opt-level = 2
 [profile.dev.package.num-bigint-dig]
 opt-level = 2
 
+# Production Release Profile for MESH:
+# - opt-level = 3: Maximum runtime performance for cryptographic hashing, Ring TLS & chunk I/O
+# - lto = "thin": Link-Time Optimization across crates to strip dead code without excessive memory cost
+# - codegen-units = 1: Maximizes inlining and compiler dead-code elimination
+# - strip = "debuginfo": Strips heavyweight debug symbols while keeping necessary FFI symbols
+# - panic = "unwind": CRITICAL for flutter_rust_bridge catch_unwind across FFI boundary (never use "abort" here!)
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "debuginfo"
+panic = "unwind"
+
 
 

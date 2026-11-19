@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-/// Centralized Design Tokens for Locara
+/// Centralized Design Tokens for MESH
 /// Strict adherence to Section 3.2 of the Master Specification.
-class LocaraDesignTokens {
-  LocaraDesignTokens._();
+class MeshDesignTokens {
+  MeshDesignTokens._();
 
   // === Color Tokens ===
-  static const Color deepNavy = Color(0xFF07142F);
-  static const Color darkNavy = Color(0xFF0B1D40);
-  static const Color cardSurface = Color(0xFF10244B);
-  static const Color cardSurfaceLight = Color(0xFF152D5E);
-  static const Color primaryBlue = Color(0xFF087BEE);
-  static const Color electricBlue = Color(0xFF176BFF);
+  static const Color deepNavy = Color(0xFF070B1A);
+  static const Color darkNavy = Color(0xFF0A1026);
+  static const Color cardSurface = Color(0xFF10172D);
+  static const Color cardSurfaceLight = Color(0xFF151F3D);
+  static const Color primaryBlue = Color(0xFF168BFF);
+  static const Color electricBlue = Color(0xFF168BFF);
   static const Color cyan = Color(0xFF12D8E8);
-  static const Color purple = Color(0xFF842CF4);
-  static const Color success = Color(0xFF16C784);
-  static const Color warning = Color(0xFFF5AD36);
-  static const Color error = Color(0xFFF05267);
-  static const Color primaryText = Color(0xFFF4F7FF);
-  static const Color secondaryText = Color(0xFFA9B9D8);
-  static const Color mutedText = Color(0xFF7486A9);
+  static const Color purple = Color(0xFF7838F5);
+  static const Color success = Color(0xFF20D890);
+  static const Color warning = Color(0xFFF5B942);
+  static const Color error = Color(0xFFF05B70);
+  static const Color primaryText = Color(0xFFF4F6FF);
+  static const Color secondaryText = Color(0xFFA8B1CA);
+  static const Color mutedText = Color(0xFF6B7A99);
 
   // Border & Glow Overlay Tokens
   static const Color cardBorder = Color(0x3812D8E8);
@@ -41,9 +41,9 @@ class LocaraDesignTokens {
 
   static const LinearGradient backgroundGradient = LinearGradient(
     colors: [
-      Color(0xFF050E24),
-      deepNavy,
-      Color(0xFF040A1A),
+      Color(0xFF070B1A),
+      Color(0xFF0A1026),
+      Color(0xFF050814),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -127,5 +127,5 @@ class LocaraDesignTokens {
   );
 }
 
-/// Mesh design tokens alias
-typedef MeshDesignTokens = LocaraDesignTokens;
+/// Legacy design tokens alias for backward compatibility
+typedef LocaraDesignTokens = MeshDesignTokens;

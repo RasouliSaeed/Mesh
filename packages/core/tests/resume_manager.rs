@@ -105,15 +105,25 @@ async fn test_resume_manager_durability_and_atomic_replace() {
         vec![0],
     );
 
-    ResumeManager::save_in(&test_dir, &state).await.expect("initial save");
-    let loaded1 = ResumeManager::load_from(&test_dir, "tx-atomic-001").await.unwrap().unwrap();
+    ResumeManager::save_in(&test_dir, &state)
+        .await
+        .expect("initial save");
+    let loaded1 = ResumeManager::load_from(&test_dir, "tx-atomic-001")
+        .await
+        .unwrap()
+        .unwrap();
     assert_eq!(loaded1.completed_chunks, vec![0]);
 
     // Update state with newly completed chunks
     state.completed_chunks = vec![0, 1, 2];
-    ResumeManager::save_in(&test_dir, &state).await.expect("second save");
+    ResumeManager::save_in(&test_dir, &state)
+        .await
+        .expect("second save");
 
-    let loaded2 = ResumeManager::load_from(&test_dir, "tx-atomic-001").await.unwrap().unwrap();
+    let loaded2 = ResumeManager::load_from(&test_dir, "tx-atomic-001")
+        .await
+        .unwrap()
+        .unwrap();
     assert_eq!(loaded2.completed_chunks, vec![0, 1, 2]);
 
     // Verify no temporary files (.tmp) linger in directory
@@ -121,7 +131,11 @@ async fn test_resume_manager_durability_and_atomic_replace() {
     let mut count = 0;
     while let Some(entry) = entries.next_entry().await.expect("entry") {
         let name = entry.file_name().to_string_lossy().to_string();
-        assert!(!name.ends_with(".tmp"), "no .tmp files should linger: {}", name);
+        assert!(
+            !name.ends_with(".tmp"),
+            "no .tmp files should linger: {}",
+            name
+        );
         count += 1;
     }
     assert_eq!(count, 1, "exactly one committed metadata file must exist");
@@ -165,8 +179,13 @@ async fn test_resume_manager_global_default_dir_operations() {
 
 #[test]
 fn test_resume_manager_default_dir_resolution() {
-    let dir = ResumeManager::default_storage_dir().expect("default storage dir should resolve on standard environment");
-    assert!(dir.is_absolute(), "default storage dir must be absolute: {:?}", dir);
+    let dir = ResumeManager::default_storage_dir()
+        .expect("default storage dir should resolve on standard environment");
+    assert!(
+        dir.is_absolute(),
+        "default storage dir must be absolute: {:?}",
+        dir
+    );
     let dir_str = dir.to_string_lossy();
     assert!(
         dir_str.contains("locara") && dir_str.contains("resume"),
@@ -217,13 +236,17 @@ async fn test_resume_manager_invalid_ids_across_all_entry_points() {
     assert!(ResumeManager::get_path(invalid_id).is_err());
 
     // load_from
-    assert!(ResumeManager::load_from(&test_dir, invalid_id).await.is_err());
+    assert!(ResumeManager::load_from(&test_dir, invalid_id)
+        .await
+        .is_err());
 
     // load
     assert!(ResumeManager::load(invalid_id).await.is_err());
 
     // delete_from
-    assert!(ResumeManager::delete_from(&test_dir, invalid_id).await.is_err());
+    assert!(ResumeManager::delete_from(&test_dir, invalid_id)
+        .await
+        .is_err());
 
     // delete
     assert!(ResumeManager::delete(invalid_id).await.is_err());
@@ -273,15 +296,23 @@ async fn test_resume_manager_atomic_replacement_preserves_valid_state_on_failure
 
     // 2. Create a subfolder where the temp file path would be unwriteable or simulate failed commit
     // by making a directory at the temp path
-    let tmp_path = test_dir.join(format!(".locara_resume_preserve-me-001_{}.tmp", std::process::id()));
-    tokio::fs::create_dir(&tmp_path).await.expect("create dir to block file open");
+    let tmp_path = test_dir.join(format!(
+        ".locara_resume_preserve-me-001_{}.tmp",
+        std::process::id()
+    ));
+    tokio::fs::create_dir(&tmp_path)
+        .await
+        .expect("create dir to block file open");
 
     let mut update_state = state.clone();
     update_state.completed_chunks = vec![0, 1, 2, 3, 4];
 
     // Saving update should fail because tmp_path is a directory
     let res = ResumeManager::save_in(&test_dir, &update_state).await;
-    assert!(res.is_err(), "saving must fail when temp file cannot be opened as a file");
+    assert!(
+        res.is_err(),
+        "saving must fail when temp file cannot be opened as a file"
+    );
 
     // Clean up blocking directory
     let _ = tokio::fs::remove_dir(&tmp_path).await;
@@ -310,11 +341,16 @@ async fn test_resume_manager_list_active_sessions_discovery() {
         None,
         vec![0, 1],
     );
-    ResumeManager::save_in(&test_dir, &s1).await.expect("save s1");
-    // Create corresponding .part file
-    tokio::fs::write(test_dir.join("locara_part_transfer-resumable-01.part"), b"part-data")
+    ResumeManager::save_in(&test_dir, &s1)
         .await
-        .expect("write part file");
+        .expect("save s1");
+    // Create corresponding .part file
+    tokio::fs::write(
+        test_dir.join("locara_part_transfer-resumable-01.part"),
+        b"part-data",
+    )
+    .await
+    .expect("write part file");
 
     // 2. All chunks completed session (awaiting commit)
     let s2 = ResumeState::new(
@@ -326,10 +362,15 @@ async fn test_resume_manager_list_active_sessions_discovery() {
         None,
         vec![0, 1],
     );
-    ResumeManager::save_in(&test_dir, &s2).await.expect("save s2");
-    tokio::fs::write(test_dir.join("locara_part_transfer-completed-02.part"), b"part-data-2")
+    ResumeManager::save_in(&test_dir, &s2)
         .await
-        .expect("write part file 2");
+        .expect("save s2");
+    tokio::fs::write(
+        test_dir.join("locara_part_transfer-completed-02.part"),
+        b"part-data-2",
+    )
+    .await
+    .expect("write part file 2");
 
     // 3. Incomplete session with missing .part file
     let s3 = ResumeState::new(
@@ -341,7 +382,9 @@ async fn test_resume_manager_list_active_sessions_discovery() {
         None,
         vec![0],
     );
-    ResumeManager::save_in(&test_dir, &s3).await.expect("save s3");
+    ResumeManager::save_in(&test_dir, &s3)
+        .await
+        .expect("save s3");
     // Notice: no .part file created for s3!
 
     // 4. Create noise: unrelated file and temp file
@@ -357,21 +400,51 @@ async fn test_resume_manager_list_active_sessions_discovery() {
         .await
         .expect("list sessions");
 
-    assert_eq!(sessions.len(), 3, "Only the 3 valid resume metadata files should be enumerated");
+    assert_eq!(
+        sessions.len(),
+        3,
+        "Only the 3 valid resume metadata files should be enumerated"
+    );
 
-    let s1_info = sessions.iter().find(|s| s.transfer_id == "transfer-resumable-01").expect("find s1");
-    assert!(s1_info.is_resumable, "s1 with .part file must be marked resumable");
+    let s1_info = sessions
+        .iter()
+        .find(|s| s.transfer_id == "transfer-resumable-01")
+        .expect("find s1");
+    assert!(
+        s1_info.is_resumable,
+        "s1 with .part file must be marked resumable"
+    );
     assert_eq!(s1_info.completed_chunks_count, 2);
     assert_eq!(s1_info.bytes_transferred, 500); // 2 * 250 bytes
     assert!(s1_info.unresumable_reason.is_none());
 
-    let s2_info = sessions.iter().find(|s| s.transfer_id == "transfer-completed-02").expect("find s2");
-    assert!(!s2_info.is_resumable, "s2 with all chunks completed must not be marked as mid-transfer resumable");
-    assert!(s2_info.unresumable_reason.as_ref().unwrap().contains("All chunks completed"));
+    let s2_info = sessions
+        .iter()
+        .find(|s| s.transfer_id == "transfer-completed-02")
+        .expect("find s2");
+    assert!(
+        !s2_info.is_resumable,
+        "s2 with all chunks completed must not be marked as mid-transfer resumable"
+    );
+    assert!(s2_info
+        .unresumable_reason
+        .as_ref()
+        .unwrap()
+        .contains("All chunks completed"));
 
-    let s3_info = sessions.iter().find(|s| s.transfer_id == "transfer-missing-part-03").expect("find s3");
-    assert!(!s3_info.is_resumable, "s3 with missing .part file must not be marked resumable");
-    assert!(s3_info.unresumable_reason.as_ref().unwrap().contains("Partial payload file (.part) is missing"));
+    let s3_info = sessions
+        .iter()
+        .find(|s| s.transfer_id == "transfer-missing-part-03")
+        .expect("find s3");
+    assert!(
+        !s3_info.is_resumable,
+        "s3 with missing .part file must not be marked resumable"
+    );
+    assert!(s3_info
+        .unresumable_reason
+        .as_ref()
+        .unwrap()
+        .contains("Partial payload file (.part) is missing"));
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
 }
@@ -381,9 +454,12 @@ async fn test_resume_manager_list_active_sessions_corrupted_metadata() {
     let test_dir = create_isolated_test_dir("corrupted_meta");
 
     // Write completely corrupted JSON
-    tokio::fs::write(test_dir.join("locara_resume_bad-json-01.json"), b"not valid json {{{")
-        .await
-        .expect("write bad json");
+    tokio::fs::write(
+        test_dir.join("locara_resume_bad-json-01.json"),
+        b"not valid json {{{",
+    )
+    .await
+    .expect("write bad json");
 
     // Write valid JSON but with total_chunks = 0
     let invalid_bounds = serde_json::json!({
@@ -421,7 +497,11 @@ async fn test_resume_manager_list_active_sessions_corrupted_metadata() {
     let sessions = ResumeManager::list_active_sessions_in(&test_dir)
         .await
         .expect("list sessions");
-    assert_eq!(sessions.len(), 0, "No corrupted or invalid sessions should be returned");
+    assert_eq!(
+        sessions.len(),
+        0,
+        "No corrupted or invalid sessions should be returned"
+    );
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;
 }
@@ -439,9 +519,13 @@ async fn test_resume_manager_prune_session() {
         None,
         vec![0],
     );
-    ResumeManager::save_in(&test_dir, &state).await.expect("save state");
+    ResumeManager::save_in(&test_dir, &state)
+        .await
+        .expect("save state");
     let part_path = test_dir.join("locara_part_prune-target-99.part");
-    tokio::fs::write(&part_path, b"some partial data").await.expect("write part");
+    tokio::fs::write(&part_path, b"some partial data")
+        .await
+        .expect("write part");
 
     let meta_path = test_dir.join("locara_resume_prune-target-99.json");
     assert!(meta_path.exists());
@@ -452,7 +536,10 @@ async fn test_resume_manager_prune_session() {
         .await
         .expect("prune session");
 
-    assert!(!meta_path.exists(), "Metadata file must be removed by prune");
+    assert!(
+        !meta_path.exists(),
+        "Metadata file must be removed by prune"
+    );
     assert!(!part_path.exists(), "Partial file must be removed by prune");
 
     let _ = tokio::fs::remove_dir_all(&test_dir).await;

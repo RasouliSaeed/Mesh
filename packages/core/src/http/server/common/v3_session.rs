@@ -1,11 +1,11 @@
-use crate::model::storage::StorageHandle;
-use crate::model::dto_v3::TransferManifestDto;
 use crate::http::server::common::error::AppError;
+use crate::model::dto_v3::TransferManifestDto;
+use crate::model::storage::StorageHandle;
 use hyper::StatusCode;
 use std::collections::HashMap;
 use std::path::Path;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::{Mutex as AsyncMutex, RwLock};
 
@@ -65,7 +65,10 @@ impl V3TransferSession {
     }
 
     pub(crate) fn now() -> u64 {
-        SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
     }
 }
 
@@ -73,7 +76,9 @@ pub const MAX_ACTIVE_SESSIONS: usize = 64;
 pub const SESSION_INACTIVITY_TIMEOUT_SECS: u64 = 600; // 10 minutes
 pub const JANITOR_INTERVAL_SECS: u64 = 30; // 30 seconds
 
-pub use crate::model::dto_v3::{DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE, MAX_FILE_SIZE, MAX_TOTAL_CHUNKS};
+pub use crate::model::dto_v3::{
+    DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE, MAX_FILE_SIZE, MAX_TOTAL_CHUNKS,
+};
 
 pub const DEFAULT_MAX_AGGREGATE_RESERVED_BYTES: u64 = 2 * 1024 * 1024 * 1024 * 1024; // 2 TiB
 
@@ -110,8 +115,8 @@ pub fn available_space_for_path(path: &Path) -> Option<u64> {
 
 #[cfg(unix)]
 pub fn available_space_for_path(path: &Path) -> Option<u64> {
-    use std::os::unix::ffi::OsStrExt;
     use std::ffi::CString;
+    use std::os::unix::ffi::OsStrExt;
     let c_path = CString::new(path.as_os_str().as_bytes()).ok()?;
     let mut stat: libc::statvfs = unsafe { std::mem::zeroed() };
     if unsafe { libc::statvfs(c_path.as_ptr(), &mut stat) } == 0 {
@@ -219,11 +224,22 @@ impl TransferSessionStore {
         total
     }
 
-    pub async fn reserve(self: &Arc<Self>, transfer_id: &str, file_size: u64) -> Result<ReservationGuard, AppError> {
+    pub async fn reserve(
+        self: &Arc<Self>,
+        transfer_id: &str,
+        file_size: u64,
+    ) -> Result<ReservationGuard, AppError> {
         let mut w = self.inner.write().await;
 
-        let active_count = w.sessions.len().checked_add(w.in_progress_reservations.len()).unwrap_or(usize::MAX);
-        if active_count >= w.max_active_sessions && !w.sessions.contains_key(transfer_id) && !w.in_progress_reservations.contains_key(transfer_id) {
+        let active_count = w
+            .sessions
+            .len()
+            .checked_add(w.in_progress_reservations.len())
+            .unwrap_or(usize::MAX);
+        if active_count >= w.max_active_sessions
+            && !w.sessions.contains_key(transfer_id)
+            && !w.in_progress_reservations.contains_key(transfer_id)
+        {
             return Err(AppError::Message(
                 StatusCode::SERVICE_UNAVAILABLE,
                 format!("Active session limit reached ({})", w.max_active_sessions),
@@ -256,7 +272,8 @@ impl TransferSessionStore {
             ));
         }
 
-        w.in_progress_reservations.insert(transfer_id.to_string(), file_size);
+        w.in_progress_reservations
+            .insert(transfer_id.to_string(), file_size);
 
         Ok(ReservationGuard {
             transfer_id: transfer_id.to_string(),
@@ -265,7 +282,11 @@ impl TransferSessionStore {
         })
     }
 
-    pub async fn commit_reservation(&self, mut guard: ReservationGuard, session: Arc<V3TransferSession>) {
+    pub async fn commit_reservation(
+        &self,
+        mut guard: ReservationGuard,
+        session: Arc<V3TransferSession>,
+    ) {
         guard.active = false;
         let mut w = self.inner.write().await;
         w.in_progress_reservations.remove(&guard.transfer_id);
@@ -279,7 +300,11 @@ impl TransferSessionStore {
 
     pub async fn try_insert(&self, session: Arc<V3TransferSession>) -> Result<(), AppError> {
         let mut w = self.inner.write().await;
-        let active_count = w.sessions.len().checked_add(w.in_progress_reservations.len()).unwrap_or(usize::MAX);
+        let active_count = w
+            .sessions
+            .len()
+            .checked_add(w.in_progress_reservations.len())
+            .unwrap_or(usize::MAX);
         if active_count >= w.max_active_sessions && !w.sessions.contains_key(&session.transfer_id) {
             return Err(AppError::Message(
                 StatusCode::SERVICE_UNAVAILABLE,

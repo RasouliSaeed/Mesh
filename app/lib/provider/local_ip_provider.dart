@@ -122,15 +122,40 @@ List<String> rankIpAddresses(List<String> nativeResult, String? thirdPartyResult
   }
 }
 
-/// Sorts Ip addresses with first being the most likely primary local address
-/// Currently,
-/// - sorts ending with ".1" last
-/// - primary is always first
+/// Sorts IP addresses with first being the most likely primary local address
+/// Supports destination-aware subnet matching (longest prefix match) to ensure
+/// Hyper-V, WSL, Docker, and VPNs (Tailscale/WireGuard) are prioritized when reaching
+/// peers residing on those specific networks.
 extension ListIpExt on List<String> {
-  List<String> _rankIpAddresses(String? primary) {
+  int _scoreIp(String ip, String? primary, [String? destination]) {
+    if (ip == primary) return 100;
+    if (ip.startsWith('169.254.') || ip == '0.0.0.0') return -100;
+    if (ip.startsWith('127.')) return (destination?.startsWith('127.') ?? false) ? 95 : -90;
+
+    if (destination != null) {
+      final prefixLen = commonPrefixLength(ip, destination);
+      if (prefixLen >= 24) return 80 + prefixLen;
+      if (prefixLen >= 16) return 50 + prefixLen;
+      if (prefixLen >= 8) return 30 + prefixLen;
+    }
+
+    if (ip.endsWith('.1')) return 2; // Gateway-like address
+    if (ip.startsWith('192.168.')) return 30; // Home/LAN
+    if (ip.startsWith('10.')) return 25; // Enterprise/LAN
+    if (ip.startsWith('100.')) return 22; // Tailscale / CGNAT
+    if (ip.startsWith('172.')) {
+      final secondOctet = int.tryParse(ip.split('.').elementAtOrNull(1) ?? '') ?? 0;
+      if (secondOctet >= 16 && secondOctet <= 31) {
+        return 18; // Private Class B / WSL / Docker
+      }
+    }
+    return 15;
+  }
+
+  List<String> _rankIpAddresses(String? primary, [String? destination]) {
     return sorted((a, b) {
-      int scoreA = a == primary ? 10 : (a.endsWith('.1') ? 0 : 1);
-      int scoreB = b == primary ? 10 : (b.endsWith('.1') ? 0 : 1);
+      final scoreA = _scoreIp(a, primary, destination);
+      final scoreB = _scoreIp(b, primary, destination);
       return scoreB.compareTo(scoreA);
     });
   }

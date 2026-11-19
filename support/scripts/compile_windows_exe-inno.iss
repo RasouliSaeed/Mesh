@@ -12,7 +12,7 @@
 #endif
 
 #define MyAppName "Mesh"
-#define MyAppVersion "1.8.0"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "SaeedR"
 #define MyAppURL "https://Mesh.org"
 #define MyAppExeName "mesh_app.exe"

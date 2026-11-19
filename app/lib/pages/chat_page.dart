@@ -96,7 +96,7 @@ class _ChatPageState extends State<ChatPage> {
           ],
         ),
         actions: [
-          if (currentTarget != null)
+          if (currentTarget != null) ...[
             IconButton(
               icon: const Icon(Icons.content_paste_go_rounded, color: LocaraDesignTokens.cyan),
               tooltip: 'ارسال فوری محتوای کلیپ‌بورد',
@@ -105,6 +105,14 @@ class _ChatPageState extends State<ChatPage> {
                 target: currentTarget,
               ),
             ),
+            IconButton(
+              icon: const Icon(Icons.delete_sweep_rounded, color: LocaraDesignTokens.mutedText),
+              tooltip: 'پاک‌سازی نشست گفتگو',
+              onPressed: () {
+                context.ref.notifier(chatProvider).clearSession(currentTarget);
+              },
+            ),
+          ],
         ],
       ),
       body: Column(
@@ -124,8 +132,23 @@ class _ChatPageState extends State<ChatPage> {
                     itemCount: chatState.messages.length,
                     itemBuilder: (context, index) {
                       final message = chatState.messages[index];
+                      final isRtl = Directionality.of(context) == TextDirection.rtl;
+                      final alignment = message.isMine
+                          ? (isRtl ? Alignment.centerLeft : Alignment.centerRight)
+                          : (isRtl ? Alignment.centerRight : Alignment.centerLeft);
+                      final isTailLeft = isRtl ? message.isMine : !message.isMine;
+
+                      // Viewport read tracking: when incoming unread message is rendered in viewport
+                      if (!message.isMine && message.deliveryStatus != MessageDeliveryStatus.read && currentTarget != null) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (context.mounted) {
+                            context.ref.notifier(chatProvider).markMessageInViewport(message, currentTarget);
+                          }
+                        });
+                      }
+
                       return Align(
-                        alignment: message.isMine ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment: alignment,
                         child: InkWell(
                           onTap: () => ClipboardSyncService.copyToClipboard(context, message.text),
                           borderRadius: BorderRadius.circular(16),
@@ -141,8 +164,8 @@ class _ChatPageState extends State<ChatPage> {
                               borderRadius: BorderRadius.only(
                                 topLeft: const Radius.circular(16),
                                 topRight: const Radius.circular(16),
-                                bottomLeft: Radius.circular(message.isMine ? 16 : 4),
-                                bottomRight: Radius.circular(message.isMine ? 4 : 16),
+                                bottomLeft: Radius.circular(isTailLeft ? 4 : 16),
+                                bottomRight: Radius.circular(isTailLeft ? 16 : 4),
                               ),
                               border: message.isMine
                                   ? null
@@ -193,6 +216,23 @@ class _ChatPageState extends State<ChatPage> {
                                       size: 13,
                                       color: message.isMine ? Colors.white.withValues(alpha: 0.6) : LocaraDesignTokens.mutedText,
                                     ),
+                                    if (message.isMine) ...[
+                                      const SizedBox(width: 4),
+                                      Icon(
+                                        switch (message.deliveryStatus) {
+                                          MessageDeliveryStatus.sending => Icons.schedule_rounded,
+                                          MessageDeliveryStatus.delivered => Icons.done_rounded,
+                                          MessageDeliveryStatus.read => Icons.done_all_rounded,
+                                          MessageDeliveryStatus.failed => Icons.error_outline_rounded,
+                                        },
+                                        size: 14,
+                                        color: switch (message.deliveryStatus) {
+                                          MessageDeliveryStatus.read => LocaraDesignTokens.cyan,
+                                          MessageDeliveryStatus.failed => Colors.redAccent,
+                                          _ => Colors.white70,
+                                        },
+                                      ),
+                                    ],
                                   ],
                                 ),
                               ],

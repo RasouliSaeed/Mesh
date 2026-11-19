@@ -2,8 +2,8 @@ use crate::http::dto::{NonceRequest, NonceResponse, RegisterDto, RegisterRespons
 use crate::http::server::common::collect_to_json::CollectToJson;
 use crate::http::server::common::error::AppError;
 use crate::http::server::common::response::{empty_body, full_body, BoxedBody, JsonResponse};
-use crate::http::server::{AppState, RequestClientInfo};
 use crate::http::server::common::v3_session::V3TransferSession;
+use crate::http::server::{AppState, RequestClientInfo};
 use crate::model::dto_v3::{ManifestResponseDto, TransferManifestDto};
 use crate::model::resume::{ResumeManager, ResumeState};
 use crate::model::storage::{FileTimestamps, StorageHandle};
@@ -63,7 +63,10 @@ pub(crate) async fn register(
                 "Ignoring register from {}: claimed token does not match client certificate",
                 client_info.ip
             );
-            return Err(AppError::Message(StatusCode::FORBIDDEN, "Certificate fingerprint mismatch".to_string()));
+            return Err(AppError::Message(
+                StatusCode::FORBIDDEN,
+                "Certificate fingerprint mismatch".to_string(),
+            ));
         }
     }
 
@@ -84,7 +87,6 @@ pub(crate) async fn register(
 }
 
 use crate::model::dto_v3::validate_filename;
-
 
 // ─── Manifest ────────────────────────────────────────────────────────────────
 
@@ -107,7 +109,10 @@ pub(crate) async fn manifest(
 
     let manifest_dto = body.collect_to_json::<TransferManifestDto>().await?;
 
-    let v3 = state.v3.as_ref().ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
+    let v3 = state
+        .v3
+        .as_ref()
+        .ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
 
     let peer_binding = client_info.identifier();
 
@@ -153,10 +158,14 @@ pub(crate) async fn manifest(
     };
 
     if manifest_dto.file_size == 0 && manifest_dto.total_chunks != 0 {
-        return Err(AppError::BadRequest("Zero-length file must have total_chunks = 0".to_string()));
+        return Err(AppError::BadRequest(
+            "Zero-length file must have total_chunks = 0".to_string(),
+        ));
     }
     if manifest_dto.file_size > 0 && manifest_dto.total_chunks == 0 {
-        return Err(AppError::BadRequest("Non-empty file must have total_chunks > 0".to_string()));
+        return Err(AppError::BadRequest(
+            "Non-empty file must have total_chunks > 0".to_string(),
+        ));
     }
 
     if manifest_dto.total_chunks != expected_chunks {
@@ -199,10 +208,15 @@ pub(crate) async fn manifest(
         }
 
         let completed = existing.completed_chunks.lock().await;
-        let missing: Vec<u64> = (0..manifest_dto.total_chunks).filter(|i| !completed.contains_key(i)).collect();
+        let missing: Vec<u64> = (0..manifest_dto.total_chunks)
+            .filter(|i| !completed.contains_key(i))
+            .collect();
         return Ok(JsonResponse {
             status: StatusCode::OK,
-            body: ManifestResponseDto { session_id: manifest_dto.transfer_id, missing_chunks: missing },
+            body: ManifestResponseDto {
+                session_id: manifest_dto.transfer_id,
+                missing_chunks: missing,
+            },
         });
     }
 
@@ -210,7 +224,10 @@ pub(crate) async fn manifest(
     let (temp_path, save_path) = {
         let dir = ResumeManager::default_storage_dir().map_err(|e| {
             tracing::warn!("Cannot resolve storage dir for V3 save: {}", e);
-            AppError::Message(StatusCode::INTERNAL_SERVER_ERROR, "Storage directory unavailable".to_string())
+            AppError::Message(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Storage directory unavailable".to_string(),
+            )
         })?;
         if let Err(e) = tokio::fs::create_dir_all(&dir).await {
             tracing::warn!("Failed to create V3 save dir {:?}: {}", dir, e);
@@ -219,7 +236,10 @@ pub(crate) async fn manifest(
             if manifest_dto.file_size > free_space {
                 return Err(AppError::Message(
                     StatusCode::INSUFFICIENT_STORAGE,
-                    format!("Insufficient disk space: required {} bytes, available {} bytes", manifest_dto.file_size, free_space),
+                    format!(
+                        "Insufficient disk space: required {} bytes, available {} bytes",
+                        manifest_dto.file_size, free_space
+                    ),
                 ));
             }
         }
@@ -229,7 +249,10 @@ pub(crate) async fn manifest(
     };
 
     // ── Acquire atomic reservation before creating disk resources ────────────
-    let reservation_guard = v3.store.reserve(&manifest_dto.transfer_id, manifest_dto.file_size).await?;
+    let reservation_guard = v3
+        .store
+        .reserve(&manifest_dto.transfer_id, manifest_dto.file_size)
+        .await?;
 
     // ── Notify application if event listener is configured ───────────────────
     let mut custom_destination: Option<std::path::PathBuf> = None;
@@ -274,203 +297,245 @@ pub(crate) async fn manifest(
     }
 
     // ── Reconstruct from persisted ResumeState or start fresh ────────────────
-    let (missing, completed_map, storage): (Vec<u64>, HashMap<u64, String>, Box<dyn StorageHandle>) =
-        match ResumeManager::load(&manifest_dto.transfer_id).await {
-            Ok(Some(resume)) => {
-                match &resume.authenticated_peer_binding {
-                    Some(bound_peer) => {
-                        if bound_peer != &peer_binding {
-                            tracing::warn!(
-                                "Manifest resume for {} rejected: peer binding mismatch",
-                                manifest_dto.transfer_id
-                            );
-                            reservation_guard.rollback().await;
-                            return Err(AppError::Message(
-                                StatusCode::FORBIDDEN,
-                                "Transfer session belongs to a different peer".to_string(),
-                            ));
-                        }
-                    }
-                    None => {
+    let (missing, completed_map, storage): (
+        Vec<u64>,
+        HashMap<u64, String>,
+        Box<dyn StorageHandle>,
+    ) = match ResumeManager::load(&manifest_dto.transfer_id).await {
+        Ok(Some(resume)) => {
+            match &resume.authenticated_peer_binding {
+                Some(bound_peer) => {
+                    if bound_peer != &peer_binding {
                         tracing::warn!(
-                            "Manifest resume for {} rejected: persisted state lacks peer binding",
+                            "Manifest resume for {} rejected: peer binding mismatch",
                             manifest_dto.transfer_id
                         );
                         reservation_guard.rollback().await;
                         return Err(AppError::Message(
                             StatusCode::FORBIDDEN,
-                            "Legacy transfer state lacks peer binding; cannot resume".to_string(),
+                            "Transfer session belongs to a different peer".to_string(),
                         ));
                     }
                 }
-
-                if resume.file_size != manifest_dto.file_size
-                    || resume.chunk_size != manifest_dto.chunk_size
-                    || resume.total_chunks != manifest_dto.total_chunks
-                    || resume.full_sha256 != manifest_dto.expected_sha256
-                    || (resume.file_name.is_some() && resume.file_name.as_deref() != Some(&manifest_dto.file_name))
-                {
-                    tracing::warn!("Resumed manifest parameters mismatch for transfer {}", manifest_dto.transfer_id);
+                None => {
+                    tracing::warn!(
+                        "Manifest resume for {} rejected: persisted state lacks peer binding",
+                        manifest_dto.transfer_id
+                    );
                     reservation_guard.rollback().await;
                     return Err(AppError::Message(
-                        StatusCode::CONFLICT,
-                        "Resumed transfer parameters do not match stored metadata".to_string(),
+                        StatusCode::FORBIDDEN,
+                        "Legacy transfer state lacks peer binding; cannot resume".to_string(),
                     ));
                 }
-
-                if resume.total_chunks > MAX_TOTAL_CHUNKS || resume.file_size > MAX_FILE_SIZE {
-                    reservation_guard.rollback().await;
-                    return Err(AppError::Message(
-                        StatusCode::BAD_REQUEST,
-                        "Stored transfer metadata exceeds current system limits".to_string(),
-                    ));
-                }
-
-                let done_set: std::collections::HashSet<u64> = resume.completed_chunks.iter().copied().collect();
-                let missing: Vec<u64> = (0..manifest_dto.total_chunks).filter(|i| !done_set.contains(i)).collect();
-                let mut completed_map = resume.chunk_hashes.clone();
-                for &idx in &resume.completed_chunks {
-                    completed_map.entry(idx).or_insert_with(String::new);
-                }
-
-                let storage: Box<dyn StorageHandle> = if completed_map.is_empty() {
-                    let _ = tokio::fs::remove_file(&temp_path).await;
-                    match DesktopStorageHandle::create_new_with_temp(temp_path.clone(), save_path.clone()).await {
-                        Ok(mut h) => {
-                            if manifest_dto.file_size > 0 {
-                                if let Err(e) = h.set_len(manifest_dto.file_size).await {
-                                    tracing::warn!(
-                                        "set_len({}) failed for {}: {:?}",
-                                        manifest_dto.file_size,
-                                        manifest_dto.transfer_id,
-                                        e
-                                    );
-                                    let _ = tokio::fs::remove_file(&temp_path).await;
-                                    reservation_guard.rollback().await;
-                                    return Err(AppError::Message(
-                                        StatusCode::INSUFFICIENT_STORAGE,
-                                        "Failed to allocate file length on disk".to_string(),
-                                    ));
-                                }
-                            }
-                            Box::new(h)
-                        }
-                        Err(e) => {
-                            tracing::warn!("Failed to create partial file for {}: {:?}", manifest_dto.transfer_id, e);
-                            reservation_guard.rollback().await;
-                            return Err(AppError::Message(
-                                StatusCode::INTERNAL_SERVER_ERROR,
-                                "Failed to create partial file".to_string(),
-                            ));
-                        }
-                    }
-                } else {
-                    match DesktopStorageHandle::reopen_existing_with_temp(temp_path.clone(), save_path.clone()).await {
-                        Ok(h) => Box::new(h),
-                        Err(_) => {
-                            tracing::warn!(
-                                "Partial file missing for resume of {}, restarting",
-                                manifest_dto.transfer_id
-                            );
-                            let _ = ResumeManager::delete(&manifest_dto.transfer_id).await;
-                            let fresh = ResumeState {
-                                protocol: "3.0".to_string(),
-                                transfer_id: manifest_dto.transfer_id.clone(),
-                                file_size: manifest_dto.file_size,
-                                chunk_size: manifest_dto.chunk_size,
-                                total_chunks: manifest_dto.total_chunks,
-                                full_sha256: manifest_dto.expected_sha256.clone(),
-                                completed_chunks: Vec::new(),
-                                file_name: Some(manifest_dto.file_name.clone()),
-                                authenticated_peer_binding: Some(peer_binding.clone()),
-                                chunk_hashes: HashMap::new(),
-                                last_updated_at: Some(V3TransferSession::now()),
-                            };
-                            let _ = ResumeManager::save(&fresh).await;
-                            let _ = tokio::fs::remove_file(&temp_path).await;
-                            match DesktopStorageHandle::create_new_with_temp(temp_path.clone(), save_path.clone()).await {
-                                Ok(mut h) => {
-                                    if manifest_dto.file_size > 0 {
-                                        let _ = h.set_len(manifest_dto.file_size).await;
-                                    }
-                                    Box::new(h)
-                                }
-                                Err(e) => {
-                                    tracing::warn!(
-                                        "Failed to recreate partial file for {}: {:?}",
-                                        manifest_dto.transfer_id,
-                                        e
-                                    );
-                                    reservation_guard.rollback().await;
-                                    return Err(AppError::Message(
-                                        StatusCode::INTERNAL_SERVER_ERROR,
-                                        "Failed to create partial file".to_string(),
-                                    ));
-                                }
-                            }
-                        }
-                    }
-                };
-
-                (missing, completed_map, storage)
             }
-            _ => {
-                // Fresh transfer or unreadable state:
-                // 1. Create partial file
+
+            if resume.file_size != manifest_dto.file_size
+                || resume.chunk_size != manifest_dto.chunk_size
+                || resume.total_chunks != manifest_dto.total_chunks
+                || resume.full_sha256 != manifest_dto.expected_sha256
+                || (resume.file_name.is_some()
+                    && resume.file_name.as_deref() != Some(&manifest_dto.file_name))
+            {
+                tracing::warn!(
+                    "Resumed manifest parameters mismatch for transfer {}",
+                    manifest_dto.transfer_id
+                );
+                reservation_guard.rollback().await;
+                return Err(AppError::Message(
+                    StatusCode::CONFLICT,
+                    "Resumed transfer parameters do not match stored metadata".to_string(),
+                ));
+            }
+
+            if resume.total_chunks > MAX_TOTAL_CHUNKS || resume.file_size > MAX_FILE_SIZE {
+                reservation_guard.rollback().await;
+                return Err(AppError::Message(
+                    StatusCode::BAD_REQUEST,
+                    "Stored transfer metadata exceeds current system limits".to_string(),
+                ));
+            }
+
+            let done_set: std::collections::HashSet<u64> =
+                resume.completed_chunks.iter().copied().collect();
+            let missing: Vec<u64> = (0..manifest_dto.total_chunks)
+                .filter(|i| !done_set.contains(i))
+                .collect();
+            let mut completed_map = resume.chunk_hashes.clone();
+            for &idx in &resume.completed_chunks {
+                completed_map.entry(idx).or_insert_with(String::new);
+            }
+
+            let storage: Box<dyn StorageHandle> = if completed_map.is_empty() {
                 let _ = tokio::fs::remove_file(&temp_path).await;
-                let mut handle = match DesktopStorageHandle::create_new_with_temp(temp_path.clone(), save_path.clone()).await {
-                    Ok(h) => h,
+                match DesktopStorageHandle::create_new_with_temp(
+                    temp_path.clone(),
+                    save_path.clone(),
+                )
+                .await
+                {
+                    Ok(mut h) => {
+                        if manifest_dto.file_size > 0 {
+                            if let Err(e) = h.set_len(manifest_dto.file_size).await {
+                                tracing::warn!(
+                                    "set_len({}) failed for {}: {:?}",
+                                    manifest_dto.file_size,
+                                    manifest_dto.transfer_id,
+                                    e
+                                );
+                                let _ = tokio::fs::remove_file(&temp_path).await;
+                                reservation_guard.rollback().await;
+                                return Err(AppError::Message(
+                                    StatusCode::INSUFFICIENT_STORAGE,
+                                    "Failed to allocate file length on disk".to_string(),
+                                ));
+                            }
+                        }
+                        Box::new(h)
+                    }
                     Err(e) => {
-                        tracing::warn!("Failed to create partial file for {}: {:?}", manifest_dto.transfer_id, e);
+                        tracing::warn!(
+                            "Failed to create partial file for {}: {:?}",
+                            manifest_dto.transfer_id,
+                            e
+                        );
                         reservation_guard.rollback().await;
                         return Err(AppError::Message(
                             StatusCode::INTERNAL_SERVER_ERROR,
                             "Failed to create partial file".to_string(),
                         ));
                     }
-                };
-
-                // 2. Allocate file length
-                if manifest_dto.file_size > 0 {
-                    if let Err(e) = handle.set_len(manifest_dto.file_size).await {
-                        tracing::warn!("set_len failed for {}: {:?}", manifest_dto.transfer_id, e);
+                }
+            } else {
+                match DesktopStorageHandle::reopen_existing_with_temp(
+                    temp_path.clone(),
+                    save_path.clone(),
+                )
+                .await
+                {
+                    Ok(h) => Box::new(h),
+                    Err(_) => {
+                        tracing::warn!(
+                            "Partial file missing for resume of {}, restarting",
+                            manifest_dto.transfer_id
+                        );
+                        let _ = ResumeManager::delete(&manifest_dto.transfer_id).await;
+                        let fresh = ResumeState {
+                            protocol: "3.0".to_string(),
+                            transfer_id: manifest_dto.transfer_id.clone(),
+                            file_size: manifest_dto.file_size,
+                            chunk_size: manifest_dto.chunk_size,
+                            total_chunks: manifest_dto.total_chunks,
+                            full_sha256: manifest_dto.expected_sha256.clone(),
+                            completed_chunks: Vec::new(),
+                            file_name: Some(manifest_dto.file_name.clone()),
+                            authenticated_peer_binding: Some(peer_binding.clone()),
+                            chunk_hashes: HashMap::new(),
+                            last_updated_at: Some(V3TransferSession::now()),
+                        };
+                        let _ = ResumeManager::save(&fresh).await;
                         let _ = tokio::fs::remove_file(&temp_path).await;
-                        reservation_guard.rollback().await;
-                        return Err(AppError::Message(
-                            StatusCode::INSUFFICIENT_STORAGE,
-                            "Failed to allocate file size on disk".to_string(),
-                        ));
+                        match DesktopStorageHandle::create_new_with_temp(
+                            temp_path.clone(),
+                            save_path.clone(),
+                        )
+                        .await
+                        {
+                            Ok(mut h) => {
+                                if manifest_dto.file_size > 0 {
+                                    let _ = h.set_len(manifest_dto.file_size).await;
+                                }
+                                Box::new(h)
+                            }
+                            Err(e) => {
+                                tracing::warn!(
+                                    "Failed to recreate partial file for {}: {:?}",
+                                    manifest_dto.transfer_id,
+                                    e
+                                );
+                                reservation_guard.rollback().await;
+                                return Err(AppError::Message(
+                                    StatusCode::INTERNAL_SERVER_ERROR,
+                                    "Failed to create partial file".to_string(),
+                                ));
+                            }
+                        }
                     }
                 }
+            };
 
-                // 3. Persist initial ResumeState
-                let new_state = ResumeState {
-                    protocol: "3.0".to_string(),
-                    transfer_id: manifest_dto.transfer_id.clone(),
-                    file_size: manifest_dto.file_size,
-                    chunk_size: manifest_dto.chunk_size,
-                    total_chunks: manifest_dto.total_chunks,
-                    full_sha256: manifest_dto.expected_sha256.clone(),
-                    completed_chunks: Vec::new(),
-                    file_name: Some(manifest_dto.file_name.clone()),
-                    authenticated_peer_binding: Some(peer_binding.clone()),
-                    chunk_hashes: HashMap::new(),
-                    last_updated_at: Some(V3TransferSession::now()),
-                };
-                if let Err(e) = ResumeManager::save(&new_state).await {
-                    tracing::warn!("Failed to persist initial ResumeState for {}: {}", manifest_dto.transfer_id, e);
-                    let _ = tokio::fs::remove_file(&temp_path).await;
+            (missing, completed_map, storage)
+        }
+        _ => {
+            // Fresh transfer or unreadable state:
+            // 1. Create partial file
+            let _ = tokio::fs::remove_file(&temp_path).await;
+            let mut handle = match DesktopStorageHandle::create_new_with_temp(
+                temp_path.clone(),
+                save_path.clone(),
+            )
+            .await
+            {
+                Ok(h) => h,
+                Err(e) => {
+                    tracing::warn!(
+                        "Failed to create partial file for {}: {:?}",
+                        manifest_dto.transfer_id,
+                        e
+                    );
                     reservation_guard.rollback().await;
                     return Err(AppError::Message(
                         StatusCode::INTERNAL_SERVER_ERROR,
-                        "Failed to persist initial transfer state".to_string(),
+                        "Failed to create partial file".to_string(),
                     ));
                 }
+            };
 
-                let missing: Vec<u64> = (0..manifest_dto.total_chunks).collect();
-                (missing, HashMap::new(), Box::new(handle))
+            // 2. Allocate file length
+            if manifest_dto.file_size > 0 {
+                if let Err(e) = handle.set_len(manifest_dto.file_size).await {
+                    tracing::warn!("set_len failed for {}: {:?}", manifest_dto.transfer_id, e);
+                    let _ = tokio::fs::remove_file(&temp_path).await;
+                    reservation_guard.rollback().await;
+                    return Err(AppError::Message(
+                        StatusCode::INSUFFICIENT_STORAGE,
+                        "Failed to allocate file size on disk".to_string(),
+                    ));
+                }
             }
-        };
+
+            // 3. Persist initial ResumeState
+            let new_state = ResumeState {
+                protocol: "3.0".to_string(),
+                transfer_id: manifest_dto.transfer_id.clone(),
+                file_size: manifest_dto.file_size,
+                chunk_size: manifest_dto.chunk_size,
+                total_chunks: manifest_dto.total_chunks,
+                full_sha256: manifest_dto.expected_sha256.clone(),
+                completed_chunks: Vec::new(),
+                file_name: Some(manifest_dto.file_name.clone()),
+                authenticated_peer_binding: Some(peer_binding.clone()),
+                chunk_hashes: HashMap::new(),
+                last_updated_at: Some(V3TransferSession::now()),
+            };
+            if let Err(e) = ResumeManager::save(&new_state).await {
+                tracing::warn!(
+                    "Failed to persist initial ResumeState for {}: {}",
+                    manifest_dto.transfer_id,
+                    e
+                );
+                let _ = tokio::fs::remove_file(&temp_path).await;
+                reservation_guard.rollback().await;
+                return Err(AppError::Message(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Failed to persist initial transfer state".to_string(),
+                ));
+            }
+
+            let missing: Vec<u64> = (0..manifest_dto.total_chunks).collect();
+            (missing, HashMap::new(), Box::new(handle))
+        }
+    };
 
     let session = Arc::new(V3TransferSession::new(
         manifest_dto.transfer_id.clone(),
@@ -482,9 +547,14 @@ pub(crate) async fn manifest(
     if let Some(dest) = custom_destination {
         *session.destination_path.lock().await = Some(dest);
     }
-    v3.store.commit_reservation(reservation_guard, session).await;
+    v3.store
+        .commit_reservation(reservation_guard, session)
+        .await;
 
-    tracing::info!("V3 session created for transfer_id={}", manifest_dto.transfer_id);
+    tracing::info!(
+        "V3 session created for transfer_id={}",
+        manifest_dto.transfer_id
+    );
 
     Ok(JsonResponse {
         status: StatusCode::OK,
@@ -506,10 +576,13 @@ pub(crate) async fn chunk(
     state: AppState,
     client_info: RequestClientInfo,
 ) -> Result<hyper::Response<BoxedBody>, AppError> {
-    use http_body_util::BodyExt;
     use crate::http::server::common::v3_session::SessionStatus;
+    use http_body_util::BodyExt;
 
-    let v3 = state.v3.as_ref().ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
+    let v3 = state
+        .v3
+        .as_ref()
+        .ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
 
     // ── Parse query parameters ────────────────────────────────────────────────
     let uri_query = req.uri().query().unwrap_or("").to_owned();
@@ -529,7 +602,9 @@ pub(crate) async fn chunk(
     let chunk_index: u64 = params
         .get("chunkIndex")
         .and_then(|v| v.parse().ok())
-        .ok_or_else(|| AppError::BadRequest("Missing or invalid chunkIndex query parameter".to_string()))?;
+        .ok_or_else(|| {
+            AppError::BadRequest("Missing or invalid chunkIndex query parameter".to_string())
+        })?;
 
     let chunk_hash_claim = params.get("chunkHash").cloned();
 
@@ -541,7 +616,10 @@ pub(crate) async fn chunk(
 
     if session.authenticated_peer_binding != client_info.identifier() {
         tracing::warn!("Chunk for session {session_id} rejected: peer binding mismatch");
-        return Err(AppError::Message(StatusCode::FORBIDDEN, "Peer binding mismatch".to_string()));
+        return Err(AppError::Message(
+            StatusCode::FORBIDDEN,
+            "Peer binding mismatch".to_string(),
+        ));
     }
 
     if chunk_index >= session.manifest.total_chunks {
@@ -557,9 +635,13 @@ pub(crate) async fn chunk(
         .ok_or_else(|| AppError::BadRequest("Chunk offset overflow".to_string()))?;
 
     let expected_len = if chunk_index == session.manifest.total_chunks - 1 {
-        session.manifest.file_size
+        session
+            .manifest
+            .file_size
             .checked_sub(offset)
-            .ok_or_else(|| AppError::BadRequest("Final chunk offset exceeds declared file size".to_string()))?
+            .ok_or_else(|| {
+                AppError::BadRequest("Final chunk offset exceeds declared file size".to_string())
+            })?
     } else {
         session.manifest.chunk_size
     };
@@ -569,7 +651,9 @@ pub(crate) async fn chunk(
         .ok_or_else(|| AppError::BadRequest("Chunk end offset overflow".to_string()))?;
 
     if end_offset > session.manifest.file_size {
-        return Err(AppError::BadRequest("Chunk extends beyond declared file size".to_string()));
+        return Err(AppError::BadRequest(
+            "Chunk extends beyond declared file size".to_string(),
+        ));
     }
 
     // ── Bounded body collection using http_body_util::Limited ─────────────────
@@ -621,7 +705,10 @@ pub(crate) async fn chunk(
         if *status != SessionStatus::Transferring {
             return Err(AppError::Message(
                 StatusCode::CONFLICT,
-                format!("Session is not in Transferring state (current: {:?})", *status),
+                format!(
+                    "Session is not in Transferring state (current: {:?})",
+                    *status
+                ),
             ));
         }
     }
@@ -649,10 +736,15 @@ pub(crate) async fn chunk(
             // Chunk was previously marked complete but hash was omitted; compare bytes on disk
             let mut existing_bytes = vec![0u8; body_bytes.len()];
             let mut handle = session.storage_handle.lock().await;
-            let n = handle.read_at(offset, &mut existing_bytes).await.map_err(|e| {
-                tracing::warn!("Failed to read existing chunk {chunk_index} for comparison: {e:?}");
-                AppError::Status(StatusCode::INTERNAL_SERVER_ERROR)
-            })?;
+            let n = handle
+                .read_at(offset, &mut existing_bytes)
+                .await
+                .map_err(|e| {
+                    tracing::warn!(
+                        "Failed to read existing chunk {chunk_index} for comparison: {e:?}"
+                    );
+                    AppError::Status(StatusCode::INTERNAL_SERVER_ERROR)
+                })?;
             if n == body_bytes.len() && existing_bytes == body_bytes.as_ref() {
                 drop(handle);
                 let mut completed = session.completed_chunks.lock().await;
@@ -674,8 +766,13 @@ pub(crate) async fn chunk(
     {
         let mut handle = session.storage_handle.lock().await;
         handle.write_at(offset, &body_bytes).await.map_err(|e| {
-            tracing::warn!("write_at failed for chunk {chunk_index} of session {session_id}: {e:?}");
-            AppError::Message(StatusCode::INTERNAL_SERVER_ERROR, "Failed to write chunk data".to_string())
+            tracing::warn!(
+                "write_at failed for chunk {chunk_index} of session {session_id}: {e:?}"
+            );
+            AppError::Message(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Failed to write chunk data".to_string(),
+            )
         })?;
     }
 
@@ -717,7 +814,10 @@ pub(crate) async fn chunk(
         ));
     }
 
-    tracing::debug!("Chunk {chunk_index} of session {session_id} written ({} bytes)", body_bytes.len());
+    tracing::debug!(
+        "Chunk {chunk_index} of session {session_id} written ({} bytes)",
+        body_bytes.len()
+    );
 
     if let Some(ref tx) = v3.event_tx {
         let total_bytes = session.manifest.file_size;
@@ -729,12 +829,17 @@ pub(crate) async fn chunk(
             .duration_since(std::time::UNIX_EPOCH)
             .map(|d| d.as_millis() as u64)
             .unwrap_or(0);
-        let last_emit = session.last_progress_emit.load(std::sync::atomic::Ordering::Relaxed);
+        let last_emit = session
+            .last_progress_emit
+            .load(std::sync::atomic::Ordering::Relaxed);
 
         if is_last || now_millis.saturating_sub(last_emit) >= 100 {
-            session.last_progress_emit.store(now_millis, std::sync::atomic::Ordering::Relaxed);
+            session
+                .last_progress_emit
+                .store(now_millis, std::sync::atomic::Ordering::Relaxed);
             let approx_bytes = if total_chunks > 0 {
-                (completed_count.min(total_chunks) as f64 / total_chunks as f64 * total_bytes as f64) as u64
+                (completed_count.min(total_chunks) as f64 / total_chunks as f64
+                    * total_bytes as f64) as u64
             } else {
                 total_bytes
             };
@@ -743,12 +848,14 @@ pub(crate) async fn chunk(
             } else {
                 1.0
             };
-            let _ = tx.send(crate::http::server::v2::ServerEventV2::TransferProgressV3 {
-                session_id: session_id.clone(),
-                bytes_received: approx_bytes,
-                total_bytes,
-                progress,
-            }).await;
+            let _ = tx
+                .send(crate::http::server::v2::ServerEventV2::TransferProgressV3 {
+                    session_id: session_id.clone(),
+                    bytes_received: approx_bytes,
+                    total_bytes,
+                    progress,
+                })
+                .await;
         }
     }
 
@@ -768,11 +875,14 @@ pub(crate) async fn commit(
     state: AppState,
     client_info: RequestClientInfo,
 ) -> Result<hyper::Response<BoxedBody>, AppError> {
-    use sha2::{Digest, Sha256};
     use crate::http::server::common::v3_session::SessionStatus;
     use crate::model::storage_adapter::DesktopStorageHandle;
+    use sha2::{Digest, Sha256};
 
-    let v3 = state.v3.as_ref().ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
+    let v3 = state
+        .v3
+        .as_ref()
+        .ok_or_else(|| AppError::Status(StatusCode::NOT_FOUND))?;
 
     // ── Parse query parameters ────────────────────────────────────────────────
     let uri_query = req.uri().query().unwrap_or("").to_owned();
@@ -796,7 +906,10 @@ pub(crate) async fn commit(
     })?;
 
     if session.authenticated_peer_binding != client_info.identifier() {
-        return Err(AppError::Message(StatusCode::FORBIDDEN, "Peer binding mismatch".to_string()));
+        return Err(AppError::Message(
+            StatusCode::FORBIDDEN,
+            "Peer binding mismatch".to_string(),
+        ));
     }
 
     // ── Acquire exclusive operation gate ──────────────────────────────────────
@@ -812,7 +925,10 @@ pub(crate) async fn commit(
             return Ok(res);
         }
         if *status == SessionStatus::Verifying {
-            return Err(AppError::Message(StatusCode::CONFLICT, "Commit verification already in progress".to_string()));
+            return Err(AppError::Message(
+                StatusCode::CONFLICT,
+                "Commit verification already in progress".to_string(),
+            ));
         }
         *status = SessionStatus::Verifying;
     }
@@ -853,8 +969,13 @@ pub(crate) async fn commit(
             let mut bytes_read: u64 = 0;
             loop {
                 let n = handle.read_at(bytes_read, &mut buf).await.map_err(|e| {
-                    tracing::warn!("Read failed during SHA-256 verification of {session_id}: {e:?}");
-                    AppError::Message(StatusCode::INTERNAL_SERVER_ERROR, "Integrity verification read failure".to_string())
+                    tracing::warn!(
+                        "Read failed during SHA-256 verification of {session_id}: {e:?}"
+                    );
+                    AppError::Message(
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        "Integrity verification read failure".to_string(),
+                    )
                 })?;
                 if n == 0 {
                     break;
@@ -885,11 +1006,13 @@ pub(crate) async fn commit(
                 drop(handle);
                 *session.status.lock().await = SessionStatus::Failed;
                 if let Some(ref tx) = v3.event_tx {
-                    let _ = tx.send(crate::http::server::v2::ServerEventV2::TransferFailedV3 {
-                        session_id: session_id.clone(),
-                        file_name: session.manifest.file_name.clone(),
-                        error: "Full-file integrity check failed".to_string(),
-                    }).await;
+                    let _ = tx
+                        .send(crate::http::server::v2::ServerEventV2::TransferFailedV3 {
+                            session_id: session_id.clone(),
+                            file_name: session.manifest.file_name.clone(),
+                            error: "Full-file integrity check failed".to_string(),
+                        })
+                        .await;
                 }
                 return Err(AppError::Message(
                     StatusCode::UNPROCESSABLE_ENTITY,
@@ -903,26 +1026,39 @@ pub(crate) async fn commit(
     let (temp_p, final_p) = {
         let dir = ResumeManager::default_storage_dir().map_err(|e| {
             tracing::warn!("Cannot resolve storage dir: {}", e);
-            AppError::Message(StatusCode::INTERNAL_SERVER_ERROR, "Storage directory unavailable".to_string())
+            AppError::Message(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Storage directory unavailable".to_string(),
+            )
         })?;
         let temp = dir.join(format!("locara_part_{session_id}.part"));
         let custom = session.destination_path.lock().await.clone();
-        let final_dest = custom.unwrap_or_else(|| dir.join(format!("{}.locara_incoming", session.manifest.file_name)));
+        let final_dest = custom
+            .unwrap_or_else(|| dir.join(format!("{}.locara_incoming", session.manifest.file_name)));
         (temp, final_dest)
     };
 
     // Pre-check destination collision before consuming the storage handle
     if tokio::fs::symlink_metadata(&final_p).await.is_ok() {
-        tracing::warn!("Commit for session {session_id} rejected: destination file {:?} already exists", final_p);
+        tracing::warn!(
+            "Commit for session {session_id} rejected: destination file {:?} already exists",
+            final_p
+        );
         *session.status.lock().await = SessionStatus::Transferring;
-        return Err(AppError::Message(StatusCode::CONFLICT, "Destination file already exists".to_string()));
+        return Err(AppError::Message(
+            StatusCode::CONFLICT,
+            "Destination file already exists".to_string(),
+        ));
     }
 
     // If handle was previously consumed, restore it from the intact partial file
     {
         let mut guard = session.storage_handle.lock().await;
         if temp_p.exists() && !final_p.exists() {
-            if let Ok(reopened) = DesktopStorageHandle::reopen_existing_with_temp(temp_p.clone(), final_p.clone()).await {
+            if let Ok(reopened) =
+                DesktopStorageHandle::reopen_existing_with_temp(temp_p.clone(), final_p.clone())
+                    .await
+            {
                 *guard = Box::new(reopened);
             }
         }
@@ -945,7 +1081,9 @@ pub(crate) async fn commit(
         if let Ok(dir) = ResumeManager::default_storage_dir() {
             let temp_p = dir.join(format!("locara_part_{}.part", session_id));
             let final_p = dir.join(format!("{}.locara_incoming", session.manifest.file_name));
-            if let Ok(reopened) = DesktopStorageHandle::reopen_existing_with_temp(temp_p, final_p).await {
+            if let Ok(reopened) =
+                DesktopStorageHandle::reopen_existing_with_temp(temp_p, final_p).await
+            {
                 let mut guard = session.storage_handle.lock().await;
                 *guard = Box::new(reopened);
             }
@@ -956,23 +1094,25 @@ pub(crate) async fn commit(
             crate::model::storage::StorageError::AlreadyExists => {
                 (StatusCode::CONFLICT, "Destination file already exists")
             }
-            crate::model::storage::StorageError::PermissionDenied => {
-                (StatusCode::FORBIDDEN, "Permission denied writing destination file")
-            }
-            crate::model::storage::StorageError::Unsupported(_) => {
-                (StatusCode::INTERNAL_SERVER_ERROR, "Non-replacing commit unsupported on storage filesystem")
-            }
-            _ => {
-                (StatusCode::INTERNAL_SERVER_ERROR, "Atomic commit failed")
-            }
+            crate::model::storage::StorageError::PermissionDenied => (
+                StatusCode::FORBIDDEN,
+                "Permission denied writing destination file",
+            ),
+            crate::model::storage::StorageError::Unsupported(_) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Non-replacing commit unsupported on storage filesystem",
+            ),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR, "Atomic commit failed"),
         };
 
         if let Some(ref tx) = v3.event_tx {
-            let _ = tx.send(crate::http::server::v2::ServerEventV2::TransferFailedV3 {
-                session_id: session_id.clone(),
-                file_name: session.manifest.file_name.clone(),
-                error: msg.to_string(),
-            }).await;
+            let _ = tx
+                .send(crate::http::server::v2::ServerEventV2::TransferFailedV3 {
+                    session_id: session_id.clone(),
+                    file_name: session.manifest.file_name.clone(),
+                    error: msg.to_string(),
+                })
+                .await;
         }
 
         return Err(AppError::Message(status_code, msg.to_string()));
@@ -983,7 +1123,9 @@ pub(crate) async fn commit(
         let mut status = session.status.lock().await;
         *status = SessionStatus::Committed;
     }
-    session.is_committed.store(true, std::sync::atomic::Ordering::Release);
+    session
+        .is_committed
+        .store(true, std::sync::atomic::Ordering::Release);
     session.update_activity();
 
     // Only delete ResumeState AFTER successful publication
@@ -992,13 +1134,15 @@ pub(crate) async fn commit(
     }
 
     if let Some(ref tx) = v3.event_tx {
-        let _ = tx.send(crate::http::server::v2::ServerEventV2::TransferFinishedV3 {
-            session_id: session_id.clone(),
-            file_name: session.manifest.file_name.clone(),
-            file_size: session.manifest.file_size,
-            destination_path: final_p.to_string_lossy().to_string(),
-            saved_to_gallery: false,
-        }).await;
+        let _ = tx
+            .send(crate::http::server::v2::ServerEventV2::TransferFinishedV3 {
+                session_id: session_id.clone(),
+                file_name: session.manifest.file_name.clone(),
+                file_size: session.manifest.file_size,
+                destination_path: final_p.to_string_lossy().to_string(),
+                saved_to_gallery: false,
+            })
+            .await;
     }
 
     tracing::info!("V3 transfer committed successfully for session {session_id}");
@@ -1016,39 +1160,86 @@ pub(crate) async fn commit(
 struct UnavailableStorageHandle;
 
 impl StorageHandle for UnavailableStorageHandle {
-    fn write_data<'a>(&'a mut self, _data: &'a [u8])
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send + 'a>>
-    {
+    fn write_data<'a>(
+        &'a mut self,
+        _data: &'a [u8],
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send
+                + 'a,
+        >,
+    > {
         Box::pin(async { Err(crate::model::storage::StorageError::Unavailable) })
     }
-    fn write_at<'a>(&'a mut self, _offset: u64, _data: &'a [u8])
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send + 'a>>
-    {
+    fn write_at<'a>(
+        &'a mut self,
+        _offset: u64,
+        _data: &'a [u8],
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send
+                + 'a,
+        >,
+    > {
         Box::pin(async { Err(crate::model::storage::StorageError::Unavailable) })
     }
-    fn read_at<'a>(&'a mut self, _offset: u64, _buf: &'a mut [u8])
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<usize, crate::model::storage::StorageError>> + Send + 'a>>
-    {
+    fn read_at<'a>(
+        &'a mut self,
+        _offset: u64,
+        _buf: &'a mut [u8],
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<usize, crate::model::storage::StorageError>>
+                + Send
+                + 'a,
+        >,
+    > {
         Box::pin(async { Err(crate::model::storage::StorageError::Unavailable) })
     }
-    fn flush<'a>(&'a mut self)
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send + 'a>>
-    {
+    fn flush<'a>(
+        &'a mut self,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send
+                + 'a,
+        >,
+    > {
         Box::pin(async { Ok(()) })
     }
-    fn set_len<'a>(&'a mut self, _len: u64)
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send + 'a>>
-    {
+    fn set_len<'a>(
+        &'a mut self,
+        _len: u64,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send
+                + 'a,
+        >,
+    > {
         Box::pin(async { Ok(()) })
     }
-    fn commit(self: Box<Self>, _timestamps: FileTimestamps)
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send>>
-    {
+    fn commit(
+        self: Box<Self>,
+        _timestamps: FileTimestamps,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send,
+        >,
+    > {
         Box::pin(async { Err(crate::model::storage::StorageError::Unavailable) })
     }
-    fn abort(self: Box<Self>)
-        -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>> + Send>>
-    {
+    fn abort(
+        self: Box<Self>,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<Output = Result<(), crate::model::storage::StorageError>>
+                + Send,
+        >,
+    > {
         Box::pin(async { Ok(()) })
     }
 }

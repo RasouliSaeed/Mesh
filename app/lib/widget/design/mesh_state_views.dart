@@ -3,14 +3,14 @@ import 'package:locara_app/theme/mesh_design_tokens.dart';
 import 'package:locara_app/widget/design/mesh_app_button.dart';
 import 'package:locara_app/widget/design/mesh_glass_card.dart';
 
-class LocaraEmptyState extends StatelessWidget {
+class MeshEmptyState extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
   final String? actionLabel;
   final VoidCallback? onAction;
 
-  const LocaraEmptyState({
+  const MeshEmptyState({
     required this.icon,
     required this.title,
     required this.description,
@@ -78,13 +78,13 @@ class LocaraEmptyState extends StatelessWidget {
   }
 }
 
-class LocaraErrorState extends StatelessWidget {
+class MeshErrorState extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback? onRetry;
   final String retryLabel;
 
-  const LocaraErrorState({
+  const MeshErrorState({
     required this.title,
     required this.message,
     this.onRetry,
@@ -155,10 +155,10 @@ class LocaraErrorState extends StatelessWidget {
   }
 }
 
-class LocaraLoadingState extends StatelessWidget {
+class MeshLoadingState extends StatelessWidget {
   final String message;
 
-  const LocaraLoadingState({
+  const MeshLoadingState({
     this.message = 'در حال بارگذاری...',
     super.key,
   });
@@ -190,7 +190,7 @@ class LocaraLoadingState extends StatelessWidget {
   }
 }
 
-/// Mesh state views aliases
-typedef MeshEmptyState = LocaraEmptyState;
-typedef MeshErrorState = LocaraErrorState;
-typedef MeshLoadingState = LocaraLoadingState;
+/// Legacy state views aliases for backward compatibility
+typedef LocaraEmptyState = MeshEmptyState;
+typedef LocaraErrorState = MeshErrorState;
+typedef LocaraLoadingState = MeshLoadingState;

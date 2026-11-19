@@ -1,6 +1,9 @@
 name: Release Draft
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       # Android
@@ -54,13 +57,13 @@ on:
 jobs:
   # Android: Builds Universal, ARMv8, ARMv7, and x64 APKs
   build_apk:
-    if: ${{ github.event.inputs.build_android_apk == 'true' }}
+    if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
     uses: ./.github/workflows/build_android_apk.yml
     secrets: inherit
 
   # Windows: Setup x64
   build_windows_setup:
-    if: ${{ github.event.inputs.build_windows_setup == 'true' }}
+    if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
     uses: ./.github/workflows/build_windows_exe_unsigned.yml
     secrets: inherit
     permissions:
@@ -69,7 +72,7 @@ jobs:
 
   # Windows: Portable x64
   build_windows_portable:
-    if: ${{ github.event.inputs.build_windows_portable == 'true' }}
+    if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
     uses: ./.github/workflows/build_windows_zip_x64.yml
     secrets: inherit
     permissions:
@@ -133,18 +136,18 @@ jobs:
       # Android APKs
       # ==============================
       - name: Download APK artifacts
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: apk-result
           path: apk-result
 
       - name: Copy APK files to root
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         run: cp apk-result/*.apk .
 
       - name: Upload Release Asset - APK Universal
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -155,7 +158,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Release Asset - APK ARMv8
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -166,7 +169,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Release Asset - APK ARMv7
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -177,7 +180,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Release Asset - APK x64
-        if: ${{ github.event.inputs.build_android_apk == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_android_apk == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -191,18 +194,18 @@ jobs:
       # Windows
       # ==============================
       - name: Download Windows Setup x64
-        if: ${{ github.event.inputs.build_windows_setup == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: windows-exe-x86-64-unsigned
           path: windows-exe-x86-64-unsigned
 
       - name: Copy Windows Setup exe to root
-        if: ${{ github.event.inputs.build_windows_setup == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
         run: cp windows-exe-x86-64-unsigned/*.exe result-windows-setup.exe
 
       - name: Upload Release Asset - Windows Setup x64
-        if: ${{ github.event.inputs.build_windows_setup == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_setup == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -213,18 +216,18 @@ jobs:
           asset_content_type: application/vnd.microsoft.portable-executable
 
       - name: Download Windows Portable x64
-        if: ${{ github.event.inputs.build_windows_portable == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: windows-zip-x86-64-result
           path: windows-zip-x86-64-result
 
       - name: Copy Windows Portable zip to root
-        if: ${{ github.event.inputs.build_windows_portable == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
         run: cp windows-zip-x86-64-result/*.zip result-windows-portable.zip
 
       - name: Upload Release Asset - Windows Portable x64
-        if: ${{ github.event.inputs.build_windows_portable == 'true' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_windows_portable == 'true' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

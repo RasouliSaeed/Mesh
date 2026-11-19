@@ -520,6 +520,50 @@ class PersistenceService {
     await _prefs.setBool(_https, https);
   }
 
+  bool isEnableNotifications() {
+    return _prefs.getBool('enableNotifications') ?? true;
+  }
+
+  Future<void> setEnableNotifications(bool enable) async {
+    await _prefs.setBool('enableNotifications', enable);
+  }
+
+  bool isNotificationSound() {
+    return _prefs.getBool('notificationSound') ?? true;
+  }
+
+  Future<void> setNotificationSound(bool sound) async {
+    await _prefs.setBool('notificationSound', sound);
+  }
+
+  bool isBlockDangerousAutoAccept() {
+    return _prefs.getBool('blockDangerousAutoAccept') ?? true;
+  }
+
+  Future<void> setBlockDangerousAutoAccept(bool block) async {
+    await _prefs.setBool('blockDangerousAutoAccept', block);
+  }
+
+  Map<String, String> getCustomShortcuts() {
+    final raw = _prefs.getString('custom_shortcuts');
+    if (raw == null) return {};
+    try {
+      return (jsonDecode(raw) as Map).cast<String, String>();
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> setCustomShortcut(String actionKey, String serialized) async {
+    final current = getCustomShortcuts();
+    current[actionKey] = serialized;
+    await _prefs.setString('custom_shortcuts', jsonEncode(current));
+  }
+
+  Future<void> resetShortcuts() async {
+    await _prefs.remove('custom_shortcuts');
+  }
+
   SendMode getSendMode() {
     return SendMode.values.firstWhereOrNull((m) => m.name == _prefs.getString(_sendMode)) ?? SendMode.single;
   }

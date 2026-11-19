@@ -98,7 +98,12 @@ async fn start_test_server_with_verification(
                             Some(dir) => {
                                 let path = dir.join(&file_id);
                                 let (result_tx, result_rx) = oneshot::channel();
-                                let handle = locara::model::storage_adapter::DesktopStorageHandle::new(path.clone()).await.unwrap();
+                                let handle =
+                                    locara::model::storage_adapter::DesktopStorageHandle::new(
+                                        path.clone(),
+                                    )
+                                    .await
+                                    .unwrap();
                                 let _ = target_tx.send(FileUploadTarget::Storage {
                                     handle: Box::new(handle),
                                     result_tx,

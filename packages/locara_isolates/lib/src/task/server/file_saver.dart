@@ -5,6 +5,7 @@ import 'package:locara_isolates/rust/api/filename.dart' as rust_filename;
 import 'package:locara_isolates/util/android_channel.dart' as android_channel;
 import 'package:locara_isolates/util/content_uri_helper.dart';
 import 'package:locara_isolates/util/file_path_helper.dart';
+import 'package:locara_isolates/util/file_security_guard.dart';
 import 'package:logging/logging.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
@@ -177,6 +178,15 @@ Future<(bool, String?)> saveCachedFileToGallery({
 /// Throws `'Path traversal detected'` when the name tries to leave the
 /// destination.
 List<String> sanitizeRelativeName(String fileName) {
+  try {
+    FileSecurityGuard.validateFileName(fileName);
+  } on FileSecurityException catch (e) {
+    if (e.message.contains('Path traversal')) {
+      throw 'Path traversal detected';
+    }
+    rethrow;
+  }
+
   final parts = p.split(fileName);
 
   final components = <String>[];
@@ -242,6 +252,13 @@ Future<(String, String?, String)> digestFilePathAndPrepareDirectory({
     }
   }
 
+  if (!parentDirectory.startsWith('content://')) {
+    FileSecurityGuard.validateBoundaryJail(
+      parentDirectory: parentDirectory,
+      destinationPath: dir,
+    );
+  }
+
   // The destination directory may not exist anymore, e.g. because it was deleted
   // or is on a drive that is no longer mounted. This also creates the
   // sub-directories of a folder transfer. Errors are propagated so that the
@@ -254,6 +271,13 @@ Future<(String, String?, String)> digestFilePathAndPrepareDirectory({
     destinationPath = counter == 1 ? p.join(dir, actualFileName) : p.join(dir, actualFileName.withCount(counter));
     counter++;
   } while (await File(destinationPath).exists());
+
+  if (!parentDirectory.startsWith('content://')) {
+    FileSecurityGuard.validateBoundaryJail(
+      parentDirectory: parentDirectory,
+      destinationPath: destinationPath,
+    );
+  }
   return (destinationPath, null, p.basename(destinationPath));
 }
 

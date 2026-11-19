@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:locara_app/theme/mesh_design_tokens.dart';
 
-class LocaraGlassCard extends StatelessWidget {
+class MeshGlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -12,11 +12,11 @@ class LocaraGlassCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool withGlow;
 
-  const LocaraGlassCard({
+  const MeshGlassCard({
     required this.child,
     this.padding,
     this.margin,
-    this.borderRadius = LocaraDesignTokens.radiusExtraLarge,
+    this.borderRadius = MeshDesignTokens.radiusExtraLarge,
     this.borderColor,
     this.fillColor,
     this.onTap,
@@ -76,5 +76,5 @@ class LocaraGlassCard extends StatelessWidget {
   }
 }
 
-/// Mesh glass card alias
-typedef MeshGlassCard = LocaraGlassCard;
+/// Legacy glass card alias for backward compatibility
+typedef LocaraGlassCard = MeshGlassCard;

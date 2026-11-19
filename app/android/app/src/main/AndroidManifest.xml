@@ -28,10 +28,11 @@
 
     <application
 
-        android:label="Mesh"
+        android:label="MESH"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:requestLegacyExternalStorage="true"
     >
 

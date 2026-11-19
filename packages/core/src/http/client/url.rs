@@ -1,6 +1,14 @@
 use crate::http::client::scoped_host;
 use std::borrow::Cow;
 
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+pub enum ApiNamespace {
+    Mesh,
+    #[default]
+    Locara,
+}
+
 pub struct TargetUrl<'a> {
     pub version: ApiVersion,
     pub protocol: &'static str,
@@ -20,8 +28,26 @@ pub enum ApiVersion {
 
 impl<'a> TargetUrl<'a> {
     pub fn to_string(&self) -> String {
+        self.to_namespace_string(ApiNamespace::Locara)
+    }
+
+    #[allow(dead_code)]
+    pub fn to_mesh(&self) -> String {
+        self.to_namespace_string(ApiNamespace::Mesh)
+    }
+
+    #[allow(dead_code)]
+    pub fn to_locara(&self) -> String {
+        self.to_namespace_string(ApiNamespace::Locara)
+    }
+
+    pub fn to_namespace_string(&self, namespace: ApiNamespace) -> String {
+        let ns = match namespace {
+            ApiNamespace::Mesh => "mesh",
+            ApiNamespace::Locara => "locara",
+        };
         let base = format!(
-            "{}://{}:{}/api/locara/{}{}",
+            "{}://{}:{}/api/{}/{}{}",
             self.protocol,
             // A scoped IPv6 address (`fe80::1%3`) cannot be represented in a
             // URL and becomes a synthetic host name instead.
@@ -33,6 +59,7 @@ impl<'a> TargetUrl<'a> {
                 },
             },
             self.port,
+            ns,
             match self.version {
                 ApiVersion::V2 => "v2",
                 ApiVersion::V3 => "v3",
@@ -114,5 +141,30 @@ mod tests {
         }
         .to_string();
         assert_eq!(url, "http://192.168.1.1:53317/api/locara/v2/info");
+    }
+
+    #[test]
+    fn test_build_url_mesh_namespace() {
+        let url = TargetUrl {
+            version: ApiVersion::V2,
+            protocol: "https",
+            host: "192.168.1.1".to_string(),
+            port: 53317,
+            path: "/register",
+            params: &[],
+        }
+        .to_mesh();
+        assert_eq!(url, "https://192.168.1.1:53317/api/mesh/v2/register");
+
+        let url_v3 = TargetUrl {
+            version: ApiVersion::V3,
+            protocol: "https",
+            host: "192.168.1.1".to_string(),
+            port: 53317,
+            path: "/manifest",
+            params: &[],
+        }
+        .to_mesh();
+        assert_eq!(url_v3, "https://192.168.1.1:53317/api/mesh/v3/manifest");
     }
 }

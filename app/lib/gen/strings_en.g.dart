@@ -279,6 +279,14 @@ class Translations$settingsTab$en {
 
   /// en: 'Advanced settings'
   String get advancedSettings => 'Advanced settings';
+
+  late final Translations$settingsTab$languageSection$en languageSection = Translations$settingsTab$languageSection$en.internal(_root);
+  late final Translations$settingsTab$appearance$en appearance = Translations$settingsTab$appearance$en.internal(_root);
+  late final Translations$settingsTab$discovery$en discovery = Translations$settingsTab$discovery$en.internal(_root);
+  late final Translations$settingsTab$transfers$en transfers = Translations$settingsTab$transfers$en.internal(_root);
+  late final Translations$settingsTab$notifications$en notifications = Translations$settingsTab$notifications$en.internal(_root);
+  late final Translations$settingsTab$privacySecurity$en privacySecurity = Translations$settingsTab$privacySecurity$en.internal(_root);
+  late final Translations$settingsTab$shortcuts$en shortcuts = Translations$settingsTab$shortcuts$en.internal(_root);
 }
 
 // Path: troubleshootPage
@@ -351,6 +359,7 @@ class Translations$receiveHistoryPage$en {
   /// en: 'The history is empty.'
   String get empty => 'The history is empty.';
 
+  late final Translations$receiveHistoryPage$filter$en filter = Translations$receiveHistoryPage$filter$en.internal(_root);
   late final Translations$receiveHistoryPage$entryActions$en entryActions = Translations$receiveHistoryPage$entryActions$en.internal(_root);
 }
 
@@ -1237,6 +1246,135 @@ class Translations$settingsTab$other$en {
   String get termsOfUse => 'Terms of Use';
 }
 
+// Path: settingsTab.languageSection
+class Translations$settingsTab$languageSection$en {
+  Translations$settingsTab$languageSection$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Language'
+  String get title => 'Language';
+}
+
+// Path: settingsTab.appearance
+class Translations$settingsTab$appearance$en {
+  Translations$settingsTab$appearance$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Appearance'
+  String get title => 'Appearance';
+}
+
+// Path: settingsTab.discovery
+class Translations$settingsTab$discovery$en {
+  Translations$settingsTab$discovery$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Discovery'
+  String get title => 'Discovery';
+
+  /// en: 'Periodic Heartbeat Ping'
+  String get heartbeat => 'Periodic Heartbeat Ping';
+}
+
+// Path: settingsTab.transfers
+class Translations$settingsTab$transfers$en {
+  Translations$settingsTab$transfers$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Transfers'
+  String get title => 'Transfers';
+}
+
+// Path: settingsTab.notifications
+class Translations$settingsTab$notifications$en {
+  Translations$settingsTab$notifications$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Notifications'
+  String get title => 'Notifications';
+
+  /// en: 'Enable notifications'
+  String get enable => 'Enable notifications';
+
+  /// en: 'Sound on completion'
+  String get sound => 'Sound on completion';
+}
+
+// Path: settingsTab.privacySecurity
+class Translations$settingsTab$privacySecurity$en {
+  Translations$settingsTab$privacySecurity$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Privacy & Security'
+  String get title => 'Privacy & Security';
+
+  /// en: 'Block auto-accept for executable files'
+  String get blockExecutable => 'Block auto-accept for executable files';
+
+  /// en: 'Require explicit confirmation for .exe, .bat, .apk, and scripts'
+  String get blockExecutableDesc => 'Require explicit confirmation for .exe, .bat, .apk, and scripts';
+}
+
+// Path: settingsTab.shortcuts
+class Translations$settingsTab$shortcuts$en {
+  Translations$settingsTab$shortcuts$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Keyboard Shortcuts'
+  String get title => 'Keyboard Shortcuts';
+
+  /// en: 'Configure Shortcuts'
+  String get configure => 'Configure Shortcuts';
+
+  /// en: 'Open Settings'
+  String get openSettings => 'Open Settings';
+
+  /// en: 'Paste & Send Clipboard'
+  String get pasteAndSend => 'Paste & Send Clipboard';
+
+  /// en: 'Close Window'
+  String get closeWindow => 'Close Window';
+
+  /// en: 'Back / Cancel'
+  String get popPage => 'Back / Cancel';
+
+  /// en: 'Exit Application'
+  String get exitApp => 'Exit Application';
+
+  /// en: 'Shortcut collision: already assigned to {action}'
+  String collisionError({required Object action}) => 'Shortcut collision: already assigned to ${action}';
+
+  /// en: 'Shortcut must include a key and at least one modifier (Ctrl, Alt, Meta)'
+  String get invalidKey => 'Shortcut must include a key and at least one modifier (Ctrl, Alt, Meta)';
+
+  /// en: 'Press key combination...'
+  String get pressKeys => 'Press key combination...';
+
+  /// en: 'Reset to Defaults'
+  String get reset => 'Reset to Defaults';
+}
+
 // Path: troubleshootPage.firewall
 class Translations$troubleshootPage$firewall$en {
   Translations$troubleshootPage$firewall$en.internal(this._root);
@@ -1288,6 +1426,24 @@ class Translations$troubleshootPage$noConnection$en {
       'Does the problem exist on both sides? If so, you need to make sure that both devices are on the same Wi-Fi network and share the same configuration (port, multicast address, encryption). The Wi-Fi network may not allow communication between participants due to Access Point (AP) Isolation. In this case, this option must be disabled on the router.';
 }
 
+// Path: receiveHistoryPage.filter
+class Translations$receiveHistoryPage$filter$en {
+  Translations$receiveHistoryPage$filter$en.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'All'
+  String get all => 'All';
+
+  /// en: 'Received'
+  String get received => 'Received';
+
+  /// en: 'Sent'
+  String get sent => 'Sent';
+}
+
 // Path: receiveHistoryPage.entryActions
 class Translations$receiveHistoryPage$entryActions$en {
   Translations$receiveHistoryPage$entryActions$en.internal(this._root);
@@ -1304,6 +1460,9 @@ class Translations$receiveHistoryPage$entryActions$en {
 
   /// en: 'Information'
   String get info => 'Information';
+
+  /// en: 'Resend'
+  String get resend => 'Resend';
 
   /// en: 'Delete from history'
   String get deleteFromHistory => 'Delete from history';

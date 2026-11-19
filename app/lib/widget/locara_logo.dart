@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:locara_app/gen/assets.gen.dart';
 import 'package:locara_app/gen/strings.g.dart';
 
-class LocaraLogo extends StatelessWidget {
+class MeshLogo extends StatelessWidget {
   final bool withText;
 
-  const LocaraLogo({required this.withText});
+  const MeshLogo({required this.withText});
 
   @override
   Widget build(BuildContext context) {
@@ -33,5 +33,5 @@ class LocaraLogo extends StatelessWidget {
   }
 }
 
-/// Mesh logo widget alias for backward compatibility and rebranding
-typedef MeshLogo = LocaraLogo;
+/// Legacy alias for backward compatibility
+typedef LocaraLogo = MeshLogo;

@@ -122,7 +122,11 @@ impl ResumeManager {
                 return Ok(PathBuf::from(app_data).join("locara").join("resume"));
             }
             if let Some(user_profile) = env_lookup("USERPROFILE") {
-                return Ok(PathBuf::from(user_profile).join("AppData").join("Local").join("locara").join("resume"));
+                return Ok(PathBuf::from(user_profile)
+                    .join("AppData")
+                    .join("Local")
+                    .join("locara")
+                    .join("resume"));
             }
         }
 
@@ -132,7 +136,11 @@ impl ResumeManager {
                 return Ok(PathBuf::from(data_home).join("locara").join("resume"));
             }
             if let Some(home) = env_lookup("HOME") {
-                return Ok(PathBuf::from(home).join(".local").join("share").join("locara").join("resume"));
+                return Ok(PathBuf::from(home)
+                    .join(".local")
+                    .join("share")
+                    .join("locara")
+                    .join("resume"));
             }
         }
 
@@ -148,8 +156,14 @@ impl ResumeManager {
         if transfer_id.len() > 128 {
             return Err("Transfer ID exceeds maximum length of 128 characters".to_string());
         }
-        if !transfer_id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') {
-            return Err("Transfer ID contains invalid characters (only alphanumeric, '-', '_' allowed)".to_string());
+        if !transfer_id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+        {
+            return Err(
+                "Transfer ID contains invalid characters (only alphanumeric, '-', '_' allowed)"
+                    .to_string(),
+            );
         }
         Ok(())
     }
@@ -175,7 +189,11 @@ impl ResumeManager {
             .map_err(|e| format!("Failed to create resume directory {}: {}", dir.display(), e))?;
 
         let target_path = dir.join(format!("locara_resume_{}.json", state.transfer_id));
-        let tmp_path = dir.join(format!(".locara_resume_{}_{}.tmp", state.transfer_id, std::process::id()));
+        let tmp_path = dir.join(format!(
+            ".locara_resume_{}_{}.tmp",
+            state.transfer_id,
+            std::process::id()
+        ));
         let mut state_to_save = state.clone();
         if state_to_save.last_updated_at.is_none() {
             state_to_save.last_updated_at = Some(
@@ -198,7 +216,13 @@ impl ResumeManager {
                 .truncate(true)
                 .open(&tmp_path)
                 .await
-                .map_err(|e| format!("Failed to open temp resume file {}: {}", tmp_path.display(), e))?;
+                .map_err(|e| {
+                    format!(
+                        "Failed to open temp resume file {}: {}",
+                        tmp_path.display(),
+                        e
+                    )
+                })?;
 
             file.write_all(&data)
                 .await
@@ -218,7 +242,11 @@ impl ResumeManager {
             .await
             .map_err(|e| {
                 let _ = std::fs::remove_file(&tmp_path);
-                format!("Failed to commit resume state {}: {}", target_path.display(), e)
+                format!(
+                    "Failed to commit resume state {}: {}",
+                    target_path.display(),
+                    e
+                )
             })?;
 
         // 3. Parent-directory durability sync on Unix platforms
@@ -281,7 +309,9 @@ impl ResumeManager {
     /// Ignores corrupted metadata, temporary files (.tmp), and sessions whose transfer IDs
     /// violate traversal constraints. Distinguishes between fully resumable sessions and
     /// unresumable ones (e.g. missing `.part` files or expired sessions).
-    pub async fn list_active_sessions_in(dir: &Path) -> Result<Vec<RecoverableSessionInfo>, String> {
+    pub async fn list_active_sessions_in(
+        dir: &Path,
+    ) -> Result<Vec<RecoverableSessionInfo>, String> {
         if !dir.exists() {
             return Ok(Vec::new());
         }
@@ -292,11 +322,13 @@ impl ResumeManager {
 
         let mut sessions = Vec::new();
 
-        while let Some(entry) = read_dir
-            .next_entry()
-            .await
-            .map_err(|e| format!("Failed to iterate resume directory {}: {}", dir.display(), e))?
-        {
+        while let Some(entry) = read_dir.next_entry().await.map_err(|e| {
+            format!(
+                "Failed to iterate resume directory {}: {}",
+                dir.display(),
+                e
+            )
+        })? {
             let path = entry.path();
             if !path.is_file() {
                 continue;
@@ -309,7 +341,10 @@ impl ResumeManager {
 
             // Must match locara_resume_{transfer_id}.json
             // Ignore hidden files, temporary (.tmp) files, or unrelated files
-            if file_name.starts_with('.') || !file_name.starts_with("locara_resume_") || !file_name.ends_with(".json") {
+            if file_name.starts_with('.')
+                || !file_name.starts_with("locara_resume_")
+                || !file_name.ends_with(".json")
+            {
                 continue;
             }
 
@@ -345,7 +380,11 @@ impl ResumeManager {
                 continue;
             }
 
-            if state.completed_chunks.iter().any(|&c| c >= state.total_chunks) {
+            if state
+                .completed_chunks
+                .iter()
+                .any(|&c| c >= state.total_chunks)
+            {
                 continue;
             }
 
@@ -379,7 +418,8 @@ impl ResumeManager {
 
             if is_expired {
                 is_resumable = false;
-                unresumable_reason = Some("Session expired on disk (exceeded 7 days inactivity)".to_string());
+                unresumable_reason =
+                    Some("Session expired on disk (exceeded 7 days inactivity)".to_string());
             } else if state.completed_chunks.len() as u64 == state.total_chunks {
                 is_resumable = false;
                 unresumable_reason = Some("All chunks completed; awaiting commit".to_string());
