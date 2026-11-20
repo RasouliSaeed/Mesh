@@ -5,12 +5,14 @@ import 'package:refena_flutter/refena_flutter.dart';
 
 class MeshContextualChatCard extends StatefulWidget {
   final String peerAlias;
+  final double? width;
   final VoidCallback? onClose;
   final VoidCallback? onMinimize;
   final void Function(String message)? onSendMessage;
 
   const MeshContextualChatCard({
     this.peerAlias = 'DESKTOP-PC',
+    this.width,
     this.onClose,
     this.onMinimize,
     this.onSendMessage,
@@ -44,7 +46,7 @@ class _MeshContextualChatCardState extends State<MeshContextualChatCard> {
     final messages = chatState.messages;
 
     return Container(
-      width: 320,
+      width: widget.width,
       decoration: BoxDecoration(
         color: LocaraDesignTokens.cardSurface.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(20),

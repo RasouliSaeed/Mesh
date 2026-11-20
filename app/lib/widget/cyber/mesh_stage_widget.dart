@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:locara_app/gen/assets.gen.dart';
 import 'package:locara_app/theme/mesh_cyber_theme.dart';
 
 class MeshStageWidget extends StatefulWidget {
@@ -47,75 +46,60 @@ class _MeshStageWidgetState extends State<MeshStageWidget> with SingleTickerProv
     return AnimatedBuilder(
       animation: _pulseController,
       builder: (context, child) {
-        return SizedBox(
-          height: 250,
-          child: Stack(
-            alignment: Alignment.center,
+        return Container(
+          height: 48,
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.75),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: LocaraCyberColors.cardBorderSubtle,
+              width: 1.0,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 3D Glowing Podium Base Custom Painter
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: _DesktopPodiumPainter(
-                    pulse: _pulseController.value,
-                  ),
+              // Wi-Fi Icon
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF1E293B),
+                ),
+                child: const Icon(
+                  Icons.wifi_rounded,
+                  color: LocaraCyberColors.auroraCyan,
+                  size: 16,
                 ),
               ),
+              const SizedBox(width: 8),
 
-              // Connected devices on stage
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Laptop
-                    _buildDeviceGraphic(
-                      icon: Icons.laptop_chromebook_rounded,
-                      label: null,
-                      size: 96,
-                      screenGlow: true,
-                    ),
-                    const SizedBox(width: 80),
-                    // Desktop Monitor
-                    _buildDeviceGraphic(
-                      icon: Icons.desktop_windows_rounded,
-                      label: null,
-                      size: 104,
-                      screenGlow: true,
-                    ),
-                  ],
-                ),
+              // Laptop device indicator
+              const Icon(
+                Icons.laptop_chromebook_rounded,
+                color: Colors.white70,
+                size: 16,
               ),
+              const SizedBox(width: 6),
 
-              // Central Floating Wi-Fi Beacon
-              Positioned(
-                top: 35,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const RadialGradient(
-                      colors: [
-                        Color(0xFF00E5FF),
-                        Color(0xFF0066FF),
-                      ],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: LocaraCyberColors.auroraCyan.withValues(alpha: 0.6),
-                        blurRadius: 18,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.wifi_rounded,
-                    color: Colors.white,
-                    size: 26,
-                  ),
+              // Desktop device indicator
+              const Icon(
+                Icons.desktop_windows_rounded,
+                color: Colors.white70,
+                size: 16,
+              ),
+              const SizedBox(width: 10),
+
+              // Counter text
+              Text(
+                '${widget.availableDevicesCount} دستگاه متصل',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -258,130 +242,6 @@ class _MeshStageWidgetState extends State<MeshStageWidget> with SingleTickerProv
         size: size,
       ),
     );
-  }
-
-  Widget _buildDeviceGraphic({
-    required IconData icon,
-    required String? label,
-    required double size,
-    bool screenGlow = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: const Color(0xFF0C1935).withValues(alpha: 0.8),
-        border: Border.all(
-          color: LocaraCyberColors.auroraCyan.withValues(alpha: 0.4),
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: LocaraCyberColors.auroraCyan.withValues(alpha: 0.25),
-            blurRadius: 16,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: size - 24,
-          ),
-          // Locara logo on screen
-          Positioned(
-            top: (size - 24) * 0.18,
-            child: Assets.img.logo32White.image(
-              width: 18,
-              height: 18,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DesktopPodiumPainter extends CustomPainter {
-  final double pulse;
-
-  _DesktopPodiumPainter({required this.pulse});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height - 45);
-
-    // Glowing Radial Light Pool under podium
-    final poolPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          LocaraCyberColors.auroraCyan.withValues(alpha: 0.35 + pulse * 0.15),
-          LocaraCyberColors.auroraBlue.withValues(alpha: 0.15),
-          Colors.transparent,
-        ],
-        radius: 0.8,
-      ).createShader(Rect.fromCenter(center: center, width: 360, height: 120));
-
-    canvas.drawOval(
-      Rect.fromCenter(center: center, width: 360, height: 100),
-      poolPaint,
-    );
-
-    // Concentric Perspective Podium Rings
-    final ringPaint1 = Paint()
-      ..color = LocaraCyberColors.auroraCyan.withValues(alpha: 0.8)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2;
-
-    final ringPaint2 = Paint()
-      ..color = LocaraCyberColors.auroraBlue.withValues(alpha: 0.5)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4;
-
-    canvas.drawOval(
-      Rect.fromCenter(center: center, width: 280, height: 50),
-      ringPaint1,
-    );
-
-    canvas.drawOval(
-      Rect.fromCenter(center: center.translate(0, 10), width: 340, height: 60),
-      ringPaint2,
-    );
-
-    // Glowing Dashed Arc Connecting Devices
-    final arcPaint = Paint()
-      ..color = LocaraCyberColors.auroraCyan.withValues(alpha: 0.7)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-
-    final path = Path();
-    final p1 = Offset(size.width / 2 - 110, size.height - 95);
-    final control = Offset(size.width / 2, 45);
-    final p2 = Offset(size.width / 2 + 110, size.height - 95);
-
-    path.moveTo(p1.dx, p1.dy);
-    path.quadraticBezierTo(control.dx, control.dy, p2.dx, p2.dy);
-
-    _drawDashedPath(canvas, path, arcPaint, 6, 5);
-  }
-
-  void _drawDashedPath(Canvas canvas, Path path, Paint paint, double dashWidth, double dashSpace) {
-    for (final metric in path.computeMetrics()) {
-      double distance = 0.0;
-      while (distance < metric.length) {
-        final len = (distance + dashWidth < metric.length) ? dashWidth : metric.length - distance;
-        canvas.drawPath(metric.extractPath(distance, distance + len), paint);
-        distance += dashWidth + dashSpace;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _DesktopPodiumPainter oldDelegate) {
-    return oldDelegate.pulse != pulse;
   }
 }
 

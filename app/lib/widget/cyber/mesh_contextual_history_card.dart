@@ -8,11 +8,13 @@ import 'package:refena_flutter/refena_flutter.dart';
 enum HistoryFilter { all, incoming, outgoing }
 
 class MeshContextualHistoryCard extends StatefulWidget {
+  final double? width;
   final VoidCallback? onClose;
   final VoidCallback? onMinimize;
   final void Function(ReceiveHistoryEntry entry)? onOpenEntry;
 
   const MeshContextualHistoryCard({
+    this.width,
     this.onClose,
     this.onMinimize,
     this.onOpenEntry,
@@ -32,7 +34,7 @@ class _MeshContextualHistoryCardState extends State<MeshContextualHistoryCard> {
     final history = context.watch(receiveHistoryProvider);
 
     return Container(
-      width: 320,
+      width: widget.width,
       decoration: BoxDecoration(
         color: LocaraDesignTokens.cardSurface.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(20),

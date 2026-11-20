@@ -18,8 +18,8 @@ final windowDimensionProvider = Provider<WindowDimensionsController>((ref) {
   return WindowDimensionsController(ref.read(persistenceProvider));
 });
 
-const Size _minimalSize = Size(400, 500);
-const Size _defaultSize = Size(900, 600);
+const Size _minimalSize = Size(500, 550);
+const Size _defaultSize = Size(1140, 740);
 
 class WindowDimensionsController {
   final PersistenceService _service;

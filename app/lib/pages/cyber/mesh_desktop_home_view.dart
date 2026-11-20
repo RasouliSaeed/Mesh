@@ -115,7 +115,7 @@ class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
 
   Widget _buildSidebar({required String activeIp}) {
     return Container(
-      width: 260,
+      width: 220,
       margin: const EdgeInsetsDirectional.all(LocaraDesignTokens.spacing16),
       decoration: LocaraCyberTheme.glassCardDecoration(
         borderRadius: 28,
@@ -565,13 +565,13 @@ class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
 
                 const SizedBox(width: 16),
 
-                // Right Column: Radar View + 3D Stage Widget
+                // Right Column: Radar View + 3D Stage Status
                 Expanded(
                   flex: 6,
-                  child: Stack(
-                    alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const MeshRadarScannerView(size: 260),
+                      const MeshRadarScannerView(size: 230),
                       LocaraStageWidget(
                         isDesktop: true,
                         availableDevicesCount: deviceCount,
@@ -584,30 +584,34 @@ class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
 
             const SizedBox(height: LocaraDesignTokens.spacing16),
 
-            // 4. Contextual Floating / Docked Panels (Chat & Transfer History)
+            // 4. Contextual Floating / Docked Panels (Chat & Transfer History Side-by-Side)
             if (_showContextualChat || _showContextualHistory) ...[
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                alignment: WrapAlignment.center,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_showContextualChat)
-                    MeshContextualChatCard(
-                      peerAlias: nearbyDevices.isNotEmpty ? nearbyDevices.first.alias : 'DESKTOP-PC',
-                      onClose: () => setState(() => _showContextualChat = false),
-                      onSendMessage: (msg) {
-                        try {
-                          final target = nearbyDevices.isNotEmpty ? nearbyDevices.first : null;
-                          if (target != null) {
-                            context.ref.notifier(chatProvider).addMessage(msg, isMine: true, target: target);
-                          }
-                        } catch (_) {}
-                      },
+                    Expanded(
+                      child: MeshContextualChatCard(
+                        peerAlias: nearbyDevices.isNotEmpty ? nearbyDevices.first.alias : 'DESKTOP-PC',
+                        onClose: () => setState(() => _showContextualChat = false),
+                        onSendMessage: (msg) {
+                          try {
+                            final target = nearbyDevices.isNotEmpty ? nearbyDevices.first : null;
+                            if (target != null) {
+                              context.ref.notifier(chatProvider).addMessage(msg, isMine: true, target: target);
+                            }
+                          } catch (_) {}
+                        },
+                      ),
                     ),
+                  if (_showContextualChat && _showContextualHistory)
+                    const SizedBox(width: 16),
                   if (_showContextualHistory)
-                    MeshContextualHistoryCard(
-                      onClose: () => setState(() => _showContextualHistory = false),
-                      onOpenEntry: (_) => switchTab(DesktopNavTab.files),
+                    Expanded(
+                      child: MeshContextualHistoryCard(
+                        onClose: () => setState(() => _showContextualHistory = false),
+                        onOpenEntry: (_) => switchTab(DesktopNavTab.files),
+                      ),
                     ),
                 ],
               ),
@@ -660,7 +664,7 @@ class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
                 text: const TextSpan(
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 26,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: -0.5,
                   ),
@@ -677,12 +681,12 @@ class _MeshDesktopHomeViewState extends State<MeshDesktopHomeView> {
                   ],
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 2),
               const Text(
                 'انتقال سریع و امن فایل بین دستگاه‌های نزدیک',
                 style: TextStyle(
                   color: LocaraDesignTokens.secondaryText,
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -20,23 +20,32 @@ class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: LocaraCyberTheme.glassCardDecoration(
-        borderRadius: 24,
-        borderColor: LocaraCyberColors.cardBorder,
-        fillColor: const Color(0xFF09142B).withValues(alpha: 0.8),
-        withGlow: true,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A).withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF1E293B),
+          width: 1.1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          // Radar pulse animation
+          // Radar pulse animation (compact 40px)
           LocaraRadarPulseWidget(
-            size: 54,
+            size: 40,
             isScanning: _isScanning,
           ),
-          const SizedBox(width: 18),
+          const SizedBox(width: 12),
 
-          // Search status text
+          // Search status text (clean single-line with ellipsis)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,25 +53,30 @@ class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
               children: [
                 Text(
                   _isScanning ? 'جستجوی دستگاه‌ها در شبکه...' : 'جستجو متوقف شد',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   _isScanning ? 'در حال یافتن دستگاه‌های متصل به شبکه محلی' : 'برای یافتن دستگاه‌های جدید، جستجو را آغاز کنید',
-                  style: const TextStyle(
-                    color: LocaraCyberColors.textSecondary,
-                    fontSize: 13,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 11,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
 
-          // Stop / Start Button
+          // Stop / Start Button (compact)
           InkWell(
             onTap: () {
               setState(() {
@@ -70,23 +84,16 @@ class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
               });
               widget.onToggleScan?.call();
             },
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFF132342).withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(16),
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: LocaraCyberColors.cardBorder,
-                  width: 1.2,
+                  width: 1.0,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -94,14 +101,14 @@ class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
                   Icon(
                     _isScanning ? Icons.stop_rounded : Icons.play_arrow_rounded,
                     color: Colors.white,
-                    size: 18,
+                    size: 15,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 4),
                   Text(
                     _isScanning ? 'توقف' : 'شروع',
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -115,5 +122,5 @@ class _MeshDiscoveryCardState extends State<MeshDiscoveryCard> {
   }
 }
 
-/// Legacy discovery card alias for backward compatibility
+/// Backward compatibility alias
 typedef LocaraDiscoveryCard = MeshDiscoveryCard;
